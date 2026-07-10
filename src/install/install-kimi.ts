@@ -1,11 +1,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
 import * as toml from 'smol-toml';
 import { resolveKimiEnv, pluginCacheDir, omoConfigDir } from '../shared/paths.js';
 import { getHookDefs } from './hook-defs.js';
 import { patchConfigToml } from './config-patcher.js';
 import { linkManagedBins, unlinkManagedBins } from './bin-links.js';
+import { captureEvent } from '../components/telemetry/posthog.js';
 
 export interface InstallOptions {
   kimiCodeHome?: string;
@@ -49,10 +51,77 @@ function applyAutonomousMode(kimiCodeHome: string, dryRun = false): void {
   fs.writeFileSync(configPath, serialized, 'utf-8');
 }
 
+export function detectKimiInstallation(): { installed: boolean; version?: string } {
+  try {
+    const out = execFileSync('kimi', ['--version'], { encoding: 'utf-8', timeout: 5000 }).trim();
+    return { installed: true, version: out };
+  } catch {
+    return { installed: false };
+  }
+}
+
+function writeRemoteMcpPlaceholders(kimiCodeHome: string, dryRun = false): void {
+  const configPath = path.join(kimiCodeHome, 'config.toml');
+  if (!fs.existsSync(configPath) || dryRun) return;
+  const raw = fs.readFileSync(configPath, 'utf-8');
+  if (raw.includes('grep_app') || raw.includes('context7')) return;
+  const placeholder = `\n# Remote MCP placeholders (oh-my-kimicode)\n# Enable after obtaining API keys:\n# [mcp_servers.grep_app]\n# command = "npx"\n# args = ["-y", "@grep-app/mcp"]\n# env = { GREP_APP_API_KEY = "..." }\n#\n# [mcp_servers.context7]\n# command = "npx"\n# args = ["-y", "@context7/mcp"]\n# env = { CONTEXT7_API_KEY = "..." }\n`;
+  fs.writeFileSync(configPath, raw.trimEnd() + placeholder, 'utf-8');
+}
+
+function recordMigrationState(kimiCodeHome: string, version: string, dryRun = false): void {
+  if (dryRun) return;
+  const stateDir = path.join(kimiCodeHome, '.local', 'share', 'oh-my-kimicode');
+  fs.mkdirSync(stateDir, { recursive: true });
+  fs.writeFileSync(
+    path.join(stateDir, 'config-migration-state.json'),
+    JSON.stringify({ lastInstalledVersion: version, installedAt: new Date().toISOString() }, null, 2),
+    'utf-8',
+  );
+}
+
+async function recordInstallTelemetry(dryRun = false): Promise<void> {
+  if (dryRun) return;
+  if (process.env.OMO_KIMI_DISABLE_POSTHOG === '1') return;
+  try {
+    const { getDistinctId } = await import('../shared/telemetry.js');
+    await captureEvent(getDistinctId(), 'install');
+  } catch {
+    // Telemetry is best-effort.
+  }
+}
+
+function runFirstBootstrap(cache: string, binDir: string, kimiCodeHome: string, dryRun = false): void {
+  if (dryRun) return;
+  const bootstrapCli = path.join(cache, 'components', 'bootstrap', 'dist', 'cli.mjs');
+  if (!fs.existsSync(bootstrapCli)) return;
+  try {
+    execFileSync('node', [bootstrapCli, 'hook', 'session-start'], {
+      env: {
+        ...process.env,
+        OMO_KIMI_PLUGIN_CACHE: cache,
+        OMO_KIMI_BIN_DIR: binDir,
+        KIMI_CODE_HOME: kimiCodeHome,
+      },
+      stdio: 'pipe',
+      timeout: 30000,
+    });
+  } catch {
+    // Bootstrap failure is non-fatal; the SessionStart hook will retry.
+  }
+}
+
 export async function runKimiInstaller(options: InstallOptions = {}): Promise<void> {
   const env = resolveKimiEnv(options);
   const version = process.env.OMO_KIMI_VERSION ?? '0.1.0';
   const cache = pluginCacheDir(env.kimiCodeHome, version);
+
+  const kimi = detectKimiInstallation();
+  if (!kimi.installed) {
+    console.warn('Warning: Kimi Code CLI not detected on PATH. Installation will still proceed.');
+  } else if (!options.dryRun) {
+    console.log(`Detected Kimi Code CLI: ${kimi.version}`);
+  }
 
   if (!options.dryRun) {
     fs.rmSync(cache, { recursive: true, force: true });
@@ -66,9 +135,13 @@ export async function runKimiInstaller(options: InstallOptions = {}): Promise<vo
   const hooks = getHookDefs(version, cache);
   const result = patchConfigToml(configPath, hooks, options.dryRun);
 
-  if (options.autonomous && !options.dryRun) {
+  writeRemoteMcpPlaceholders(env.kimiCodeHome, options.dryRun);
+
+  if (options.autonomous) {
     applyAutonomousMode(env.kimiCodeHome, options.dryRun);
   }
+
+  recordMigrationState(env.kimiCodeHome, version, options.dryRun);
 
   if (options.dryRun) {
     console.log('Dry run. Proposed changes:');
@@ -78,6 +151,9 @@ export async function runKimiInstaller(options: InstallOptions = {}): Promise<vo
     }
     return;
   }
+
+  runFirstBootstrap(cache, env.binDir, env.kimiCodeHome, options.dryRun);
+  await recordInstallTelemetry(options.dryRun);
 
   console.log(`Installed oh-my-kimicode ${version} to ${cache}`);
   if (result.backupPath) console.log(`Backed up config to ${result.backupPath}`);

@@ -17,22 +17,22 @@ export interface PostHogCaptureBody {
   properties: Record<string, unknown>;
 }
 
-export async function captureDailyActive(
+export async function captureEvent(
   distinctId: string,
+  event: string,
   options: CaptureOptions = {},
 ): Promise<void> {
   const apiKey = options.apiKey ?? process.env.OMO_KIMI_POSTHOG_API_KEY ?? DEFAULT_POSTHOG_API_KEY;
   const host = (options.host ?? process.env.OMO_KIMI_POSTHOG_HOST ?? DEFAULT_POSTHOG_HOST).replace(/\/$/, '');
 
   if (apiKey === DEFAULT_POSTHOG_API_KEY) {
-    // No real key configured: no-op after logging so users know telemetry is disabled by default.
-    process.stderr.write('telemetry: no PostHog API key configured; skipping capture\n');
+    // No real key configured: silently no-op. Telemetry is opt-out and disabled by default.
     return;
   }
 
   const body: PostHogCaptureBody = {
     api_key: apiKey,
-    event: 'daily_active',
+    event,
     distinct_id: distinctId,
     properties: {
       source: 'oh-my-kimicode',
@@ -57,4 +57,11 @@ export async function captureDailyActive(
   if (!response.ok) {
     throw new Error(`PostHog capture failed: ${response.status} ${response.statusText}`);
   }
+}
+
+export async function captureDailyActive(
+  distinctId: string,
+  options: CaptureOptions = {},
+): Promise<void> {
+  return captureEvent(distinctId, 'daily_active', options);
 }

@@ -37,6 +37,20 @@ async function buildMcp(name, outName) {
   });
 }
 
+async function buildTeamScript() {
+  const src = path.join(SRC, 'teammode', 'scripts', 'team.ts');
+  if (!fs.existsSync(src)) return;
+  const outdir = path.join('plugin/components/teammode/scripts');
+  fs.mkdirSync(outdir, { recursive: true });
+  await build({
+    entryPoints: [src],
+    bundle: true,
+    platform: 'node',
+    format: 'esm',
+    outfile: path.join(outdir, 'team.mjs'),
+  });
+}
+
 async function buildInstaller() {
   const outdir = path.join('dist', 'cli');
   fs.mkdirSync(outdir, { recursive: true });
@@ -60,6 +74,7 @@ async function main() {
     buildMcp('codegraph', 'serve.mjs'),
     buildMcp('lsp', 'mcp-server.mjs'),
     buildMcp('git-bash', 'mcp-server.mjs'),
+    buildTeamScript(),
   ]);
   await buildInstaller();
   console.log('Build complete');

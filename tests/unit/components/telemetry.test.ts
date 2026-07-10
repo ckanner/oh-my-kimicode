@@ -56,10 +56,8 @@ describe('telemetry', () => {
   describe('posthog capture', () => {
     it('no-ops when default placeholder key is used', async () => {
       const fetchMock = vi.fn();
-      const stderrSpy = vi.spyOn(process.stderr, 'write').mockImplementation(() => true);
       await captureDailyActive('abc123', { fetchImpl: fetchMock as unknown as typeof fetch });
       expect(fetchMock).not.toHaveBeenCalled();
-      expect(stderrSpy).toHaveBeenCalledWith(expect.stringContaining('no PostHog API key'));
     });
 
     it('sends capture request with configured key', async () => {

@@ -23,6 +23,7 @@ export function getHookDefs(version: string, pluginCache: string): HookDef[] {
     { event: 'PostToolUse', matcher: '^(Write|Edit)$', command: cli('rules', 'post-tool-use'), timeout: 30 },
     { event: 'PostCompact', matcher: '.*', command: cli('rules', 'post-compact'), timeout: 10 },
     { event: 'PostCompact', matcher: '.*', command: cli('lsp', 'post-compact'), timeout: 10 },
+    { event: 'PostCompact', matcher: '.*', command: cli('git-bash', 'post-compact'), timeout: 10 },
     { event: 'Stop', matcher: '.*', command: cli('start-work-continuation', 'stop'), timeout: 10 },
     { event: 'SubagentStop', matcher: '.*', command: cli('start-work-continuation', 'subagent-stop'), timeout: 10 },
     { event: 'SubagentStop', matcher: '^coder$', command: cli('executor-verify', 'subagent-stop'), timeout: 10 },

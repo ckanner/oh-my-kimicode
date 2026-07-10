@@ -78,6 +78,18 @@ describe('installer integration', () => {
     expect(config).toContain('default_permission_mode = "auto"');
   });
 
+  it('writes migration state and remote MCP placeholders', () => {
+    runKimiInstaller({ kimiCodeHome: tmpDir });
+    const statePath = path.join(tmpDir, '.local', 'share', 'oh-my-kimicode', 'config-migration-state.json');
+    expect(fs.existsSync(statePath)).toBe(true);
+    const state = JSON.parse(fs.readFileSync(statePath, 'utf-8'));
+    expect(state.lastInstalledVersion).toBe('0.1.0');
+
+    const config = fs.readFileSync(path.join(tmpDir, 'config.toml'), 'utf-8');
+    expect(config).toContain('grep_app');
+    expect(config).toContain('context7');
+  });
+
   it('uninstall removes hooks and cache', async () => {
     await runKimiInstaller({ kimiCodeHome: tmpDir, binDir: path.join(tmpDir, 'bin') });
 

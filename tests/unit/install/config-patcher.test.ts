@@ -36,4 +36,15 @@ describe('patchConfigToml', () => {
     expect(r.wrote).toBe(false);
     expect(fs.readFileSync(configPath, 'utf-8')).toBe('default_model = "kimi"\n');
   });
+
+  it('preserves existing comments and formatting', () => {
+    const configPath = path.join(tmpDir, 'config.toml');
+    fs.writeFileSync(configPath, '# My custom config\ndefault_model = "kimi"\n\n# Keep this comment\n');
+    const hooks = [{ event: 'SessionStart', matcher: '.*', command: 'node "x" hook session-start', timeout: 10 }];
+    patchConfigToml(configPath, hooks);
+    const content = fs.readFileSync(configPath, 'utf-8');
+    expect(content).toContain('# My custom config');
+    expect(content).toContain('# Keep this comment');
+    expect(content).toContain('[[hooks]]');
+  });
 });

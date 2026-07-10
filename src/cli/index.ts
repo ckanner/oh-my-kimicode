@@ -1,4 +1,5 @@
 import { runKimiInstaller, runKimiUninstaller, type InstallOptions, type UninstallOptions } from '../install/install-kimi.js';
+import { runDoctor } from '../install/doctor.js';
 
 const args = process.argv.slice(2);
 const command = args[0] ?? 'install';
@@ -36,12 +37,21 @@ async function main(): Promise<void> {
     await runKimiInstaller(parseInstallOptions());
   } else if (command === 'uninstall') {
     await runKimiUninstaller(parseUninstallOptions());
+  } else if (command === 'doctor') {
+    const results = runDoctor({ kimiCodeHome: extractArg(args, '--kimi-code-home'), binDir: extractArg(args, '--bin-dir') });
+    let failed = false;
+    for (const r of results) {
+      console.log(`${r.ok ? '✓' : '✗'} ${r.name}: ${r.message}`);
+      if (!r.ok) failed = true;
+    }
+    process.exit(failed ? 1 : 0);
   } else if (command === 'help' || command === '--help' || command === '-h') {
     console.log(`Usage: oh-my-kimicode <command> [options]
 
 Commands:
   install (default)   Install oh-my-kimicode hooks and plugin cache
   uninstall           Remove oh-my-kimicode hooks, cache, and bin links
+  doctor              Run health checks on the installation
   help                Show this help
 
 Install options:
@@ -54,6 +64,10 @@ Install options:
 
 Uninstall options:
   --preserve-rules    Keep ~/.omo/ rules and config
+  --kimi-code-home    Override Kimi Code home directory
+  --bin-dir           Override bin directory
+
+Doctor options:
   --kimi-code-home    Override Kimi Code home directory
   --bin-dir           Override bin directory
 `);
