@@ -29,7 +29,8 @@ const EXPECTED_SKILLS = [
   'visual-qa',
 ];
 
-function parseFrontmatter(content: string): Record<string, string> | null {
+function parseFrontmatter(rawContent: string): Record<string, string> | null {
+  const content = rawContent.replace(/\r\n/g, '\n');
   if (!content.startsWith('---\n')) return null;
   const end = content.indexOf('\n---\n', 4);
   if (end === -1) return null;
