@@ -78,6 +78,7 @@ The plugin exposes two built-in MCP servers:
   - `codegraph_search`
   - `codegraph_relate`
   - `codegraph_reindex`
+  - `codegraph_status`
   - `codegraph_explore`
   - `codegraph_files`
   - `codegraph_callers`
@@ -90,6 +91,8 @@ The plugin exposes two built-in MCP servers:
   - `lsp_goto_definition`
   - `lsp_find_references`
   - `lsp_symbols`
+  - `lsp_prepare_rename`
+  - `lsp_rename`
 
 Configure your LSP server via environment variables:
 
@@ -129,11 +132,13 @@ If the skill name is unique, `/skill:<skill-name>` also works.
 |---|---|
 | `OMO_KIMI_DISABLE_POSTHOG=1` | Disable anonymous telemetry |
 | `OMO_KIMI_POSTHOG_API_KEY` | Use a real PostHog key instead of the placeholder |
+| `OMO_KIMI_POSTHOG_HOST` | PostHog host (default `https://us.i.posthog.com`) |
 | `OMO_KIMI_LSP_COMMAND` | LSP server executable |
 | `OMO_KIMI_LSP_ARGS` | Space-separated args for the LSP server |
 | `OMO_KIMI_PROJECT` | Override project directory |
 | `KIMI_CODE_HOME` | Override Kimi Code home (default `~/.kimi-code`) |
 | `KIMI_LOCAL_BIN_DIR` | Override bin directory for managed binaries |
+| `OMO_TEAMS_DIR` | Override team-mode state directory (default `~/.omo/teams`) |
 
 ---
 

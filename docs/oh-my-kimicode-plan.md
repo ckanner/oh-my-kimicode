@@ -1,8 +1,8 @@
 # oh-my-kimicode Design & Implementation Plan
 
-> **Status:** Implemented and verified. This document records the approved design. The current code may contain small refinements beyond this plan; where specifics differ, the source code and `AGENTS.md` are authoritative.
+> **Status:** Implemented and verified. All previously identified gaps (teammode subcommands, lsp-daemon split, MCP tool-name alignment, lcx-* repository routing, PostHog release key injection, and create-pr-body script) are closed. The current code may contain small refinements beyond this plan; where specifics differ, the source code and `AGENTS.md` are authoritative.
 >
-> **Verification:** `pnpm run lint && pnpm run typecheck && pnpm test && pnpm run build` passes (22 test files, 219 tests).
+> **Verification:** `pnpm run lint && pnpm run typecheck && pnpm test && pnpm run build` passes (23 test files, 228 tests).
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:subagent-driven-development` (recommended) or `superpowers:executing-plans` to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -104,8 +104,8 @@ The stdout protocol is a single line of JSON, identical to LazyCodex's component
 | `bootstrap` | `SessionStart` | Version-change bootstrap: bin links, agent profile cache, `sg` binary, config re-stamping |
 | `rules` | `SessionStart`, `UserPromptSubmit`, `PostToolUse`, `PostCompact` | Inject static/dynamic project rules (`.omo/rules/`, `AGENTS.md`) |
 | `comment-checker` | `PostToolUse` | After `Write`/`Edit`, check for stale TODO/FIXME comments |
-| `lsp` | `PostToolUse`, `PostCompact` | Run LSP diagnostics on edited files; clear cache on compact. Exposes MCP tools `lsp_status`, `lsp_diagnostics`, `lsp_goto_definition`, `lsp_find_references`, `lsp_symbols` via the persistent `lsp-daemon` binary |
-| `codegraph` | `SessionStart`, `PostToolUse` | Bootstrap CodeGraph; guide when CodeGraph tools fail. Exposes `codegraph_search`, `codegraph_relate`, `codegraph_reindex`, `codegraph_explore`, `codegraph_files`, `codegraph_callers`, `codegraph_callees`, `codegraph_impact` |
+| `lsp` | `PostToolUse`, `PostCompact` | Run LSP diagnostics on edited files; clear cache on compact. Exposes MCP tools `lsp_status`, `lsp_diagnostics`, `lsp_goto_definition`, `lsp_find_references`, `lsp_symbols`, `lsp_prepare_rename`, `lsp_rename` via the persistent `lsp-daemon` binary (plus a stateless `lsp-tools-mcp` fallback) |
+| `codegraph` | `SessionStart`, `PostToolUse` | Bootstrap CodeGraph; guide when CodeGraph tools fail. Exposes `codegraph_search`, `codegraph_relate`, `codegraph_reindex`, `codegraph_status`, `codegraph_explore`, `codegraph_files`, `codegraph_callers`, `codegraph_callees`, `codegraph_impact` |
 | `ultrawork` | `UserPromptSubmit` | Detect `ultrawork`/`ulw` keywords and inject ultrawork prompt |
 | `ulw-loop` | `UserPromptSubmit`, `PreToolUse` | Parse `OMO_ULW_LOOP_STEER:` steering; deny budgeted `CreateGoal` |
 | `telemetry` | `SessionStart` | Daily active telemetry (opt-out) |
@@ -350,7 +350,7 @@ Current suite covers:
 - `tests/integration/install.test.ts` — run installer with `KIMI_CODE_HOME=<temp>`, assert plugin cache exists, hooks written, no duplicate hooks on second run.
 - `tests/integration/hooks.test.ts` — pipe synthetic Kimi hook payloads to component CLIs and assert JSON stdout.
 
-**Latest result:** 22 test files, 219 tests passing.
+**Latest result:** 23 test files, 228 tests passing.
 
 ### 8.3 Manual validation checklist
 

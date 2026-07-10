@@ -55,6 +55,7 @@ Indexed languages: TypeScript, JavaScript, Python, Go, Rust.
 | `codegraph_search` | `query?: string`, `kind?: string`, `file?: string` | `{ results: Symbol[] }` | Structural symbol search |
 | `codegraph_relate` | `symbol: string` | `{ results: Symbol[] }` | Symbols in files related to the given symbol |
 | `codegraph_reindex` | — | `{ symbolCount: number }` | Rebuild the CodeGraph index |
+| `codegraph_status` | — | `{ status, symbolCount }` | CodeGraph index status |
 | `codegraph_explore` | `query: string`, optional `kind`, `file`, `limit` | `{ results: ExploreResult[] }` | Search symbols plus their file neighbors |
 | `codegraph_files` | `query?: string` | `{ files: string[] }` | Files containing matching symbols |
 | `codegraph_callers` | `symbol: string` | `{ callers: CallerInfo[] }` | Files that reference a symbol |
@@ -77,6 +78,8 @@ export OMO_KIMI_LSP_ARGS="--stdio"
 | `lsp_goto_definition` | `file`, `line`, `character` | `{ locations: Location[] }` | Go-to-definition |
 | `lsp_find_references` | `file`, `line`, `character` | `{ locations: Location[] }` | Find references |
 | `lsp_symbols` | `file: string` | `{ symbols: SymbolInformation[] }` | Document symbols |
+| `lsp_prepare_rename` | `file`, `line`, `character` | `{ result }` | Validate a symbol rename |
+| `lsp_rename` | `file`, `line`, `character`, `newName` | `{ result }` | Execute a symbol rename |
 
 A stateless fallback binary `lsp-tools-mcp` is also linked for environments that do not use the daemon.
 
@@ -194,4 +197,4 @@ The full verification command used in CI and development:
 pnpm run lint && pnpm run typecheck && pnpm test && pnpm run build
 ```
 
-Latest result: **22 test files, 219 tests passing**.
+Latest result: **23 test files, 228 tests passing**.
