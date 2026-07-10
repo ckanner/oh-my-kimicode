@@ -140,12 +140,12 @@ bun scripts/verify-lsp.ts <file> --timeout=90000
 
 Otherwise, verify through the oh-my-kimicode LSP component directly:
 
-```bash
-# Check harness status
-lsp-tools-mcp lsp_status
+```typescript
+// Check harness status
+lsp_status()
 
-# Request diagnostics for a file
-lsp-tools-mcp lsp_diagnostics --file <path/to/file.ext>
+// Request diagnostics for a file
+lsp_diagnostics(file=<path/to/file.ext>)
 ```
 
 `OK` = the server started and answered. `FAIL: language server not installed`

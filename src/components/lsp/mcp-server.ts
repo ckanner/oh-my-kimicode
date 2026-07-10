@@ -17,6 +17,8 @@ export function startLspServer() {
       { name: 'lsp_goto_definition', description: 'Go to definition', inputSchema: { type: 'object', properties: { file: { type: 'string' }, line: { type: 'number' }, character: { type: 'number' } }, required: ['file', 'line', 'character'] } },
       { name: 'lsp_find_references', description: 'Find references', inputSchema: { type: 'object', properties: { file: { type: 'string' }, line: { type: 'number' }, character: { type: 'number' } }, required: ['file', 'line', 'character'] } },
       { name: 'lsp_symbols', description: 'List document symbols for a file', inputSchema: { type: 'object', properties: { file: { type: 'string' } }, required: ['file'] } },
+      { name: 'lsp_prepare_rename', description: 'Validate a symbol rename is possible', inputSchema: { type: 'object', properties: { file: { type: 'string' }, line: { type: 'number' }, character: { type: 'number' } }, required: ['file', 'line', 'character'] } },
+      { name: 'lsp_rename', description: 'Execute a symbol rename', inputSchema: { type: 'object', properties: { file: { type: 'string' }, line: { type: 'number' }, character: { type: 'number' }, newName: { type: 'string' } }, required: ['file', 'line', 'character', 'newName'] } },
     ],
   }));
 
@@ -78,6 +80,30 @@ export function startLspServer() {
           client.openDocument(uri, path.extname(file).replace('.', '') || 'text', text);
           const symbols = await client.documentSymbol(uri);
           return { content: [{ type: 'text', text: JSON.stringify({ symbols }) }] };
+        } catch (err) {
+          return { content: [{ type: 'text', text: JSON.stringify({ error: (err as Error).message }) }], isError: true };
+        } finally {
+          client.close();
+        }
+      }
+      case 'lsp_prepare_rename':
+      case 'lsp_rename': {
+        const args = req.params.arguments as { file: string; line: number; character: number; newName?: string };
+        const transport = lspCommand ? createTransport(lspCommand, lspArgs) : undefined;
+        if (!transport) {
+          return { content: [{ type: 'text', text: JSON.stringify({ result: null }) }] };
+        }
+        const client = new LspClient(transport);
+        try {
+          const uri = pathToFileURL(path.resolve(args.file)).href;
+          const text = fs.existsSync(args.file) ? fs.readFileSync(args.file, 'utf-8') : '';
+          await client.initialize(pathToFileURL(process.cwd()).href);
+          client.openDocument(uri, path.extname(args.file).replace('.', '') || 'text', text);
+          const pos = { line: args.line, character: args.character };
+          const result = req.params.name === 'lsp_prepare_rename'
+            ? await client.prepareRename(uri, pos)
+            : await client.rename(uri, pos, args.newName ?? '');
+          return { content: [{ type: 'text', text: JSON.stringify({ result }) }] };
         } catch (err) {
           return { content: [{ type: 'text', text: JSON.stringify({ error: (err as Error).message }) }], isError: true };
         } finally {
