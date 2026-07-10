@@ -1,4 +1,5 @@
 import type { HookPayload, HookOutput } from '../../shared/types.js';
+import { runBootstrapProvisioning } from './provision.js';
 
 export interface BootstrapContext {
   version: string;
@@ -16,11 +17,28 @@ export function getBootstrapContext(): BootstrapContext {
 
 export function runSessionStart(_payload: HookPayload): HookOutput {
   const ctx = getBootstrapContext();
-  // Idempotent provisioning is performed by the installer; this hook just confirms.
+  let details = `(OmO ${ctx.version}) Bootstrap provisioning complete`;
+
+  if (ctx.cacheDir && ctx.binDir) {
+    try {
+      const kimiCodeHome = process.env.KIMI_CODE_HOME ?? '';
+      const result = runBootstrapProvisioning(ctx.cacheDir, ctx.binDir, kimiCodeHome || process.cwd());
+      const parts = [
+        `bins=${result.binLinksOk ? 'ok' : 'failed'}`,
+        `agents=${result.agentCacheDir}`,
+        `sg=${result.sgAvailable ? (result.sgPath ?? 'available') : 'missing'}`,
+      ];
+      if (result.warnings.length) parts.push(`warnings=${result.warnings.join('; ')}`);
+      details += `\n${parts.join('; ')}`;
+    } catch (e) {
+      details += `\nBootstrap provisioning error: ${e instanceof Error ? e.message : String(e)}`;
+    }
+  }
+
   return {
     hookSpecificOutput: {
       hookEventName: 'SessionStart',
-      additionalContext: `(OmO ${ctx.version}) Bootstrap provisioning complete`,
+      additionalContext: details,
     },
   };
 }
