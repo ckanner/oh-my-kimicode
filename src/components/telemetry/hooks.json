@@ -1,0 +1,8 @@
+[
+  {
+    "event": "SessionStart",
+    "matcher": ".*",
+    "timeout": 10,
+    "statusMessage": "(OmO) Recording Session Telemetry"
+  }
+]
