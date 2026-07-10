@@ -22,11 +22,15 @@ async function buildComponent(name) {
   });
 }
 
-async function buildMcp(name, outName) {
-  const tsSrc = path.join(SRC, name, 'mcp-server.ts');
-  const mjsSrc = path.join(SRC, name, 'serve.mjs');
-  const src = fs.existsSync(tsSrc) ? tsSrc : fs.existsSync(mjsSrc) ? mjsSrc : null;
-  if (!src) return;
+async function buildMcp(name, outName, entry = null) {
+  const src = entry
+    ? path.join(SRC, name, entry)
+    : fs.existsSync(path.join(SRC, name, 'mcp-server.ts'))
+      ? path.join(SRC, name, 'mcp-server.ts')
+      : fs.existsSync(path.join(SRC, name, 'serve.mjs'))
+        ? path.join(SRC, name, 'serve.mjs')
+        : null;
+  if (!src || !fs.existsSync(src)) return;
   const outdir = path.join('plugin/components', name, 'dist');
   fs.mkdirSync(outdir, { recursive: true });
   await build({
@@ -75,6 +79,7 @@ async function main() {
   await Promise.all([
     buildMcp('codegraph', 'serve.mjs'),
     buildMcp('lsp', 'mcp-server.mjs'),
+    buildMcp('lsp', 'daemon.mjs', 'daemon.ts'),
     buildMcp('git-bash', 'mcp-server.mjs'),
     buildTeamScript(),
   ]);

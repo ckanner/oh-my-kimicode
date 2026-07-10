@@ -5,11 +5,11 @@ import { writeHookOutput } from '../../shared/serialize.js';
 async function main() {
   if (shouldEmitDailyActive()) {
     const id = getDistinctId();
-    try {
-      await captureDailyActive(id);
+    const result = await captureDailyActive(id);
+    if (result.ok) {
       process.stderr.write(`telemetry: emitted daily_active for ${id}\n`);
-    } catch (e) {
-      process.stderr.write(`telemetry: capture failed: ${e instanceof Error ? e.message : String(e)}\n`);
+    } else {
+      process.stderr.write(`telemetry: capture skipped: ${result.reason}\n`);
     }
   }
   writeHookOutput({ hookSpecificOutput: { hookEventName: 'SessionStart', additionalContext: '' } });

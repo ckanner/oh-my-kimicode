@@ -12,7 +12,7 @@ export function getManagedBinTargets(cache: string): BinTarget[] {
   return [
     { name: 'git-bash-mcp', target: path.join(cache, 'components', 'git-bash', 'dist', 'mcp-server.mjs') },
     { name: 'lsp-tools-mcp', target: path.join(cache, 'components', 'lsp', 'dist', 'mcp-server.mjs') },
-    { name: 'lsp-daemon', target: path.join(cache, 'components', 'lsp', 'dist', 'mcp-server.mjs') },
+    { name: 'lsp-daemon', target: path.join(cache, 'components', 'lsp', 'dist', 'daemon.mjs') },
     { name: 'codegraph-server', target: path.join(cache, 'components', 'codegraph', 'dist', 'serve.mjs') },
   ];
 }

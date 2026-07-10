@@ -1,6 +1,6 @@
 ---
 name: lcx-contribute-bug-fix
-description: "Contribute a verified bug fix for Oh My KimiCode, oh-my-kimicode, bundled Kimi skills, hooks, MCP wiring, installer, marketplace sync, docs, packaging, or upstream Kimi Code CLI bugs. Opens a fork PR only for MoonshotAI/kimi-code; Oh My KimiCode-owned defects become a verified-fix issue on code-yeongyu/oh-my-kimicode (never a PR — that repo is a generated distribution mirror). Use when the user asks to fix a bug, contribute a bug fix, contribute to fix bug, open a PR for a bug, or debug and PR an Oh My KimiCode / Kimi Code CLI defect."
+description: "Contribute a verified bug fix for Oh My KimiCode, oh-my-kimicode, bundled Kimi skills, hooks, MCP wiring, installer, marketplace sync, docs, packaging, or upstream Kimi Code CLI bugs. Opens a fork PR only for MoonshotAI/kimi-code; Oh My KimiCode-owned defects become a verified-fix issue on ckanner/oh-my-kimicode (never a PR — that repo is a generated distribution mirror). Use when the user asks to fix a bug, contribute a bug fix, contribute to fix bug, open a PR for a bug, or debug and PR an Oh My KimiCode / Kimi Code CLI defect."
 type: prompt
 whenToUse: When the user asks to fix a bug, contribute a bug fix, open a PR for a bug, or debug and PR an Oh My KimiCode or Kimi Code CLI defect.
 ---
@@ -77,7 +77,7 @@ Use this skill to debug a concrete Oh My KimiCode or Kimi Code CLI defect, imple
 
 Route ownership the same way as `$lcx-report-bug`, but the deliverable differs by target:
 
-- `code-yeongyu/oh-my-kimicode` for Oh My KimiCode, oh-my-kimicode, bundled skills, hooks, MCP wiring, installer behavior, marketplace sync, docs, or packaging. Deliverable: a verified-fix issue with the patch embedded. NEVER open a PR or push a branch against this repo — its contents are regenerated from the source tree on every release, so PRs there cannot be merged and will be closed.
+- `ckanner/oh-my-kimicode` for Oh My KimiCode, oh-my-kimicode, bundled skills, hooks, MCP wiring, installer behavior, marketplace sync, docs, or packaging. Deliverable: a verified-fix issue with the patch embedded. NEVER open a PR or push a branch against this repo — its contents are regenerated from the source tree on every release, so PRs there cannot be merged and will be closed.
 - `MoonshotAI/kimi-code` for upstream Kimi Code CLI bugs that reproduce without Oh My KimiCode or come from Kimi Code core behavior. Deliverable: a PR from a fork.
 
 ## Required Outcome
@@ -92,7 +92,7 @@ For `MoonshotAI/kimi-code`, create a fork PR that includes:
 - the required Oh My KimiCode footer tag `Tag: oh-my-kimicode-generated`
 - cleanup of temporary worktrees and clones
 
-For `code-yeongyu/oh-my-kimicode`, create an issue (never a PR) that includes:
+For `ckanner/oh-my-kimicode`, create an issue (never a PR) that includes:
 
 - reproduction logs from before the fix
 - the root cause with source evidence
@@ -149,14 +149,14 @@ sync_latest_source() {
   git -C "$DEST" fetch --depth=1 origin "$DEFAULT_BRANCH"
   git -C "$DEST" checkout -B "$DEFAULT_BRANCH" FETCH_HEAD
 }
-sync_latest_source code-yeongyu/oh-my-kimicode "$OH_MY_KIMICODE_SOURCE_ROOT/oh-my-kimicode-source"
+sync_latest_source ckanner/oh-my-kimicode "$OH_MY_KIMICODE_SOURCE_ROOT/oh-my-kimicode-source"
 sync_latest_source MoonshotAI/kimi-code "$OH_MY_KIMICODE_SOURCE_ROOT/kimi-code-source"
 ```
 
 4. Create a fresh temporary clone and branch under `${TMPDIR:-/tmp}`. Do not modify the user's current repository for the target fix unless the current repository is itself the requested target and the user explicitly asked for local edits. Use `Agent(subagent_type="coder")` to carry out the implementation inside the worktree.
 
 ```bash
-TARGET_REPO="code-yeongyu/oh-my-kimicode" # or MoonshotAI/kimi-code
+TARGET_REPO="ckanner/oh-my-kimicode" # or MoonshotAI/kimi-code
 WORK_ROOT="$(mktemp -d "${TMPDIR:-/tmp}/oh-my-kimicode-fix-XXXXXX")"
 gh repo clone "$TARGET_REPO" "$WORK_ROOT/repo" -- --depth=1
 cd "$WORK_ROOT/repo"
@@ -184,7 +184,7 @@ git log --oneline "origin/$BASE_BRANCH..HEAD"
 
 10. Build the delivery body for the target:
    - `MoonshotAI/kimi-code`: generate the PR body with `scripts/create-pr-body.mjs` if it is present in the skill directory; otherwise produce the PR body manually from the PR Body Template below.
-   - `code-yeongyu/oh-my-kimicode`: export the verified patch and write the issue body from the Verified-Fix Issue Template below:
+   - `ckanner/oh-my-kimicode`: export the verified patch and write the issue body from the Verified-Fix Issue Template below:
 
 ```bash
 PATCH_FILE="${TMPDIR:-/tmp}/oh-my-kimicode-fix-<short-slug>.patch"
@@ -203,11 +203,11 @@ fi
 ```
 
 12. Deliver the fix.
-   - `code-yeongyu/oh-my-kimicode`: create the verified-fix issue. Never push a branch to this repo and never run `gh pr create` against it:
+   - `ckanner/oh-my-kimicode`: create the verified-fix issue. Never push a branch to this repo and never run `gh pr create` against it:
 
 ```bash
 ISSUE_BODY="${TMPDIR:-/tmp}/oh-my-kimicode-fix-<short-slug>-issue.md"
-gh issue create --repo code-yeongyu/oh-my-kimicode --title "<short fix title>" "${LABEL_ARGS[@]}" --body-file "$ISSUE_BODY"
+gh issue create --repo ckanner/oh-my-kimicode --title "<short fix title>" "${LABEL_ARGS[@]}" --body-file "$ISSUE_BODY"
 ```
 
    - `MoonshotAI/kimi-code`: fork, push the branch to the fork, and create the PR:
@@ -230,7 +230,7 @@ rmdir "$WORK_ROOT"
 
 Return the PR or issue URL, the reproduction command, the verification command, and the cleanup receipt.
 
-## Verified-Fix Issue Template (code-yeongyu/oh-my-kimicode)
+## Verified-Fix Issue Template (ckanner/oh-my-kimicode)
 
 Write the issue body in English. Embed the patch verbatim so a maintainer can apply it to the source tree:
 
@@ -257,7 +257,7 @@ Write the issue body in English. Embed the patch verbatim so a maintainer can ap
 - [Manual QA command and result]
 
 ---
-This fix was debugged, implemented, and verified with [Oh My KimiCode](https://github.com/code-yeongyu/oh-my-kimicode).
+This fix was debugged, implemented, and verified with [Oh My KimiCode](https://github.com/ckanner/oh-my-kimicode).
 Tag: oh-my-kimicode-generated
 ````
 
@@ -318,7 +318,7 @@ The generated body must follow this structure:
 - [Manual QA command and result]
 
 ---
-This PR was debugged, implemented, and created with [Oh My KimiCode](https://github.com/code-yeongyu/oh-my-kimicode).
+This PR was debugged, implemented, and created with [Oh My KimiCode](https://github.com/ckanner/oh-my-kimicode).
 Tag: oh-my-kimicode-generated
 ```
 
@@ -352,7 +352,7 @@ Stop and ask one narrow question only when:
 
 Do not open:
 
-- a PR or pushed branch targeting `code-yeongyu/oh-my-kimicode` — deliver the verified-fix issue instead, always
+- a PR or pushed branch targeting `ckanner/oh-my-kimicode` — deliver the verified-fix issue instead, always
 - a PR or verified-fix issue without a failing-before and passing-after test
 - a PR or verified-fix issue without a real-surface QA command
 - a PR or issue without the `Tag: oh-my-kimicode-generated` footer

@@ -4,7 +4,7 @@ import path from 'node:path';
 import os from 'node:os';
 import { parseFile, inferLanguageId } from '../../../src/components/codegraph/symbols.js';
 import { buildIndex, loadIndex, saveIndex, indexPath, listProjectFiles } from '../../../src/components/codegraph/indexer.js';
-import { search, relate } from '../../../src/components/codegraph/search.js';
+import { search, relate, explore, files, callers, callees, impact } from '../../../src/components/codegraph/search.js';
 import { runBootstrap } from '../../../src/components/codegraph/bootstrap.js';
 
 describe('codegraph', () => {
@@ -143,6 +143,59 @@ impl Point {}
     it('returns empty relate when symbol not found', () => {
       const index = { version: '1', symbols: [], byFile: {} };
       expect(relate(index, 'missing')).toEqual([]);
+    });
+
+    it('explores symbols with neighbors', () => {
+      const index = {
+        version: '1',
+        symbols: [
+          { name: 'alpha', kind: 'function' as const, file: 'a.ts', line: 1, column: 1 },
+          { name: 'beta', kind: 'function' as const, file: 'a.ts', line: 2, column: 1 },
+          { name: 'gamma', kind: 'function' as const, file: 'b.ts', line: 1, column: 1 },
+        ],
+        byFile: {},
+      };
+      const results = explore(index, { query: 'alpha' });
+      expect(results).toHaveLength(1);
+      expect(results[0].symbol.name).toBe('alpha');
+      expect(results[0].neighbors.map((n) => n.name)).toContain('beta');
+    });
+
+    it('lists files for a query', () => {
+      const index = {
+        version: '1',
+        symbols: [
+          { name: 'alpha', kind: 'function' as const, file: 'a.ts', line: 1, column: 1 },
+          { name: 'beta', kind: 'function' as const, file: 'b.ts', line: 1, column: 1 },
+        ],
+        byFile: {},
+      };
+      expect(files(index, 'alpha')).toEqual(['a.ts']);
+      expect(files(index)).toEqual(['a.ts', 'b.ts']);
+    });
+
+    it('finds callers by file reference', () => {
+      fs.writeFileSync(path.join(tmpDir, 'lib.ts'), 'export function helper() {}');
+      fs.writeFileSync(path.join(tmpDir, 'main.ts'), 'import { helper } from "./lib"; helper();');
+      const index = buildIndex(tmpDir);
+      const result = callers(index, tmpDir, 'helper');
+      expect(result.some((c) => c.file === 'main.ts')).toBe(true);
+    });
+
+    it('finds callees inside a symbol file', () => {
+      fs.writeFileSync(path.join(tmpDir, 'lib.ts'), 'export function a() {}\nexport function b() { a(); }');
+      const index = buildIndex(tmpDir);
+      const result = callees(index, tmpDir, 'b');
+      expect(result.map((s) => s.name)).toContain('a');
+    });
+
+    it('computes impact files', () => {
+      fs.writeFileSync(path.join(tmpDir, 'lib.ts'), 'export function helper() {}');
+      fs.writeFileSync(path.join(tmpDir, 'main.ts'), 'import { helper } from "./lib"; helper();');
+      const index = buildIndex(tmpDir);
+      const result = impact(index, tmpDir, 'helper');
+      expect(result).toContain('lib.ts');
+      expect(result).toContain('main.ts');
     });
   });
 

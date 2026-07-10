@@ -123,7 +123,7 @@ sync_latest_source() {
   git -C "$DEST" fetch --depth=1 origin "$DEFAULT_BRANCH"
   git -C "$DEST" checkout -B "$DEFAULT_BRANCH" FETCH_HEAD
 }
-sync_latest_source code-yeongyu/oh-my-kimicode "$OH_MY_KIMICODE_SOURCE_ROOT/oh-my-kimicode-source"
+sync_latest_source ckanner/oh-my-kimicode "$OH_MY_KIMICODE_SOURCE_ROOT/oh-my-kimicode-source"
 sync_latest_source MoonshotAI/kimi-code "$OH_MY_KIMICODE_SOURCE_ROOT/kimi-code-source"
 ```
 
@@ -140,7 +140,7 @@ sync_latest_source MoonshotAI/kimi-code "$OH_MY_KIMICODE_SOURCE_ROOT/kimi-code-s
    - Stale project-local leftovers the installer now removes (e.g. `.kimi-code/hooks.json`, `.kimi-code/skills` in the project) are flagged, not deleted.
 4. Probe the real surface. Do not invoke `oh-my-kimicode doctor`; this skill is already running inside that doctor workflow, so calling it would recurse. Instead run non-recursive probes directly: `kimi --version`, `command -v kimi`, the bin-link checks above, config/plugin payload inspections, and a trivial non-interactive Kimi runtime/config probe such as `kimi doctor` (or `kimi --prompt 'hello' --yolo --auto` if `doctor` is unavailable). Use the configured Kimi default model for the runtime probe unless the user explicitly passed a model override to the doctor surface; never force a guessed/rejected model. Capture stderr verbatim; a clean exit with warnings is WARN, not PASS.
 5. Compare for drift. Where installed manifest-declared bundled files differ from the same files at the installed version, or the latest source removed or renamed something the local config still references, record it with both paths. Do not report expected materialization differences, such as absolute `.mcp.json` runtime paths, as drift when their targets exist and are non-empty.
-6. Check whether each FAIL is already known: `gh issue list --repo code-yeongyu/oh-my-kimicode --search "<short symptom>" --state open` (and `MoonshotAI/kimi-code` when the failure points upstream). Link matches in the report instead of re-diagnosing from scratch.
+6. Check whether each FAIL is already known: `gh issue list --repo ckanner/oh-my-kimicode --search "<short symptom>" --state open` (and `MoonshotAI/kimi-code` when the failure points upstream). Link matches in the report instead of re-diagnosing from scratch.
 7. If a probe fails and the cause is not explained by config or source comparison, invoke the `debugging` skill for the investigation. In Kimi Code CLI this is an `Agent` call with `subagent_type="explore"` or `/skill:oh-my-kimicode:debugging` when skill invocation is supported.
 8. Emit the report.
 

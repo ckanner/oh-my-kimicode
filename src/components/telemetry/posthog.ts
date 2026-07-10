@@ -17,17 +17,27 @@ export interface PostHogCaptureBody {
   properties: Record<string, unknown>;
 }
 
+export type CaptureResult =
+  | { ok: true }
+  | { ok: false; reason: string };
+
 export async function captureEvent(
   distinctId: string,
   event: string,
   options: CaptureOptions = {},
-): Promise<void> {
+): Promise<CaptureResult> {
+  if (
+    process.env.OMO_KIMI_DISABLE_POSTHOG === '1' ||
+    process.env.OMO_DISABLE_POSTHOG === '1'
+  ) {
+    return { ok: false, reason: 'telemetry disabled by OMO_KIMI_DISABLE_POSTHOG' };
+  }
+
   const apiKey = options.apiKey ?? process.env.OMO_KIMI_POSTHOG_API_KEY ?? DEFAULT_POSTHOG_API_KEY;
   const host = (options.host ?? process.env.OMO_KIMI_POSTHOG_HOST ?? DEFAULT_POSTHOG_HOST).replace(/\/$/, '');
 
   if (apiKey === DEFAULT_POSTHOG_API_KEY) {
-    // No real key configured: silently no-op. Telemetry is opt-out and disabled by default.
-    return;
+    return { ok: false, reason: 'PostHog API key is the placeholder; telemetry skipped' };
   }
 
   const body: PostHogCaptureBody = {
@@ -42,26 +52,31 @@ export async function captureEvent(
 
   const fetchImpl = options.fetchImpl ?? globalThis.fetch;
   if (!fetchImpl) {
-    throw new Error('fetch is not available');
+    return { ok: false, reason: 'fetch is not available' };
   }
 
-  const response = await fetchImpl(`${host}/capture/`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-    body: JSON.stringify(body),
-  });
+  try {
+    const response = await fetchImpl(`${host}/capture/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
 
-  if (!response.ok) {
-    throw new Error(`PostHog capture failed: ${response.status} ${response.statusText}`);
+    if (!response.ok) {
+      return { ok: false, reason: `PostHog capture failed: ${response.status} ${response.statusText}` };
+    }
+    return { ok: true };
+  } catch (err) {
+    return { ok: false, reason: `PostHog capture error: ${(err as Error).message}` };
   }
 }
 
 export async function captureDailyActive(
   distinctId: string,
   options: CaptureOptions = {},
-): Promise<void> {
+): Promise<CaptureResult> {
   return captureEvent(distinctId, 'daily_active', options);
 }

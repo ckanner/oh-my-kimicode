@@ -75,7 +75,7 @@ Never ask the user "should I continue", "proceed to the next task", or any appro
 
 You are an oh-my-kimicode bug router and reporter. Produce one useful GitHub issue or PR in English, backed by runtime evidence and source evidence rather than guesses. Route it to the repository that owns the defect:
 
-- `code-yeongyu/oh-my-kimicode` for oh-my-kimicode, Oh My KimiCode, OmO, marketplace, bundled skill, hook, MCP, installer, packaging, docs, or plugin behavior bugs. The artifact for this repo is always an issue — never a PR, because its contents are regenerated from the source tree on every release, so PRs there cannot be merged.
+- `ckanner/oh-my-kimicode` for oh-my-kimicode, Oh My KimiCode, OmO, marketplace, bundled skill, hook, MCP, installer, packaging, docs, or plugin behavior bugs. The artifact for this repo is always an issue — never a PR, because its contents are regenerated from the source tree on every release, so PRs there cannot be merged.
 - `MoonshotAI/kimi-code` for upstream Kimi Code CLI bugs that reproduce without oh-my-kimicode or are caused by Kimi core behavior. This is the only repo where this skill may create a PR.
 
 Use concise, evidence-bound style: outcome first. Keep the workflow moving, but do not file an issue until the root cause and reproduction path are concrete enough for a maintainer to act.
@@ -143,7 +143,7 @@ sync_latest_source() {
   git -C "$DEST" fetch --depth=1 origin "$DEFAULT_BRANCH"
   git -C "$DEST" checkout -B "$DEFAULT_BRANCH" FETCH_HEAD
 }
-sync_latest_source code-yeongyu/oh-my-kimicode "$OMO_SOURCE_ROOT/oh-my-kimicode-source"
+sync_latest_source ckanner/oh-my-kimicode "$OMO_SOURCE_ROOT/oh-my-kimicode-source"
 sync_latest_source MoonshotAI/kimi-code "$OMO_SOURCE_ROOT/kimi-code-source"
 ```
 
@@ -154,13 +154,13 @@ sync_latest_source MoonshotAI/kimi-code "$OMO_SOURCE_ROOT/kimi-code-source"
    - identify the minimal fix path or maintainer action
 5. Compare runtime evidence with both `$OMO_SOURCE_ROOT/oh-my-kimicode-source` and `$OMO_SOURCE_ROOT/kimi-code-source` before choosing the target repo. Cite exact files, commands, logs, or source paths that support the routing decision.
 6. Choose the target repo:
-   - Use `code-yeongyu/oh-my-kimicode` when the bug is in oh-my-kimicode integration, distribution, bundled plugin code, skills, hooks, MCP wiring, installer behavior, aliases, marketplace sync, docs, or any behavior that disappears in clean upstream Kimi Code.
+   - Use `ckanner/oh-my-kimicode` when the bug is in oh-my-kimicode integration, distribution, bundled plugin code, skills, hooks, MCP wiring, installer behavior, aliases, marketplace sync, docs, or any behavior that disappears in clean upstream Kimi Code.
    - Use `MoonshotAI/kimi-code` when the bug reproduces in clean upstream Kimi Code without oh-my-kimicode, or the failing behavior comes from Kimi Code CLI core, plugin API contracts, sandboxing, approvals, config loading, or built-in tool behavior.
    - If ownership remains ambiguous after evidence gathering, do not guess. Prepare the issue body with the uncertainty and ask one narrow routing question.
 7. Search for an existing issue in the selected repo before creating a new one. Search the other repo too when the ownership boundary is close:
 
 ```bash
-TARGET_REPO="code-yeongyu/oh-my-kimicode" # or MoonshotAI/kimi-code
+TARGET_REPO="ckanner/oh-my-kimicode" # or MoonshotAI/kimi-code
 gh issue list --repo "$TARGET_REPO" --search "<short error or symptom>" --state open
 ```
 
@@ -178,7 +178,7 @@ fi
 
 If the selected repo is `MoonshotAI/kimi-code` and label management is not available, still include the footer tag in the body and continue without claiming label creation succeeded.
 10. If no matching issue exists, create the issue with `gh` and apply the `oh-my-kimicode-generated` label.
-11. Create a PR only when the target repo is `MoonshotAI/kimi-code` AND the user asked for a PR, the fix is already implemented on a branch, or the smallest correct fix can be safely made there. Never create a PR or push a branch against `code-yeongyu/oh-my-kimicode` — always file an issue there, embedding the verified patch in the Proposed Fix section when one exists. Apply the `oh-my-kimicode-generated` label to every PR created by this skill. Otherwise create an issue with fix guidance.
+11. Create a PR only when the target repo is `MoonshotAI/kimi-code` AND the user asked for a PR, the fix is already implemented on a branch, or the smallest correct fix can be safely made there. Never create a PR or push a branch against `ckanner/oh-my-kimicode` — always file an issue there, embedding the verified patch in the Proposed Fix section when one exists. Apply the `oh-my-kimicode-generated` label to every PR created by this skill. Otherwise create an issue with fix guidance.
 
 ## Required Label And Footer
 
@@ -293,7 +293,7 @@ if [ "${#LABEL_ARGS[@]}" -gt 0 ]; then
 fi
 ```
 
-For a PR from a branch pushed to a fork — `MoonshotAI/kimi-code` only, never `code-yeongyu/oh-my-kimicode`:
+For a PR from a branch pushed to a fork — `MoonshotAI/kimi-code` only, never `ckanner/oh-my-kimicode`:
 
 ```bash
 PR_BODY="${TMPDIR:-/tmp}/lcx-report-bug-pr-$(date +%Y%m%d-%H%M%S).md"
@@ -306,7 +306,7 @@ After creating or commenting, return the issue or PR URL and a short summary of 
 
 If `gh` is unavailable, unauthenticated, or blocked, use the `kimi-webbridge` skill against the real GitHub page:
 
-1. Open the new issue page for the selected repo: `https://github.com/code-yeongyu/oh-my-kimicode/issues/new` or `https://github.com/MoonshotAI/kimi-code/issues/new`.
+1. Open the new issue page for the selected repo: `https://github.com/ckanner/oh-my-kimicode/issues/new` or `https://github.com/MoonshotAI/kimi-code/issues/new`.
 2. Fill the title and body from the template.
 3. Submit the issue only after visually confirming the repo, title, and body.
 4. Capture the resulting issue URL.
@@ -317,7 +317,7 @@ If `kimi-webbridge` is unavailable, use `FetchURL` to read and search existing i
 
 If neither `gh` nor `kimi-webbridge` is available, ask the user to use an authenticated desktop browser:
 
-1. Navigate to the new issue page for the selected repo: `https://github.com/code-yeongyu/oh-my-kimicode/issues/new` or `https://github.com/MoonshotAI/kimi-code/issues/new`.
+1. Navigate to the new issue page for the selected repo: `https://github.com/ckanner/oh-my-kimicode/issues/new` or `https://github.com/MoonshotAI/kimi-code/issues/new`.
 2. Paste the title and body you prepared.
 3. Verify the target repository and final text before submission.
 4. Submit and capture the issue URL.
@@ -328,7 +328,7 @@ Stop and ask one narrow question only when the missing fact changes the issue ma
 
 Do not file:
 
-- a PR or pushed branch targeting `code-yeongyu/oh-my-kimicode` — file the issue instead, always
+- a PR or pushed branch targeting `ckanner/oh-my-kimicode` — file the issue instead, always
 - a vague issue without reproduction steps
 - an issue that claims a root cause not supported by runtime evidence
 - a duplicate when commenting on an existing issue is enough

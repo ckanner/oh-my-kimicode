@@ -97,7 +97,10 @@ async function recordInstallTelemetry(dryRun = false): Promise<void> {
   if (process.env.OMO_KIMI_DISABLE_POSTHOG === '1') return;
   try {
     const { getDistinctId } = await import('../shared/telemetry.js');
-    await captureEvent(getDistinctId(), 'install');
+    const result = await captureEvent(getDistinctId(), 'install');
+    if (!result.ok) {
+      process.stderr.write(`telemetry: install capture skipped: ${result.reason}\n`);
+    }
   } catch {
     // Telemetry is best-effort.
   }

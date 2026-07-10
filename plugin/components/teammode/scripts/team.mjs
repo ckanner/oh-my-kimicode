@@ -4,49 +4,334 @@
 import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
+import { execSync } from "node:child_process";
 function getTeamsDir() {
   return process.env.OMO_TEAMS_DIR ?? path.join(os.homedir(), ".omo", "teams");
 }
 function teamDir(sessionId) {
   return path.join(getTeamsDir(), sessionId);
 }
-function readTeam(sessionId) {
+function sleepSync(ms) {
+  const buffer = new SharedArrayBuffer(4);
+  const view = new Int32Array(buffer);
+  Atomics.wait(view, 0, 0, ms);
+}
+function withLock(sessionId, fn) {
+  const lockDir = path.join(teamDir(sessionId), ".team.lock");
+  const ownerPath = path.join(lockDir, "owner.json");
+  fs.mkdirSync(lockDir, { recursive: true });
+  const owner = { pid: process.pid, command: process.argv.slice(2).join(" ") };
+  const maxRetries = 100;
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      fs.writeFileSync(ownerPath, JSON.stringify(owner), { flag: "wx" });
+      try {
+        return fn();
+      } finally {
+        fs.rmSync(ownerPath, { force: true });
+      }
+    } catch (err) {
+      const code = err.code;
+      if (code !== "EEXIST") throw err;
+      sleepSync(Math.min(50 * (i + 1), 500));
+    }
+  }
+  const existing = fs.existsSync(ownerPath) ? fs.readFileSync(ownerPath, "utf-8") : "unknown";
+  throw new Error(`Failed to acquire lock for team ${sessionId}. Owner: ${existing}`);
+}
+function readTeamUnlocked(sessionId) {
   const teamPath = path.join(teamDir(sessionId), "team.json");
   if (!fs.existsSync(teamPath)) return null;
   return JSON.parse(fs.readFileSync(teamPath, "utf-8"));
 }
-function writeTeam(sessionId, team) {
+function writeTeamUnlocked(sessionId, team) {
   const dir = teamDir(sessionId);
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, "team.json"), JSON.stringify(team, null, 2));
 }
-function init(sessionId) {
+function createDefaultTeam(sessionId) {
+  return {
+    id: sessionId,
+    name: sessionId,
+    sessionName: sessionId,
+    shape: "swarm",
+    session: "",
+    baseBranch: "main",
+    worktreeMode: false,
+    createdAt: (/* @__PURE__ */ new Date()).toISOString(),
+    archived: false,
+    archiveNote: "",
+    members: []
+  };
+}
+function writeGuide(sessionId, team) {
   const dir = teamDir(sessionId);
-  fs.mkdirSync(dir, { recursive: true });
-  fs.mkdirSync(path.join(dir, "artifacts"), { recursive: true });
-  writeTeam(sessionId, { members: [], createdAt: (/* @__PURE__ */ new Date()).toISOString() });
-  fs.writeFileSync(path.join(dir, "guide.md"), "# Team Guide\n", "utf-8");
-  console.log(`Team initialized at ${dir}`);
+  const lines = [
+    `# Team Guide: ${team.name}`,
+    "",
+    `- Shape: ${team.shape}`,
+    `- Base branch: ${team.baseBranch}`,
+    `- Worktree mode: ${team.worktreeMode ? "yes" : "no"}`,
+    `- Session: ${team.sessionName}`,
+    `- Archived: ${team.archived ? "yes" : "no"}`,
+    team.archiveNote ? `- Archive note: ${team.archiveNote}` : "",
+    "",
+    "## Members",
+    "",
+    "| ID | Name | Focus | Lens | Deliverable | Status | Worktree |",
+    "|---|---|---|---|---|---|---|",
+    ...team.members.map(
+      (m) => `| ${m.id} | ${m.name} | ${m.focus} | ${m.lens} | ${m.deliverable} | ${m.status} | ${m.worktreePath || "-"} |`
+    ),
+    "",
+    "## Hard rules",
+    "",
+    "- Read `guide.md` and `team.json` before starting work.",
+    "- Stay strictly within your assigned focus and lens.",
+    "- Verify your worktree path exists before editing files.",
+    "- Report progress frequently using `WORKING:`, `BLOCKED:`, or `DONE:` markers.",
+    "- Place shared artifacts in the `artifacts/` directory.",
+    "- Do not edit files outside your assigned scope."
+  ];
+  fs.writeFileSync(path.join(dir, "guide.md"), lines.filter(Boolean).join("\n"), "utf-8");
+}
+function withTeamRead(sessionId, fn) {
+  return withLock(sessionId, () => fn(readTeamUnlocked(sessionId)));
+}
+function withTeamWrite(sessionId, fn) {
+  return withLock(sessionId, () => {
+    const team = readTeamUnlocked(sessionId);
+    if (!team) throw new Error(`Team ${sessionId} not found`);
+    const result = fn(team);
+    writeTeamUnlocked(sessionId, team);
+    writeGuide(sessionId, team);
+    return result;
+  });
+}
+function withTeamWriteOrCreate(sessionId, fn) {
+  return withLock(sessionId, () => {
+    const team = readTeamUnlocked(sessionId) ?? createDefaultTeam(sessionId);
+    const result = fn(team);
+    writeTeamUnlocked(sessionId, team);
+    writeGuide(sessionId, team);
+    return result;
+  });
+}
+function getRepoRoot() {
+  return execSync("git rev-parse --show-toplevel").toString().trim();
+}
+function parseArgs(argv) {
+  const args = {};
+  for (let i = 0; i < argv.length; i++) {
+    const arg = argv[i];
+    if (arg.startsWith("--")) {
+      const key = arg.slice(2);
+      if (i + 1 < argv.length && !argv[i + 1].startsWith("--")) {
+        args[key] = argv[i + 1];
+        i++;
+      } else {
+        args[key] = true;
+      }
+    }
+  }
+  return args;
+}
+function initTeam(options) {
+  const sessionName = options.sessionName ?? options.name;
+  if (!sessionName) throw new Error("--session-name or --name is required");
+  withLock(sessionName, () => {
+    const dir = teamDir(sessionName);
+    fs.mkdirSync(dir, { recursive: true });
+    fs.mkdirSync(path.join(dir, "artifacts"), { recursive: true });
+    const existing = readTeamUnlocked(sessionName);
+    if (existing) {
+      console.log(`Team already exists at ${dir}`);
+      return;
+    }
+    const team = {
+      id: options.name ?? sessionName,
+      name: options.name ?? sessionName,
+      sessionName,
+      shape: options.shape ?? "swarm",
+      session: options.session ?? "",
+      baseBranch: options.baseBranch ?? "main",
+      worktreeMode: options.worktree ?? false,
+      createdAt: (/* @__PURE__ */ new Date()).toISOString(),
+      archived: false,
+      archiveNote: "",
+      members: []
+    };
+    writeTeamUnlocked(sessionName, team);
+    writeGuide(sessionName, team);
+    console.log(`Team initialized at ${dir}`);
+  });
+}
+function init(sessionId) {
+  initTeam({ sessionName: sessionId, name: sessionId });
+}
+function addMemberFull(options) {
+  if (!options.team) throw new Error("--team is required");
+  if (!options.id) throw new Error("--id is required");
+  if (!options.name) throw new Error("--name is required");
+  if (!options.focus) throw new Error("--focus is required");
+  if (!options.lens) throw new Error("--lens is required");
+  if (!options.deliverable) throw new Error("--deliverable is required");
+  withTeamWrite(options.team, (team) => {
+    if (team.members.some((m) => m.id === options.id)) {
+      throw new Error(`Member ${options.id} already exists`);
+    }
+    team.members.push({
+      id: options.id,
+      name: options.name,
+      focus: options.focus,
+      lens: options.lens,
+      deliverable: options.deliverable,
+      branch: options.branch ?? "",
+      worktreePath: "",
+      status: "active",
+      statusNote: "",
+      joinedAt: (/* @__PURE__ */ new Date()).toISOString(),
+      reportedAt: ""
+    });
+    console.log(`Added ${options.id}: focus=${options.focus}, lens=${options.lens}`);
+  });
 }
 function addMember(sessionId, focus, lens) {
-  const team = readTeam(sessionId) ?? { members: [] };
-  const member = {
-    id: `member-${team.members.length + 1}`,
-    focus: focus ?? "general",
-    lens: lens ?? "implementation",
-    joinedAt: (/* @__PURE__ */ new Date()).toISOString()
-  };
-  team.members.push(member);
-  writeTeam(sessionId, team);
-  console.log(`Added ${member.id}: focus=${member.focus}, lens=${member.lens}`);
+  withTeamWriteOrCreate(sessionId, (team) => {
+    const id = `member-${team.members.length + 1}`;
+    team.members.push({
+      id,
+      name: id,
+      focus: focus ?? "general",
+      lens: lens ?? "area",
+      deliverable: "",
+      branch: "",
+      worktreePath: "",
+      status: "active",
+      statusNote: "",
+      joinedAt: (/* @__PURE__ */ new Date()).toISOString(),
+      reportedAt: ""
+    });
+    console.log(`Added ${id}: focus=${focus ?? "general"}, lens=${lens ?? "area"}`);
+  });
 }
-function status(sessionId) {
-  const team = readTeam(sessionId);
-  if (!team) {
-    console.log("Team not found");
+function memberPrompt(sessionId, memberId) {
+  return withTeamRead(sessionId, (team) => {
+    if (!team) throw new Error(`Team ${sessionId} not found`);
+    const member = team.members.find((m) => m.id === memberId);
+    if (!member) throw new Error(`Member ${memberId} not found`);
+    const dir = teamDir(sessionId);
+    const prompt = `You are member ${member.id} (${member.name}) of team ${team.name}.
+Focus: ${member.focus}
+Lens: ${member.lens}
+Deliverable: ${member.deliverable}
+Worktree: ${member.worktreePath || "(none)"}
+
+Before starting, read:
+- ${path.join(dir, "guide.md")}
+- ${path.join(dir, "team.json")}
+
+Rules:
+- Stay strictly within your focus and lens.
+- Verify your worktree path exists before editing files.
+- Report progress frequently using:
+  - WORKING: <what you are doing>
+  - BLOCKED: <what is blocking you>
+  - DONE: <summary of completed deliverable>
+`;
+    console.log(prompt);
+    return prompt;
+  });
+}
+function setStatus(sessionId, memberId, status2, note) {
+  withTeamWrite(sessionId, (team) => {
+    const member = team.members.find((m) => m.id === memberId);
+    if (!member) throw new Error(`Member ${memberId} not found`);
+    member.status = status2;
+    member.statusNote = note ?? "";
+    if (status2 === "reported" || status2 === "blocked" || status2 === "archived") {
+      member.reportedAt = (/* @__PURE__ */ new Date()).toISOString();
+    }
+    console.log(`Set ${memberId} status to ${status2}`);
+  });
+}
+function worktreeAdd(sessionId, memberId, baseBranch, branch) {
+  withTeamWrite(sessionId, (team) => {
+    const member = team.members.find((m) => m.id === memberId);
+    if (!member) throw new Error(`Member ${memberId} not found`);
+    const repoRoot = getRepoRoot();
+    const base = baseBranch ?? team.baseBranch;
+    const memberBranch = branch ?? `${memberId}/${base}`;
+    const worktreePath = path.join(teamDir(sessionId), "worktrees", memberId);
+    execSync(`git worktree add -b ${memberBranch} ${worktreePath} ${base}`, {
+      cwd: repoRoot,
+      stdio: "pipe"
+    });
+    member.branch = memberBranch;
+    member.worktreePath = worktreePath;
+    team.worktreeMode = true;
+    console.log(`Worktree added at ${worktreePath}`);
+  });
+}
+function worktreeRemove(sessionId, memberId, force = false) {
+  withTeamWrite(sessionId, (team) => {
+    const member = team.members.find((m) => m.id === memberId);
+    if (!member) throw new Error(`Member ${memberId} not found`);
+    if (!member.worktreePath) throw new Error(`Member ${memberId} has no worktree`);
+    const flags = force ? "--force" : "";
+    execSync(`git worktree remove ${flags} ${member.worktreePath}`.trim(), { stdio: "pipe" });
+    member.worktreePath = "";
+    console.log(`Worktree removed for ${memberId}`);
+  });
+}
+function integrate(sessionId, memberId) {
+  const conflicts = [];
+  withTeamRead(sessionId, (team) => {
+    if (!team) throw new Error(`Team ${sessionId} not found`);
+    const members = memberId ? team.members.filter((m) => m.id === memberId && m.branch) : team.members.filter((m) => m.branch && m.status !== "archived");
+    for (const member of members) {
+      try {
+        execSync(`git merge --no-ff ${member.branch}`, { stdio: "pipe" });
+        console.log(`Integrated ${member.id} from ${member.branch}`);
+      } catch (err) {
+        const message = err.message;
+        conflicts.push(`${member.id} (${member.branch}): ${message}`);
+        try {
+          execSync("git merge --abort", { stdio: "pipe" });
+        } catch {
+        }
+      }
+    }
+  });
+  if (conflicts.length > 0) {
+    throw new Error("Integration conflicts:\n" + conflicts.map((c) => `  ${c}`).join("\n"));
+  }
+}
+function archiveTeam(sessionId, memberId, note) {
+  if (memberId) {
+    withTeamWrite(sessionId, (team) => {
+      const member = team.members.find((m) => m.id === memberId);
+      if (!member) throw new Error(`Member ${memberId} not found`);
+      member.status = "archived";
+      member.statusNote = note ?? "";
+      member.reportedAt = (/* @__PURE__ */ new Date()).toISOString();
+      console.log(`Archived member ${memberId}`);
+    });
     return;
   }
-  console.log(JSON.stringify(team, null, 2));
+  withLock(sessionId, () => {
+    const team = readTeamUnlocked(sessionId);
+    if (!team) throw new Error(`Team ${sessionId} not found`);
+    team.archived = true;
+    team.archiveNote = note ?? "";
+    writeTeamUnlocked(sessionId, team);
+    writeGuide(sessionId, team);
+    const archiveDir = path.join(getTeamsDir(), "archive");
+    fs.mkdirSync(archiveDir, { recursive: true });
+    const target = path.join(archiveDir, `${sessionId}-${Date.now()}`);
+    fs.cpSync(teamDir(sessionId), target, { recursive: true });
+    console.log(`Team archived to ${target}`);
+  });
 }
 function archive(sessionId) {
   const dir = teamDir(sessionId);
@@ -60,6 +345,21 @@ function archive(sessionId) {
   fs.renameSync(dir, target);
   console.log(`Team archived to ${target}`);
 }
+function deleteTeamSafe(sessionId, force = false) {
+  withLock(sessionId, () => {
+    const team = readTeamUnlocked(sessionId);
+    if (!team) {
+      console.log("Team not found");
+      return;
+    }
+    if (!team.archived && !force) {
+      throw new Error(`Team ${sessionId} is not archived. Use --force to delete anyway.`);
+    }
+    const dir = teamDir(sessionId);
+    fs.rmSync(dir, { recursive: true, force: true });
+    console.log(`Team ${sessionId} deleted`);
+  });
+}
 function deleteTeam(sessionId) {
   const dir = teamDir(sessionId);
   if (!fs.existsSync(dir)) {
@@ -69,27 +369,87 @@ function deleteTeam(sessionId) {
   fs.rmSync(dir, { recursive: true, force: true });
   console.log(`Team ${sessionId} deleted`);
 }
+function status(sessionId) {
+  withTeamRead(sessionId, (team) => {
+    if (!team) {
+      console.log("Team not found");
+      return;
+    }
+    console.log(JSON.stringify(team, null, 2));
+  });
+}
 function main() {
-  const [, , cmd, sessionId, ...rest] = process.argv;
-  switch (cmd) {
-    case "init":
-      init(sessionId);
-      break;
-    case "add-member":
-      addMember(sessionId, rest[0], rest[1]);
-      break;
-    case "status":
-      status(sessionId);
-      break;
-    case "archive":
-      archive(sessionId);
-      break;
-    case "delete":
-      deleteTeam(sessionId);
-      break;
-    default:
-      console.log(`Usage: team.ts {init|add-member|status|archive|delete} <sessionId> [focus] [lens]`);
-      process.exit(1);
+  const [, , cmd, ...rest] = process.argv;
+  const args = parseArgs(rest);
+  try {
+    switch (cmd) {
+      case "init":
+        initTeam({
+          name: args.name,
+          sessionName: args["session-name"],
+          shape: args.shape,
+          session: args.session,
+          worktree: args.worktree === true,
+          baseBranch: args["base-branch"]
+        });
+        break;
+      case "add-member":
+        addMemberFull({
+          team: args.team,
+          id: args.id,
+          name: args.name,
+          focus: args.focus,
+          lens: args.lens,
+          deliverable: args.deliverable,
+          branch: args.branch
+        });
+        break;
+      case "member-prompt":
+        memberPrompt(args.team, args.id);
+        break;
+      case "set-status":
+        setStatus(
+          args.team,
+          args.id,
+          args.status,
+          args.note
+        );
+        break;
+      case "worktree-add":
+        worktreeAdd(
+          args.team,
+          args.id,
+          args["base-branch"]
+        );
+        break;
+      case "worktree-remove":
+        worktreeRemove(args.team, args.id, args.force === true);
+        break;
+      case "integrate":
+        integrate(args.team, args.id);
+        break;
+      case "archive":
+        archiveTeam(
+          args.team,
+          args.id,
+          args.note
+        );
+        break;
+      case "delete":
+        deleteTeamSafe(args.team, args.force === true);
+        break;
+      case "status":
+        status(args.team);
+        break;
+      default:
+        console.log(
+          "Usage: team.ts {init|add-member|member-prompt|set-status|worktree-add|worktree-remove|integrate|archive|delete|status} ..."
+        );
+        process.exit(1);
+    }
+  } catch (err) {
+    console.error(err.message);
+    process.exit(1);
   }
 }
 if (import.meta.url === `file://${process.argv[1]}`) {
@@ -97,9 +457,18 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 }
 export {
   addMember,
+  addMemberFull,
   archive,
+  archiveTeam,
   deleteTeam,
+  deleteTeamSafe,
   getTeamsDir,
   init,
-  status
+  initTeam,
+  integrate,
+  memberPrompt,
+  setStatus,
+  status,
+  worktreeAdd,
+  worktreeRemove
 };

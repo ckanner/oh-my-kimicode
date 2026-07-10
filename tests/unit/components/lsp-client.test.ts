@@ -68,4 +68,16 @@ describe('LspClient', () => {
     expect(diagnostics).toHaveLength(1);
     client.close();
   });
+
+  it('requests document symbols', async () => {
+    const transport = new MockLspTransport([
+      { jsonrpc: '2.0', id: 1, result: { capabilities: {} } },
+      { jsonrpc: '2.0', id: 2, result: [{ name: 'foo', kind: 12 }] },
+    ]);
+    const client = new LspClient(transport);
+    await client.initialize('file:///tmp/');
+    const result = await client.documentSymbol('file:///tmp/test.ts');
+    expect(result).toEqual([{ name: 'foo', kind: 12 }]);
+    client.close();
+  });
 });

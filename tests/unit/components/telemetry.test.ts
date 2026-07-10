@@ -54,19 +54,34 @@ describe('telemetry', () => {
   });
 
   describe('posthog capture', () => {
-    it('no-ops when default placeholder key is used', async () => {
+    it('skips when default placeholder key is used', async () => {
       const fetchMock = vi.fn();
-      await captureDailyActive('abc123', { fetchImpl: fetchMock as unknown as typeof fetch });
+      const result = await captureDailyActive('abc123', { fetchImpl: fetchMock as unknown as typeof fetch });
       expect(fetchMock).not.toHaveBeenCalled();
+      expect(result.ok).toBe(false);
+      expect(result.ok ? '' : result.reason).toContain('placeholder');
+    });
+
+    it('skips when telemetry is disabled', async () => {
+      process.env.OMO_KIMI_DISABLE_POSTHOG = '1';
+      const fetchMock = vi.fn();
+      const result = await captureDailyActive('abc123', {
+        apiKey: 'real-key',
+        fetchImpl: fetchMock as unknown as typeof fetch,
+      });
+      expect(fetchMock).not.toHaveBeenCalled();
+      expect(result.ok).toBe(false);
+      expect(result.ok ? '' : result.reason).toContain('disabled');
     });
 
     it('sends capture request with configured key', async () => {
       const fetchMock = vi.fn().mockResolvedValue({ ok: true, status: 200, statusText: 'OK' });
-      await captureDailyActive('abc123', {
+      const result = await captureDailyActive('abc123', {
         apiKey: 'test-key',
         host: 'https://test.posthog.example',
         fetchImpl: fetchMock as unknown as typeof fetch,
       });
+      expect(result.ok).toBe(true);
       expect(fetchMock).toHaveBeenCalledTimes(1);
       const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
       expect(url).toBe('https://test.posthog.example/capture/');
@@ -78,28 +93,40 @@ describe('telemetry', () => {
       expect(body.properties.source).toBe('oh-my-kimicode');
     });
 
-    it('throws when PostHog returns non-ok', async () => {
+    it('reports failure when PostHog returns non-ok', async () => {
       const fetchMock = vi.fn().mockResolvedValue({ ok: false, status: 401, statusText: 'Unauthorized' });
-      await expect(
-        captureDailyActive('abc123', {
-          apiKey: 'bad-key',
-          fetchImpl: fetchMock as unknown as typeof fetch,
-        }),
-      ).rejects.toThrow('PostHog capture failed: 401 Unauthorized');
+      const result = await captureDailyActive('abc123', {
+        apiKey: 'bad-key',
+        fetchImpl: fetchMock as unknown as typeof fetch,
+      });
+      expect(result.ok).toBe(false);
+      expect(result.ok ? '' : result.reason).toBe('PostHog capture failed: 401 Unauthorized');
     });
 
-    it('throws when fetch is unavailable', async () => {
+    it('reports failure when fetch is unavailable', async () => {
       const originalFetch = globalThis.fetch;
       vi.stubGlobal('fetch', undefined);
       try {
-        await expect(
-          captureDailyActive('abc123', {
-            apiKey: 'test-key',
-          }),
-        ).rejects.toThrow('fetch is not available');
+        const result = await captureDailyActive('abc123', {
+          apiKey: 'test-key',
+        });
+        expect(result.ok).toBe(false);
+        expect(result.ok ? '' : result.reason).toBe('fetch is not available');
       } finally {
         globalThis.fetch = originalFetch;
       }
+    });
+
+    it('sends when real API key is provided via env', async () => {
+      process.env.OMO_KIMI_POSTHOG_API_KEY = 'env-key';
+      const fetchMock = vi.fn().mockResolvedValue({ ok: true, status: 200, statusText: 'OK' });
+      const result = await captureDailyActive('abc123', {
+        fetchImpl: fetchMock as unknown as typeof fetch,
+      });
+      expect(result.ok).toBe(true);
+      const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+      const body = JSON.parse(init.body as string);
+      expect(body.api_key).toBe('env-key');
     });
   });
 });

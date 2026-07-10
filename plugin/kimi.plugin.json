@@ -16,7 +16,7 @@
     },
     "lsp": {
       "command": "node",
-      "args": ["./components/lsp/dist/mcp-server.mjs"],
+      "args": ["./components/lsp/dist/daemon.mjs"],
       "cwd": "./"
     }
   },

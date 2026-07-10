@@ -51,6 +51,13 @@ export class LspClient {
     });
   }
 
+  didChange(uri: string, text: string): void {
+    this.notify('textDocument/didChange', {
+      textDocument: { uri, version: 2 },
+      contentChanges: [{ text }],
+    });
+  }
+
   requestDiagnostics(uri: string): Promise<Diagnostic[]> {
     return new Promise((resolve, _reject) => {
       const handler = (params: PublishDiagnosticsParams) => {
@@ -86,6 +93,13 @@ export class LspClient {
       textDocument: { uri },
       position,
       context: { includeDeclaration: true },
+    });
+    return (msg as { result?: unknown }).result;
+  }
+
+  async documentSymbol(uri: string): Promise<unknown> {
+    const msg = await this.request('textDocument/documentSymbol', {
+      textDocument: { uri },
     });
     return (msg as { result?: unknown }).result;
   }
