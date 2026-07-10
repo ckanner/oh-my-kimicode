@@ -11,7 +11,7 @@ const PLUGIN_DIR = path.join(PROJECT_ROOT, 'plugin');
 describe('hook execution integration', () => {
   beforeAll(() => {
     if (!fs.existsSync(path.join(PLUGIN_DIR, 'components', 'bootstrap', 'dist', 'cli.mjs'))) {
-      execFileSync('pnpm', ['run', 'build'], { cwd: PROJECT_ROOT, stdio: 'inherit' });
+      execFileSync('node', ['scripts/build.mjs'], { cwd: PROJECT_ROOT, stdio: 'inherit' });
     }
   });
 

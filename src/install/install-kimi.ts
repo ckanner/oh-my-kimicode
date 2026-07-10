@@ -76,7 +76,9 @@ function ensureGitBashMcp(kimiCodeHome: string, cache: string, dryRun = false): 
   if (!fs.existsSync(configPath) || dryRun) return;
   const raw = fs.readFileSync(configPath, 'utf-8');
   if (raw.includes('[mcpServers.git_bash]')) return;
-  const entry = `\n# git_bash MCP (Windows only; installed by oh-my-kimicode)\n[mcpServers.git_bash]\ncommand = "node"\nargs = ["${cache.replace(/\\/g, '\\\\')}\\components\\git-bash\\dist\\mcp-server.mjs"]\n`;
+  // Use forward slashes in TOML so the path is valid on Windows without escaping.
+  const gitBashPath = path.join(cache, 'components', 'git-bash', 'dist', 'mcp-server.mjs').replace(/\\/g, '/');
+  const entry = `\n# git_bash MCP (Windows only; installed by oh-my-kimicode)\n[mcpServers.git_bash]\ncommand = "node"\nargs = ["${gitBashPath}"]\n`;
   fs.writeFileSync(configPath, raw.trimEnd() + entry, 'utf-8');
 }
 
