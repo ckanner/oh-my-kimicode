@@ -1,9 +1,7 @@
 node_modules/
 dist/
-plugin/components/*/dist/
-plugin/skills/
-plugin/hooks/
-*.log
-.DS_Store
-.tmp/
+plugin/
+.omo/
+tmp-home/
 coverage/
+*.log
