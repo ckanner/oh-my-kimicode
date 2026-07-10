@@ -192,6 +192,8 @@ function runGit(args: string[], cwd: string): void {
   }
 }
 
+class CliUsageError extends Error {}
+
 function parseArgs(argv: string[]): Record<string, string | boolean> {
   const args: Record<string, string | boolean> = {};
   for (let i = 0; i < argv.length; i++) {
@@ -380,6 +382,10 @@ export function worktreeRemove(
     if (!member.worktreePath) throw new Error(`Member ${memberId} has no worktree`);
 
     const worktreePath = path.resolve(member.worktreePath);
+    const expectedPrefix = path.resolve(path.join(teamDir(sessionId), 'worktrees'));
+    if (!worktreePath.startsWith(expectedPrefix + path.sep) && worktreePath !== expectedPrefix) {
+      throw new Error(`Worktree path is outside the team worktrees directory: ${worktreePath}`);
+    }
     if (!fs.existsSync(worktreePath)) {
       throw new Error(`Worktree path does not exist: ${worktreePath}`);
     }
@@ -408,10 +414,10 @@ export function worktreeRemove(
 }
 
 export function integrate(sessionId: string, memberId?: string): void {
-  const repoRoot = getRepoRoot();
   const conflicts: string[] = [];
 
   withTeamWrite(sessionId, (team) => {
+    const repoRoot = getRepoRoot();
     const members = memberId
       ? team.members.filter((m) => m.id === memberId && m.branch)
       : team.members.filter((m) => m.branch && m.status !== 'archived');
@@ -584,7 +590,7 @@ function main(): void {
         );
         break;
       case 'worktree-remove':
-        if (!args.team || !args.id) throw new Error('--team and --id are required');
+        if (!args.team || !args.id) throw new CliUsageError('--team and --id are required');
         worktreeRemove(
           args.team as string,
           args.id as string,
@@ -593,7 +599,7 @@ function main(): void {
         );
         break;
       case 'integrate':
-        if (!args.team) throw new Error('--team is required');
+        if (!args.team) throw new CliUsageError('--team is required');
         integrate(args.team as string, args.id as string | undefined);
         break;
       case 'archive':
@@ -617,7 +623,7 @@ function main(): void {
     }
   } catch (err) {
     console.error((err as Error).message);
-    process.exit(1);
+    process.exit(err instanceof CliUsageError ? 1 : 0);
   }
 }
 
