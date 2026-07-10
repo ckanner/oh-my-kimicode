@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
 
 const INPUT_FIELD_ORDER = [
   'title',
@@ -74,4 +75,6 @@ function main() {
   console.log(`Wrote PR body to ${outputPath}`);
 }
 
-main();
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  main();
+}
