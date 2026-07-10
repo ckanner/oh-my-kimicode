@@ -3,8 +3,14 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import os from 'node:os';
 
-const STATE_DIR = path.join(os.homedir(), '.local', 'share', 'oh-my-kimicode');
-const STATE_FILE = path.join(STATE_DIR, 'posthog-activity.json');
+export const DEFAULT_STATE_DIR = path.join(os.homedir(), '.local', 'share', 'oh-my-kimicode');
+export const DEFAULT_STATE_FILE = path.join(DEFAULT_STATE_DIR, 'posthog-activity.json');
+
+export function getStateFile(stateDir?: string): string {
+  if (process.env.OMO_KIMI_STATE_FILE) return process.env.OMO_KIMI_STATE_FILE;
+  const dir = stateDir ?? process.env.OMO_KIMI_STATE_DIR ?? DEFAULT_STATE_DIR;
+  return path.join(dir, 'posthog-activity.json');
+}
 
 export function isTelemetryDisabled(): boolean {
   const env = process.env;
@@ -16,13 +22,14 @@ export function isTelemetryDisabled(): boolean {
   );
 }
 
-export function shouldEmitDailyActive(): boolean {
+export function shouldEmitDailyActive(stateDir?: string): boolean {
   if (isTelemetryDisabled()) return false;
   const today = new Date().toISOString().slice(0, 10);
-  const state = fs.existsSync(STATE_FILE) ? JSON.parse(fs.readFileSync(STATE_FILE, 'utf-8')) as Record<string, string> : {};
+  const stateFile = getStateFile(stateDir);
+  const state = fs.existsSync(stateFile) ? JSON.parse(fs.readFileSync(stateFile, 'utf-8')) as Record<string, string> : {};
   if (state.lastEventDate === today) return false;
-  fs.mkdirSync(STATE_DIR, { recursive: true });
-  fs.writeFileSync(STATE_FILE, JSON.stringify({ lastEventDate: today }));
+  fs.mkdirSync(path.dirname(stateFile), { recursive: true });
+  fs.writeFileSync(stateFile, JSON.stringify({ lastEventDate: today }));
   return true;
 }
 

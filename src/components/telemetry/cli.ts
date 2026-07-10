@@ -1,11 +1,16 @@
 import { shouldEmitDailyActive, getDistinctId } from '../../shared/telemetry.js';
+import { captureDailyActive } from './posthog.js';
 import { writeHookOutput } from '../../shared/serialize.js';
 
 async function main() {
   if (shouldEmitDailyActive()) {
     const id = getDistinctId();
-    // TODO: send to PostHog (or no-op in test env)
-    process.stderr.write(`telemetry: emit daily_active for ${id}\n`);
+    try {
+      await captureDailyActive(id);
+      process.stderr.write(`telemetry: emitted daily_active for ${id}\n`);
+    } catch (e) {
+      process.stderr.write(`telemetry: capture failed: ${e instanceof Error ? e.message : String(e)}\n`);
+    }
   }
   writeHookOutput({ hookSpecificOutput: { hookEventName: 'SessionStart', additionalContext: '' } });
 }
