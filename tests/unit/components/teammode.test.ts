@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
-import { init, addMember, status, archive, deleteTeam } from '../../../src/components/teammode/scripts/team.js';
+import { init, addMember, archive, deleteTeam } from '../../../src/components/teammode/scripts/team.js';
 
 describe('teammode', () => {
   let tmpDir: string;
