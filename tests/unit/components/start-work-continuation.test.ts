@@ -15,7 +15,19 @@ describe('start-work-continuation', () => {
     expect(hasIncompleteWork(readBoulder(tmp))).toBe(true);
   });
 
+  it('passes when work is completed', () => {
+    fs.mkdirSync(path.join(tmp, '.omo'), { recursive: true });
+    fs.writeFileSync(path.join(tmp, '.omo', 'boulder.json'), JSON.stringify({ active_work_id: 'x', works: { x: { completed: true } } }));
+    expect(hasIncompleteWork(readBoulder(tmp))).toBe(false);
+  });
+
   it('passes when no active work', () => {
     expect(hasIncompleteWork(readBoulder(tmp))).toBe(false);
+  });
+
+  it('passes when file is malformed', () => {
+    fs.mkdirSync(path.join(tmp, '.omo'), { recursive: true });
+    fs.writeFileSync(path.join(tmp, '.omo', 'boulder.json'), 'not json');
+    expect(() => readBoulder(tmp)).toThrow();
   });
 });

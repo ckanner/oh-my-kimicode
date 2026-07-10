@@ -17,10 +17,32 @@ describe('comment-checker', () => {
     expect(r.matches).toHaveLength(1);
   });
 
+  it('detects FIXME, HACK, XXX, BUG in block comments and hash comments', () => {
+    const p = path.join(tmp, 'b.py');
+    fs.writeFileSync(p, `# FIXME: now\n/* HACK */\n// XXX\n# BUG here\n`);
+    const r = checkFile(p);
+    expect(r.hasIssue).toBe(true);
+    expect(r.matches.length).toBeGreaterThanOrEqual(3);
+  });
+
   it('passes clean files', () => {
-    const p = path.join(tmp, 'b.ts');
+    const p = path.join(tmp, 'c.ts');
     fs.writeFileSync(p, 'const x = 1;\n');
     const r = checkFile(p);
     expect(r.hasIssue).toBe(false);
+    expect(r.matches).toHaveLength(0);
+  });
+
+  it('ignores TODO inside string literals', () => {
+    const p = path.join(tmp, 'd.ts');
+    fs.writeFileSync(p, 'const msg = "TODO: not a marker";\n');
+    const r = checkFile(p);
+    expect(r.hasIssue).toBe(false);
+  });
+
+  it('returns empty result for missing file', () => {
+    const r = checkFile(path.join(tmp, 'missing.ts'));
+    expect(r.hasIssue).toBe(false);
+    expect(r.matches).toHaveLength(0);
   });
 });

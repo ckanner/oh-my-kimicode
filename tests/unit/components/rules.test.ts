@@ -20,4 +20,29 @@ describe('rules', () => {
     expect(ctx).toContain('AGENTS.md');
     expect(ctx).toContain('api.md');
   });
+
+  it('returns empty rules for project without rules', () => {
+    const rules = discoverRules(tmp);
+    expect(rules.agentsMd).toBeUndefined();
+    expect(rules.ruleFiles).toHaveLength(0);
+    expect(formatRulesContext(rules)).toBe('');
+  });
+
+  it('ignores non-markdown files in rules directory', () => {
+    fs.mkdirSync(path.join(tmp, '.omo', 'rules'), { recursive: true });
+    fs.writeFileSync(path.join(tmp, '.omo', 'rules', 'notes.txt'), 'not a rule');
+    fs.writeFileSync(path.join(tmp, '.omo', 'rules', 'valid.md'), '# Valid');
+    const rules = discoverRules(tmp);
+    expect(rules.ruleFiles).toHaveLength(1);
+    expect(rules.ruleFiles[0].path).toContain('valid.md');
+  });
+
+  it('reads multiple rule files', () => {
+    fs.mkdirSync(path.join(tmp, '.omo', 'rules'), { recursive: true });
+    fs.writeFileSync(path.join(tmp, '.omo', 'rules', 'b.md'), '# B');
+    fs.writeFileSync(path.join(tmp, '.omo', 'rules', 'a.md'), '# A');
+    const rules = discoverRules(tmp);
+    const names = rules.ruleFiles.map((f) => path.basename(f.path)).sort();
+    expect(names).toEqual(['a.md', 'b.md']);
+  });
 });

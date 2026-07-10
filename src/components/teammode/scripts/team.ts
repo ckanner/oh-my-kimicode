@@ -3,27 +3,39 @@ import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
 
-export function getTeamsDir() {
+export interface TeamMember {
+  id: string;
+  focus: string;
+  lens: string;
+  joinedAt: string;
+}
+
+export interface Team {
+  members: TeamMember[];
+  createdAt?: string;
+}
+
+export function getTeamsDir(): string {
   return process.env.OMO_TEAMS_DIR ?? path.join(os.homedir(), '.omo', 'teams');
 }
 
-function teamDir(sessionId) {
+function teamDir(sessionId: string): string {
   return path.join(getTeamsDir(), sessionId);
 }
 
-function readTeam(sessionId) {
+function readTeam(sessionId: string): Team | null {
   const teamPath = path.join(teamDir(sessionId), 'team.json');
   if (!fs.existsSync(teamPath)) return null;
-  return JSON.parse(fs.readFileSync(teamPath, 'utf-8'));
+  return JSON.parse(fs.readFileSync(teamPath, 'utf-8')) as Team;
 }
 
-function writeTeam(sessionId, team) {
+function writeTeam(sessionId: string, team: Team): void {
   const dir = teamDir(sessionId);
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, 'team.json'), JSON.stringify(team, null, 2));
 }
 
-export function init(sessionId) {
+export function init(sessionId: string): void {
   const dir = teamDir(sessionId);
   fs.mkdirSync(dir, { recursive: true });
   fs.mkdirSync(path.join(dir, 'artifacts'), { recursive: true });
@@ -32,9 +44,9 @@ export function init(sessionId) {
   console.log(`Team initialized at ${dir}`);
 }
 
-export function addMember(sessionId, focus, lens) {
+export function addMember(sessionId: string, focus?: string, lens?: string): void {
   const team = readTeam(sessionId) ?? { members: [] };
-  const member = {
+  const member: TeamMember = {
     id: `member-${team.members.length + 1}`,
     focus: focus ?? 'general',
     lens: lens ?? 'implementation',
@@ -45,7 +57,7 @@ export function addMember(sessionId, focus, lens) {
   console.log(`Added ${member.id}: focus=${member.focus}, lens=${member.lens}`);
 }
 
-export function status(sessionId) {
+export function status(sessionId: string): void {
   const team = readTeam(sessionId);
   if (!team) {
     console.log('Team not found');
@@ -54,7 +66,7 @@ export function status(sessionId) {
   console.log(JSON.stringify(team, null, 2));
 }
 
-export function archive(sessionId) {
+export function archive(sessionId: string): void {
   const dir = teamDir(sessionId);
   if (!fs.existsSync(dir)) {
     console.log('Team not found');
@@ -67,7 +79,7 @@ export function archive(sessionId) {
   console.log(`Team archived to ${target}`);
 }
 
-export function deleteTeam(sessionId) {
+export function deleteTeam(sessionId: string): void {
   const dir = teamDir(sessionId);
   if (!fs.existsSync(dir)) {
     console.log('Team not found');
@@ -77,7 +89,7 @@ export function deleteTeam(sessionId) {
   console.log(`Team ${sessionId} deleted`);
 }
 
-function main() {
+function main(): void {
   const [, , cmd, sessionId, ...rest] = process.argv;
   switch (cmd) {
     case 'init':
@@ -96,7 +108,7 @@ function main() {
       deleteTeam(sessionId);
       break;
     default:
-      console.log(`Usage: team.mjs {init|add-member|status|archive|delete} <sessionId> [focus] [lens]`);
+      console.log(`Usage: team.ts {init|add-member|status|archive|delete} <sessionId> [focus] [lens]`);
       process.exit(1);
   }
 }

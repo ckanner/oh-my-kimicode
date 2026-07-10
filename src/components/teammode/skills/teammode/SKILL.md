@@ -15,7 +15,8 @@ Create a team of parallel agents using `AgentSwarm`. The leader (main session) c
 2. Use `AgentSwarm` when members can work independently; use sequential `Agent` when dependencies exist.
 3. Members editing the same file must use separate git worktrees.
 4. Track progress with `TodoList`.
-5. Archive the team state when done.
+5. Use `src/components/teammode/scripts/team.ts` to manage team state (init, add-member, status, archive, delete).
+6. Archive the team state when done.
 
 ## Kimi Code Harness Compatibility
 

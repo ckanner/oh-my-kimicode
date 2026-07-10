@@ -8,7 +8,11 @@ export interface CheckResult {
 }
 
 export function checkFile(filePath: string): CheckResult {
-  const content = fs.readFileSync(filePath, 'utf-8');
-  const matches = content.match(COMMENT_PATTERN) ?? [];
-  return { hasIssue: matches.length > 0, matches };
+  try {
+    const content = fs.readFileSync(filePath, 'utf-8');
+    const matches = content.match(COMMENT_PATTERN) ?? [];
+    return { hasIssue: matches.length > 0, matches };
+  } catch {
+    return { hasIssue: false, matches: [] };
+  }
 }

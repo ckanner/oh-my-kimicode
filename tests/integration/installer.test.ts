@@ -70,6 +70,14 @@ describe('installer integration', () => {
     expect(backups.length).toBe(1);
   });
 
+  it('autonomous mode sets default_permission_mode to auto', () => {
+    const configPath = path.join(tmpDir, 'config.toml');
+    fs.writeFileSync(configPath, 'default_model = "kimi"\n');
+    runKimiInstaller({ kimiCodeHome: tmpDir, autonomous: true });
+    const config = fs.readFileSync(configPath, 'utf-8');
+    expect(config).toContain('default_permission_mode = "auto"');
+  });
+
   it('uninstall removes hooks and cache', async () => {
     await runKimiInstaller({ kimiCodeHome: tmpDir, binDir: path.join(tmpDir, 'bin') });
 
