@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
+import { pathToFileURL } from 'node:url';
 import { readCache, writeCache, runDiagnostics } from '../../../src/components/lsp/diagnostics.js';
 import { MockLspTransport } from '../../../src/components/lsp/transport.js';
 
@@ -36,7 +37,7 @@ describe('lsp diagnostics', () => {
           jsonrpc: '2.0',
           method: 'textDocument/publishDiagnostics',
           params: {
-            uri: 'file://' + file,
+            uri: pathToFileURL(file).href,
             diagnostics: [
               {
                 range: { start: { line: 0, character: 6 }, end: { line: 0, character: 7 } },
