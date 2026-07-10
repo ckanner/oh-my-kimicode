@@ -1,7 +1,16 @@
 node_modules/
 dist/
-plugin/
 .omo/
 tmp-home/
 coverage/
 *.log
+
+# Generated plugin assets
+plugin/components/*/dist/
+plugin/hooks/
+
+# Keep plugin manifest and skills source
+!plugin/kimi.plugin.json
+!plugin/.mcp.json
+!plugin/skills/
+!plugin/skills/**/SKILL.md
