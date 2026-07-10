@@ -1,0 +1,4699 @@
+{
+  "version": "1",
+  "symbols": [
+    {
+      "name": "extractArg",
+      "kind": "function",
+      "file": "src/cli/index.ts",
+      "line": 6,
+      "column": 10
+    },
+    {
+      "name": "args",
+      "kind": "variable",
+      "file": "src/cli/index.ts",
+      "line": 3,
+      "column": 7
+    },
+    {
+      "name": "command",
+      "kind": "variable",
+      "file": "src/cli/index.ts",
+      "line": 4,
+      "column": 7
+    },
+    {
+      "name": "idx",
+      "kind": "variable",
+      "file": "src/cli/index.ts",
+      "line": 7,
+      "column": 9
+    },
+    {
+      "name": "options",
+      "kind": "variable",
+      "file": "src/cli/index.ts",
+      "line": 11,
+      "column": 7
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "src/components/bootstrap/cli.ts",
+      "line": 4,
+      "column": 16
+    },
+    {
+      "name": "event",
+      "kind": "variable",
+      "file": "src/components/bootstrap/cli.ts",
+      "line": 5,
+      "column": 9
+    },
+    {
+      "name": "raw",
+      "kind": "variable",
+      "file": "src/components/bootstrap/cli.ts",
+      "line": 10,
+      "column": 7
+    },
+    {
+      "name": "chunk",
+      "kind": "variable",
+      "file": "src/components/bootstrap/cli.ts",
+      "line": 12,
+      "column": 20
+    },
+    {
+      "name": "payload",
+      "kind": "variable",
+      "file": "src/components/bootstrap/cli.ts",
+      "line": 13,
+      "column": 9
+    },
+    {
+      "name": "getBootstrapContext",
+      "kind": "function",
+      "file": "src/components/bootstrap/session-start.ts",
+      "line": 9,
+      "column": 17
+    },
+    {
+      "name": "runSessionStart",
+      "kind": "function",
+      "file": "src/components/bootstrap/session-start.ts",
+      "line": 17,
+      "column": 17
+    },
+    {
+      "name": "ctx",
+      "kind": "variable",
+      "file": "src/components/bootstrap/session-start.ts",
+      "line": 18,
+      "column": 9
+    },
+    {
+      "name": "BootstrapContext",
+      "kind": "type",
+      "file": "src/components/bootstrap/session-start.ts",
+      "line": 3,
+      "column": 18
+    },
+    {
+      "name": "runBootstrap",
+      "kind": "function",
+      "file": "src/components/codegraph/bootstrap.ts",
+      "line": 4,
+      "column": 17
+    },
+    {
+      "name": "runPostToolUse",
+      "kind": "function",
+      "file": "src/components/codegraph/bootstrap.ts",
+      "line": 22,
+      "column": 17
+    },
+    {
+      "name": "projectDir",
+      "kind": "variable",
+      "file": "src/components/codegraph/bootstrap.ts",
+      "line": 5,
+      "column": 9
+    },
+    {
+      "name": "index",
+      "kind": "variable",
+      "file": "src/components/codegraph/bootstrap.ts",
+      "line": 8,
+      "column": 13
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "src/components/codegraph/cli.ts",
+      "line": 4,
+      "column": 16
+    },
+    {
+      "name": "event",
+      "kind": "variable",
+      "file": "src/components/codegraph/cli.ts",
+      "line": 5,
+      "column": 9
+    },
+    {
+      "name": "raw",
+      "kind": "variable",
+      "file": "src/components/codegraph/cli.ts",
+      "line": 6,
+      "column": 7
+    },
+    {
+      "name": "chunk",
+      "kind": "variable",
+      "file": "src/components/codegraph/cli.ts",
+      "line": 7,
+      "column": 20
+    },
+    {
+      "name": "payload",
+      "kind": "variable",
+      "file": "src/components/codegraph/cli.ts",
+      "line": 8,
+      "column": 9
+    },
+    {
+      "name": "listProjectFiles",
+      "kind": "function",
+      "file": "src/components/codegraph/indexer.ts",
+      "line": 8,
+      "column": 17
+    },
+    {
+      "name": "walk",
+      "kind": "function",
+      "file": "src/components/codegraph/indexer.ts",
+      "line": 11,
+      "column": 12
+    },
+    {
+      "name": "buildIndex",
+      "kind": "function",
+      "file": "src/components/codegraph/indexer.ts",
+      "line": 34,
+      "column": 17
+    },
+    {
+      "name": "indexPath",
+      "kind": "function",
+      "file": "src/components/codegraph/indexer.ts",
+      "line": 52,
+      "column": 17
+    },
+    {
+      "name": "loadIndex",
+      "kind": "function",
+      "file": "src/components/codegraph/indexer.ts",
+      "line": 56,
+      "column": 17
+    },
+    {
+      "name": "saveIndex",
+      "kind": "function",
+      "file": "src/components/codegraph/indexer.ts",
+      "line": 62,
+      "column": 17
+    },
+    {
+      "name": "SUPPORTED_EXTS",
+      "kind": "variable",
+      "file": "src/components/codegraph/indexer.ts",
+      "line": 6,
+      "column": 7
+    },
+    {
+      "name": "files",
+      "kind": "variable",
+      "file": "src/components/codegraph/indexer.ts",
+      "line": 9,
+      "column": 9
+    },
+    {
+      "name": "entries",
+      "kind": "variable",
+      "file": "src/components/codegraph/indexer.ts",
+      "line": 12,
+      "column": 9
+    },
+    {
+      "name": "entry",
+      "kind": "variable",
+      "file": "src/components/codegraph/indexer.ts",
+      "line": 18,
+      "column": 16
+    },
+    {
+      "name": "full",
+      "kind": "variable",
+      "file": "src/components/codegraph/indexer.ts",
+      "line": 19,
+      "column": 13
+    },
+    {
+      "name": "ext",
+      "kind": "variable",
+      "file": "src/components/codegraph/indexer.ts",
+      "line": 24,
+      "column": 15
+    },
+    {
+      "name": "files",
+      "kind": "variable",
+      "file": "src/components/codegraph/indexer.ts",
+      "line": 35,
+      "column": 9
+    },
+    {
+      "name": "allSymbols",
+      "kind": "variable",
+      "file": "src/components/codegraph/indexer.ts",
+      "line": 36,
+      "column": 9
+    },
+    {
+      "name": "byFile",
+      "kind": "variable",
+      "file": "src/components/codegraph/indexer.ts",
+      "line": 37,
+      "column": 9
+    },
+    {
+      "name": "rel",
+      "kind": "variable",
+      "file": "src/components/codegraph/indexer.ts",
+      "line": 39,
+      "column": 14
+    },
+    {
+      "name": "full",
+      "kind": "variable",
+      "file": "src/components/codegraph/indexer.ts",
+      "line": 40,
+      "column": 11
+    },
+    {
+      "name": "content",
+      "kind": "variable",
+      "file": "src/components/codegraph/indexer.ts",
+      "line": 41,
+      "column": 11
+    },
+    {
+      "name": "symbols",
+      "kind": "variable",
+      "file": "src/components/codegraph/indexer.ts",
+      "line": 42,
+      "column": 11
+    },
+    {
+      "name": "p",
+      "kind": "variable",
+      "file": "src/components/codegraph/indexer.ts",
+      "line": 57,
+      "column": 9
+    },
+    {
+      "name": "p",
+      "kind": "variable",
+      "file": "src/components/codegraph/indexer.ts",
+      "line": 63,
+      "column": 9
+    },
+    {
+      "name": "search",
+      "kind": "function",
+      "file": "src/components/codegraph/search.ts",
+      "line": 9,
+      "column": 17
+    },
+    {
+      "name": "relate",
+      "kind": "function",
+      "file": "src/components/codegraph/search.ts",
+      "line": 24,
+      "column": 17
+    },
+    {
+      "name": "results",
+      "kind": "variable",
+      "file": "src/components/codegraph/search.ts",
+      "line": 10,
+      "column": 7
+    },
+    {
+      "name": "lower",
+      "kind": "variable",
+      "file": "src/components/codegraph/search.ts",
+      "line": 12,
+      "column": 11
+    },
+    {
+      "name": "targets",
+      "kind": "variable",
+      "file": "src/components/codegraph/search.ts",
+      "line": 25,
+      "column": 9
+    },
+    {
+      "name": "files",
+      "kind": "variable",
+      "file": "src/components/codegraph/search.ts",
+      "line": 27,
+      "column": 9
+    },
+    {
+      "name": "SearchQuery",
+      "kind": "type",
+      "file": "src/components/codegraph/search.ts",
+      "line": 3,
+      "column": 18
+    },
+    {
+      "name": "inferLanguageId",
+      "kind": "function",
+      "file": "src/components/codegraph/symbols.ts",
+      "line": 43,
+      "column": 17
+    },
+    {
+      "name": "parseFile",
+      "kind": "function",
+      "file": "src/components/codegraph/symbols.ts",
+      "line": 48,
+      "column": 17
+    },
+    {
+      "name": "PARSERS",
+      "kind": "variable",
+      "file": "src/components/codegraph/symbols.ts",
+      "line": 15,
+      "column": 7
+    },
+    {
+      "name": "ext",
+      "kind": "variable",
+      "file": "src/components/codegraph/symbols.ts",
+      "line": 44,
+      "column": 9
+    },
+    {
+      "name": "ext",
+      "kind": "variable",
+      "file": "src/components/codegraph/symbols.ts",
+      "line": 49,
+      "column": 9
+    },
+    {
+      "name": "patterns",
+      "kind": "variable",
+      "file": "src/components/codegraph/symbols.ts",
+      "line": 50,
+      "column": 9
+    },
+    {
+      "name": "symbols",
+      "kind": "variable",
+      "file": "src/components/codegraph/symbols.ts",
+      "line": 53,
+      "column": 9
+    },
+    {
+      "name": "lines",
+      "kind": "variable",
+      "file": "src/components/codegraph/symbols.ts",
+      "line": 54,
+      "column": 9
+    },
+    {
+      "name": "pattern",
+      "kind": "variable",
+      "file": "src/components/codegraph/symbols.ts",
+      "line": 56,
+      "column": 14
+    },
+    {
+      "name": "match",
+      "kind": "variable",
+      "file": "src/components/codegraph/symbols.ts",
+      "line": 57,
+      "column": 9
+    },
+    {
+      "name": "name",
+      "kind": "variable",
+      "file": "src/components/codegraph/symbols.ts",
+      "line": 61,
+      "column": 13
+    },
+    {
+      "name": "index",
+      "kind": "variable",
+      "file": "src/components/codegraph/symbols.ts",
+      "line": 63,
+      "column": 13
+    },
+    {
+      "name": "line",
+      "kind": "variable",
+      "file": "src/components/codegraph/symbols.ts",
+      "line": 64,
+      "column": 13
+    },
+    {
+      "name": "column",
+      "kind": "variable",
+      "file": "src/components/codegraph/symbols.ts",
+      "line": 65,
+      "column": 13
+    },
+    {
+      "name": "kind",
+      "kind": "variable",
+      "file": "src/components/codegraph/symbols.ts",
+      "line": 66,
+      "column": 11
+    },
+    {
+      "name": "Symbol",
+      "kind": "type",
+      "file": "src/components/codegraph/symbols.ts",
+      "line": 1,
+      "column": 18
+    },
+    {
+      "name": "CodeGraphIndex",
+      "kind": "type",
+      "file": "src/components/codegraph/symbols.ts",
+      "line": 9,
+      "column": 18
+    },
+    {
+      "name": "checkFile",
+      "kind": "function",
+      "file": "src/components/comment-checker/check.ts",
+      "line": 10,
+      "column": 17
+    },
+    {
+      "name": "COMMENT_PATTERN",
+      "kind": "variable",
+      "file": "src/components/comment-checker/check.ts",
+      "line": 3,
+      "column": 7
+    },
+    {
+      "name": "content",
+      "kind": "variable",
+      "file": "src/components/comment-checker/check.ts",
+      "line": 11,
+      "column": 9
+    },
+    {
+      "name": "matches",
+      "kind": "variable",
+      "file": "src/components/comment-checker/check.ts",
+      "line": 12,
+      "column": 9
+    },
+    {
+      "name": "CheckResult",
+      "kind": "type",
+      "file": "src/components/comment-checker/check.ts",
+      "line": 5,
+      "column": 18
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "src/components/comment-checker/cli.ts",
+      "line": 4,
+      "column": 16
+    },
+    {
+      "name": "raw",
+      "kind": "variable",
+      "file": "src/components/comment-checker/cli.ts",
+      "line": 5,
+      "column": 7
+    },
+    {
+      "name": "chunk",
+      "kind": "variable",
+      "file": "src/components/comment-checker/cli.ts",
+      "line": 7,
+      "column": 20
+    },
+    {
+      "name": "payload",
+      "kind": "variable",
+      "file": "src/components/comment-checker/cli.ts",
+      "line": 8,
+      "column": 9
+    },
+    {
+      "name": "filePath",
+      "kind": "variable",
+      "file": "src/components/comment-checker/cli.ts",
+      "line": 9,
+      "column": 9
+    },
+    {
+      "name": "result",
+      "kind": "variable",
+      "file": "src/components/comment-checker/cli.ts",
+      "line": 14,
+      "column": 9
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "src/components/executor-verify/cli.ts",
+      "line": 4,
+      "column": 16
+    },
+    {
+      "name": "raw",
+      "kind": "variable",
+      "file": "src/components/executor-verify/cli.ts",
+      "line": 5,
+      "column": 7
+    },
+    {
+      "name": "chunk",
+      "kind": "variable",
+      "file": "src/components/executor-verify/cli.ts",
+      "line": 7,
+      "column": 20
+    },
+    {
+      "name": "payload",
+      "kind": "variable",
+      "file": "src/components/executor-verify/cli.ts",
+      "line": 8,
+      "column": 9
+    },
+    {
+      "name": "verifyEvidence",
+      "kind": "function",
+      "file": "src/components/executor-verify/verify.ts",
+      "line": 3,
+      "column": 17
+    },
+    {
+      "name": "output",
+      "kind": "variable",
+      "file": "src/components/executor-verify/verify.ts",
+      "line": 4,
+      "column": 9
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "src/components/git-bash/cli.ts",
+      "line": 4,
+      "column": 16
+    },
+    {
+      "name": "raw",
+      "kind": "variable",
+      "file": "src/components/git-bash/cli.ts",
+      "line": 5,
+      "column": 7
+    },
+    {
+      "name": "chunk",
+      "kind": "variable",
+      "file": "src/components/git-bash/cli.ts",
+      "line": 7,
+      "column": 20
+    },
+    {
+      "name": "payload",
+      "kind": "variable",
+      "file": "src/components/git-bash/cli.ts",
+      "line": 8,
+      "column": 9
+    },
+    {
+      "name": "startGitBashServer",
+      "kind": "function",
+      "file": "src/components/git-bash/mcp-server.ts",
+      "line": 5,
+      "column": 17
+    },
+    {
+      "name": "server",
+      "kind": "variable",
+      "file": "src/components/git-bash/mcp-server.ts",
+      "line": 6,
+      "column": 9
+    },
+    {
+      "name": "transport",
+      "kind": "variable",
+      "file": "src/components/git-bash/mcp-server.ts",
+      "line": 21,
+      "column": 9
+    },
+    {
+      "name": "recommendGitBash",
+      "kind": "function",
+      "file": "src/components/git-bash/recommend.ts",
+      "line": 4,
+      "column": 17
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "src/components/lsp/cli.ts",
+      "line": 4,
+      "column": 16
+    },
+    {
+      "name": "event",
+      "kind": "variable",
+      "file": "src/components/lsp/cli.ts",
+      "line": 5,
+      "column": 9
+    },
+    {
+      "name": "projectDir",
+      "kind": "variable",
+      "file": "src/components/lsp/cli.ts",
+      "line": 6,
+      "column": 9
+    },
+    {
+      "name": "raw",
+      "kind": "variable",
+      "file": "src/components/lsp/cli.ts",
+      "line": 12,
+      "column": 7
+    },
+    {
+      "name": "chunk",
+      "kind": "variable",
+      "file": "src/components/lsp/cli.ts",
+      "line": 13,
+      "column": 20
+    },
+    {
+      "name": "payload",
+      "kind": "variable",
+      "file": "src/components/lsp/cli.ts",
+      "line": 14,
+      "column": 9
+    },
+    {
+      "name": "filePath",
+      "kind": "variable",
+      "file": "src/components/lsp/cli.ts",
+      "line": 15,
+      "column": 9
+    },
+    {
+      "name": "files",
+      "kind": "variable",
+      "file": "src/components/lsp/cli.ts",
+      "line": 16,
+      "column": 9
+    },
+    {
+      "name": "cached",
+      "kind": "variable",
+      "file": "src/components/lsp/cli.ts",
+      "line": 17,
+      "column": 9
+    },
+    {
+      "name": "f",
+      "kind": "variable",
+      "file": "src/components/lsp/cli.ts",
+      "line": 18,
+      "column": 14
+    },
+    {
+      "name": "lspCommand",
+      "kind": "variable",
+      "file": "src/components/lsp/cli.ts",
+      "line": 21,
+      "column": 9
+    },
+    {
+      "name": "lspArgs",
+      "kind": "variable",
+      "file": "src/components/lsp/cli.ts",
+      "line": 22,
+      "column": 9
+    },
+    {
+      "name": "transport",
+      "kind": "variable",
+      "file": "src/components/lsp/cli.ts",
+      "line": 23,
+      "column": 9
+    },
+    {
+      "name": "all",
+      "kind": "variable",
+      "file": "src/components/lsp/cli.ts",
+      "line": 25,
+      "column": 9
+    },
+    {
+      "name": "f",
+      "kind": "variable",
+      "file": "src/components/lsp/cli.ts",
+      "line": 27,
+      "column": 16
+    },
+    {
+      "name": "diagnostics",
+      "kind": "variable",
+      "file": "src/components/lsp/cli.ts",
+      "line": 28,
+      "column": 13
+    },
+    {
+      "name": "readCache",
+      "kind": "function",
+      "file": "src/components/lsp/diagnostics.ts",
+      "line": 16,
+      "column": 17
+    },
+    {
+      "name": "writeCache",
+      "kind": "function",
+      "file": "src/components/lsp/diagnostics.ts",
+      "line": 21,
+      "column": 17
+    },
+    {
+      "name": "createTransport",
+      "kind": "function",
+      "file": "src/components/lsp/diagnostics.ts",
+      "line": 27,
+      "column": 17
+    },
+    {
+      "name": "runDiagnostics",
+      "kind": "function",
+      "file": "src/components/lsp/diagnostics.ts",
+      "line": 36,
+      "column": 23
+    },
+    {
+      "name": "inferLanguageId",
+      "kind": "function",
+      "file": "src/components/lsp/diagnostics.ts",
+      "line": 61,
+      "column": 10
+    },
+    {
+      "name": "CACHE_FILE",
+      "kind": "variable",
+      "file": "src/components/lsp/diagnostics.ts",
+      "line": 14,
+      "column": 7
+    },
+    {
+      "name": "p",
+      "kind": "variable",
+      "file": "src/components/lsp/diagnostics.ts",
+      "line": 17,
+      "column": 9
+    },
+    {
+      "name": "p",
+      "kind": "variable",
+      "file": "src/components/lsp/diagnostics.ts",
+      "line": 22,
+      "column": 9
+    },
+    {
+      "name": "content",
+      "kind": "variable",
+      "file": "src/components/lsp/diagnostics.ts",
+      "line": 37,
+      "column": 9
+    },
+    {
+      "name": "uri",
+      "kind": "variable",
+      "file": "src/components/lsp/diagnostics.ts",
+      "line": 38,
+      "column": 9
+    },
+    {
+      "name": "languageId",
+      "kind": "variable",
+      "file": "src/components/lsp/diagnostics.ts",
+      "line": 39,
+      "column": 9
+    },
+    {
+      "name": "client",
+      "kind": "variable",
+      "file": "src/components/lsp/diagnostics.ts",
+      "line": 45,
+      "column": 9
+    },
+    {
+      "name": "raw",
+      "kind": "variable",
+      "file": "src/components/lsp/diagnostics.ts",
+      "line": 49,
+      "column": 11
+    },
+    {
+      "name": "ext",
+      "kind": "variable",
+      "file": "src/components/lsp/diagnostics.ts",
+      "line": 62,
+      "column": 9
+    },
+    {
+      "name": "Diagnostic",
+      "kind": "type",
+      "file": "src/components/lsp/diagnostics.ts",
+      "line": 7,
+      "column": 18
+    },
+    {
+      "name": "LspTransport",
+      "kind": "type",
+      "file": "src/components/lsp/diagnostics.ts",
+      "line": 5,
+      "column": 34
+    },
+    {
+      "name": "LspClient",
+      "kind": "class",
+      "file": "src/components/lsp/lsp-client.ts",
+      "line": 19,
+      "column": 14
+    },
+    {
+      "name": "handler",
+      "kind": "variable",
+      "file": "src/components/lsp/lsp-client.ts",
+      "line": 51,
+      "column": 13
+    },
+    {
+      "name": "id",
+      "kind": "variable",
+      "file": "src/components/lsp/lsp-client.ts",
+      "line": 84,
+      "column": 11
+    },
+    {
+      "name": "params",
+      "kind": "variable",
+      "file": "src/components/lsp/lsp-client.ts",
+      "line": 103,
+      "column": 13
+    },
+    {
+      "name": "handler",
+      "kind": "variable",
+      "file": "src/components/lsp/lsp-client.ts",
+      "line": 104,
+      "column": 18
+    },
+    {
+      "name": "resolve",
+      "kind": "variable",
+      "file": "src/components/lsp/lsp-client.ts",
+      "line": 108,
+      "column": 13
+    },
+    {
+      "name": "Diagnostic",
+      "kind": "type",
+      "file": "src/components/lsp/lsp-client.ts",
+      "line": 3,
+      "column": 18
+    },
+    {
+      "name": "PublishDiagnosticsParams",
+      "kind": "type",
+      "file": "src/components/lsp/lsp-client.ts",
+      "line": 14,
+      "column": 18
+    },
+    {
+      "name": "startLspServer",
+      "kind": "function",
+      "file": "src/components/lsp/mcp-server.ts",
+      "line": 6,
+      "column": 17
+    },
+    {
+      "name": "server",
+      "kind": "variable",
+      "file": "src/components/lsp/mcp-server.ts",
+      "line": 7,
+      "column": 9
+    },
+    {
+      "name": "lspCommand",
+      "kind": "variable",
+      "file": "src/components/lsp/mcp-server.ts",
+      "line": 19,
+      "column": 11
+    },
+    {
+      "name": "lspArgs",
+      "kind": "variable",
+      "file": "src/components/lsp/mcp-server.ts",
+      "line": 20,
+      "column": 11
+    },
+    {
+      "name": "transport",
+      "kind": "variable",
+      "file": "src/components/lsp/mcp-server.ts",
+      "line": 24,
+      "column": 15
+    },
+    {
+      "name": "status",
+      "kind": "variable",
+      "file": "src/components/lsp/mcp-server.ts",
+      "line": 25,
+      "column": 15
+    },
+    {
+      "name": "file",
+      "kind": "variable",
+      "file": "src/components/lsp/mcp-server.ts",
+      "line": 30,
+      "column": 15
+    },
+    {
+      "name": "transport",
+      "kind": "variable",
+      "file": "src/components/lsp/mcp-server.ts",
+      "line": 31,
+      "column": 15
+    },
+    {
+      "name": "diagnostics",
+      "kind": "variable",
+      "file": "src/components/lsp/mcp-server.ts",
+      "line": 33,
+      "column": 17
+    },
+    {
+      "name": "transport",
+      "kind": "variable",
+      "file": "src/components/lsp/mcp-server.ts",
+      "line": 48,
+      "column": 9
+    },
+    {
+      "name": "StdioLspTransport",
+      "kind": "class",
+      "file": "src/components/lsp/transport.ts",
+      "line": 20,
+      "column": 14
+    },
+    {
+      "name": "MockLspTransport",
+      "kind": "class",
+      "file": "src/components/lsp/transport.ts",
+      "line": 84,
+      "column": 14
+    },
+    {
+      "name": "body",
+      "kind": "variable",
+      "file": "src/components/lsp/transport.ts",
+      "line": 43,
+      "column": 11
+    },
+    {
+      "name": "header",
+      "kind": "variable",
+      "file": "src/components/lsp/transport.ts",
+      "line": 44,
+      "column": 11
+    },
+    {
+      "name": "headerMatch",
+      "kind": "variable",
+      "file": "src/components/lsp/transport.ts",
+      "line": 67,
+      "column": 13
+    },
+    {
+      "name": "contentLength",
+      "kind": "variable",
+      "file": "src/components/lsp/transport.ts",
+      "line": 69,
+      "column": 13
+    },
+    {
+      "name": "headerEnd",
+      "kind": "variable",
+      "file": "src/components/lsp/transport.ts",
+      "line": 70,
+      "column": 13
+    },
+    {
+      "name": "body",
+      "kind": "variable",
+      "file": "src/components/lsp/transport.ts",
+      "line": 72,
+      "column": 13
+    },
+    {
+      "name": "message",
+      "kind": "variable",
+      "file": "src/components/lsp/transport.ts",
+      "line": 75,
+      "column": 15
+    },
+    {
+      "name": "msg",
+      "kind": "variable",
+      "file": "src/components/lsp/transport.ts",
+      "line": 92,
+      "column": 16
+    },
+    {
+      "name": "reply",
+      "kind": "variable",
+      "file": "src/components/lsp/transport.ts",
+      "line": 103,
+      "column": 13
+    },
+    {
+      "name": "response",
+      "kind": "variable",
+      "file": "src/components/lsp/transport.ts",
+      "line": 110,
+      "column": 13
+    },
+    {
+      "name": "LspMessage",
+      "kind": "type",
+      "file": "src/components/lsp/transport.ts",
+      "line": 3,
+      "column": 18
+    },
+    {
+      "name": "LspTransport",
+      "kind": "type",
+      "file": "src/components/lsp/transport.ts",
+      "line": 12,
+      "column": 18
+    },
+    {
+      "name": "ChildProcess",
+      "kind": "type",
+      "file": "src/components/lsp/transport.ts",
+      "line": 1,
+      "column": 22
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "src/components/rules/cli.ts",
+      "line": 4,
+      "column": 16
+    },
+    {
+      "name": "event",
+      "kind": "variable",
+      "file": "src/components/rules/cli.ts",
+      "line": 5,
+      "column": 9
+    },
+    {
+      "name": "projectDir",
+      "kind": "variable",
+      "file": "src/components/rules/cli.ts",
+      "line": 6,
+      "column": 9
+    },
+    {
+      "name": "rules",
+      "kind": "variable",
+      "file": "src/components/rules/cli.ts",
+      "line": 7,
+      "column": 9
+    },
+    {
+      "name": "additionalContext",
+      "kind": "variable",
+      "file": "src/components/rules/cli.ts",
+      "line": 8,
+      "column": 9
+    },
+    {
+      "name": "hookEventName",
+      "kind": "variable",
+      "file": "src/components/rules/cli.ts",
+      "line": 9,
+      "column": 9
+    },
+    {
+      "name": "discoverRules",
+      "kind": "function",
+      "file": "src/components/rules/discover.ts",
+      "line": 9,
+      "column": 17
+    },
+    {
+      "name": "formatRulesContext",
+      "kind": "function",
+      "file": "src/components/rules/discover.ts",
+      "line": 25,
+      "column": 17
+    },
+    {
+      "name": "ruleFiles",
+      "kind": "variable",
+      "file": "src/components/rules/discover.ts",
+      "line": 10,
+      "column": 9
+    },
+    {
+      "name": "rulesDir",
+      "kind": "variable",
+      "file": "src/components/rules/discover.ts",
+      "line": 11,
+      "column": 9
+    },
+    {
+      "name": "entry",
+      "kind": "variable",
+      "file": "src/components/rules/discover.ts",
+      "line": 13,
+      "column": 16
+    },
+    {
+      "name": "full",
+      "kind": "variable",
+      "file": "src/components/rules/discover.ts",
+      "line": 14,
+      "column": 13
+    },
+    {
+      "name": "agentsMdPath",
+      "kind": "variable",
+      "file": "src/components/rules/discover.ts",
+      "line": 20,
+      "column": 9
+    },
+    {
+      "name": "agentsMd",
+      "kind": "variable",
+      "file": "src/components/rules/discover.ts",
+      "line": 21,
+      "column": 9
+    },
+    {
+      "name": "parts",
+      "kind": "variable",
+      "file": "src/components/rules/discover.ts",
+      "line": 26,
+      "column": 9
+    },
+    {
+      "name": "f",
+      "kind": "variable",
+      "file": "src/components/rules/discover.ts",
+      "line": 28,
+      "column": 14
+    },
+    {
+      "name": "DiscoveredRules",
+      "kind": "type",
+      "file": "src/components/rules/discover.ts",
+      "line": 4,
+      "column": 18
+    },
+    {
+      "name": "readBoulder",
+      "kind": "function",
+      "file": "src/components/start-work-continuation/boulder.ts",
+      "line": 9,
+      "column": 17
+    },
+    {
+      "name": "hasIncompleteWork",
+      "kind": "function",
+      "file": "src/components/start-work-continuation/boulder.ts",
+      "line": 14,
+      "column": 17
+    },
+    {
+      "name": "p",
+      "kind": "variable",
+      "file": "src/components/start-work-continuation/boulder.ts",
+      "line": 10,
+      "column": 9
+    },
+    {
+      "name": "BoulderState",
+      "kind": "type",
+      "file": "src/components/start-work-continuation/boulder.ts",
+      "line": 4,
+      "column": 18
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "src/components/start-work-continuation/cli.ts",
+      "line": 4,
+      "column": 16
+    },
+    {
+      "name": "event",
+      "kind": "variable",
+      "file": "src/components/start-work-continuation/cli.ts",
+      "line": 5,
+      "column": 9
+    },
+    {
+      "name": "projectDir",
+      "kind": "variable",
+      "file": "src/components/start-work-continuation/cli.ts",
+      "line": 6,
+      "column": 9
+    },
+    {
+      "name": "state",
+      "kind": "variable",
+      "file": "src/components/start-work-continuation/cli.ts",
+      "line": 7,
+      "column": 9
+    },
+    {
+      "name": "hookEventName",
+      "kind": "variable",
+      "file": "src/components/start-work-continuation/cli.ts",
+      "line": 8,
+      "column": 9
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "src/components/telemetry/cli.ts",
+      "line": 4,
+      "column": 16
+    },
+    {
+      "name": "id",
+      "kind": "variable",
+      "file": "src/components/telemetry/cli.ts",
+      "line": 6,
+      "column": 11
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "src/components/ultrawork/cli.ts",
+      "line": 4,
+      "column": 16
+    },
+    {
+      "name": "raw",
+      "kind": "variable",
+      "file": "src/components/ultrawork/cli.ts",
+      "line": 5,
+      "column": 7
+    },
+    {
+      "name": "chunk",
+      "kind": "variable",
+      "file": "src/components/ultrawork/cli.ts",
+      "line": 7,
+      "column": 20
+    },
+    {
+      "name": "payload",
+      "kind": "variable",
+      "file": "src/components/ultrawork/cli.ts",
+      "line": 8,
+      "column": 9
+    },
+    {
+      "name": "detectUltrawork",
+      "kind": "function",
+      "file": "src/components/ultrawork/detect.ts",
+      "line": 5,
+      "column": 17
+    },
+    {
+      "name": "KEYWORDS",
+      "kind": "variable",
+      "file": "src/components/ultrawork/detect.ts",
+      "line": 3,
+      "column": 7
+    },
+    {
+      "name": "prompt",
+      "kind": "variable",
+      "file": "src/components/ultrawork/detect.ts",
+      "line": 6,
+      "column": 9
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "file": "src/components/ulw-loop/cli.ts",
+      "line": 4,
+      "column": 16
+    },
+    {
+      "name": "event",
+      "kind": "variable",
+      "file": "src/components/ulw-loop/cli.ts",
+      "line": 5,
+      "column": 9
+    },
+    {
+      "name": "raw",
+      "kind": "variable",
+      "file": "src/components/ulw-loop/cli.ts",
+      "line": 6,
+      "column": 7
+    },
+    {
+      "name": "chunk",
+      "kind": "variable",
+      "file": "src/components/ulw-loop/cli.ts",
+      "line": 8,
+      "column": 20
+    },
+    {
+      "name": "payload",
+      "kind": "variable",
+      "file": "src/components/ulw-loop/cli.ts",
+      "line": 9,
+      "column": 9
+    },
+    {
+      "name": "parseSteer",
+      "kind": "function",
+      "file": "src/components/ulw-loop/steer.ts",
+      "line": 5,
+      "column": 17
+    },
+    {
+      "name": "enforceGoalBudget",
+      "kind": "function",
+      "file": "src/components/ulw-loop/steer.ts",
+      "line": 19,
+      "column": 17
+    },
+    {
+      "name": "STEER_PATTERN",
+      "kind": "variable",
+      "file": "src/components/ulw-loop/steer.ts",
+      "line": 3,
+      "column": 7
+    },
+    {
+      "name": "prompt",
+      "kind": "variable",
+      "file": "src/components/ulw-loop/steer.ts",
+      "line": 6,
+      "column": 9
+    },
+    {
+      "name": "match",
+      "kind": "variable",
+      "file": "src/components/ulw-loop/steer.ts",
+      "line": 7,
+      "column": 9
+    },
+    {
+      "name": "toolInput",
+      "kind": "variable",
+      "file": "src/components/ulw-loop/steer.ts",
+      "line": 20,
+      "column": 9
+    },
+    {
+      "name": "normalizeCommand",
+      "kind": "function",
+      "file": "src/install/config-patcher.ts",
+      "line": 11,
+      "column": 10
+    },
+    {
+      "name": "hookKey",
+      "kind": "function",
+      "file": "src/install/config-patcher.ts",
+      "line": 15,
+      "column": 10
+    },
+    {
+      "name": "hookFromDef",
+      "kind": "function",
+      "file": "src/install/config-patcher.ts",
+      "line": 19,
+      "column": 10
+    },
+    {
+      "name": "patchConfigToml",
+      "kind": "function",
+      "file": "src/install/config-patcher.ts",
+      "line": 28,
+      "column": 17
+    },
+    {
+      "name": "raw",
+      "kind": "variable",
+      "file": "src/install/config-patcher.ts",
+      "line": 33,
+      "column": 9
+    },
+    {
+      "name": "parsed",
+      "kind": "variable",
+      "file": "src/install/config-patcher.ts",
+      "line": 34,
+      "column": 9
+    },
+    {
+      "name": "existingHooks",
+      "kind": "variable",
+      "file": "src/install/config-patcher.ts",
+      "line": 35,
+      "column": 9
+    },
+    {
+      "name": "existingKeys",
+      "kind": "variable",
+      "file": "src/install/config-patcher.ts",
+      "line": 36,
+      "column": 9
+    },
+    {
+      "name": "toAdd",
+      "kind": "variable",
+      "file": "src/install/config-patcher.ts",
+      "line": 40,
+      "column": 9
+    },
+    {
+      "name": "diff",
+      "kind": "variable",
+      "file": "src/install/config-patcher.ts",
+      "line": 45,
+      "column": 9
+    },
+    {
+      "name": "backupPath",
+      "kind": "variable",
+      "file": "src/install/config-patcher.ts",
+      "line": 51,
+      "column": 9
+    },
+    {
+      "name": "newHooks",
+      "kind": "variable",
+      "file": "src/install/config-patcher.ts",
+      "line": 54,
+      "column": 9
+    },
+    {
+      "name": "PatchResult",
+      "kind": "type",
+      "file": "src/install/config-patcher.ts",
+      "line": 5,
+      "column": 18
+    },
+    {
+      "name": "getHookDefs",
+      "kind": "function",
+      "file": "src/install/hook-defs.ts",
+      "line": 8,
+      "column": 17
+    },
+    {
+      "name": "cli",
+      "kind": "variable",
+      "file": "src/install/hook-defs.ts",
+      "line": 9,
+      "column": 9
+    },
+    {
+      "name": "HookDef",
+      "kind": "type",
+      "file": "src/install/hook-defs.ts",
+      "line": 1,
+      "column": 18
+    },
+    {
+      "name": "runKimiInstaller",
+      "kind": "function",
+      "file": "src/install/install-kimi.ts",
+      "line": 17,
+      "column": 23
+    },
+    {
+      "name": "env",
+      "kind": "variable",
+      "file": "src/install/install-kimi.ts",
+      "line": 18,
+      "column": 9
+    },
+    {
+      "name": "version",
+      "kind": "variable",
+      "file": "src/install/install-kimi.ts",
+      "line": 19,
+      "column": 9
+    },
+    {
+      "name": "cache",
+      "kind": "variable",
+      "file": "src/install/install-kimi.ts",
+      "line": 20,
+      "column": 9
+    },
+    {
+      "name": "pluginRoot",
+      "kind": "variable",
+      "file": "src/install/install-kimi.ts",
+      "line": 25,
+      "column": 11
+    },
+    {
+      "name": "configPath",
+      "kind": "variable",
+      "file": "src/install/install-kimi.ts",
+      "line": 30,
+      "column": 9
+    },
+    {
+      "name": "hooks",
+      "kind": "variable",
+      "file": "src/install/install-kimi.ts",
+      "line": 31,
+      "column": 9
+    },
+    {
+      "name": "result",
+      "kind": "variable",
+      "file": "src/install/install-kimi.ts",
+      "line": 32,
+      "column": 9
+    },
+    {
+      "name": "InstallOptions",
+      "kind": "type",
+      "file": "src/install/install-kimi.ts",
+      "line": 8,
+      "column": 18
+    },
+    {
+      "name": "resolveKimiEnv",
+      "kind": "function",
+      "file": "src/shared/paths.ts",
+      "line": 10,
+      "column": 17
+    },
+    {
+      "name": "pluginCacheDir",
+      "kind": "function",
+      "file": "src/shared/paths.ts",
+      "line": 31,
+      "column": 17
+    },
+    {
+      "name": "omoConfigDir",
+      "kind": "function",
+      "file": "src/shared/paths.ts",
+      "line": 35,
+      "column": 17
+    },
+    {
+      "name": "kimiCodeHome",
+      "kind": "variable",
+      "file": "src/shared/paths.ts",
+      "line": 15,
+      "column": 9
+    },
+    {
+      "name": "projectDirectory",
+      "kind": "variable",
+      "file": "src/shared/paths.ts",
+      "line": 19,
+      "column": 9
+    },
+    {
+      "name": "defaultHome",
+      "kind": "variable",
+      "file": "src/shared/paths.ts",
+      "line": 23,
+      "column": 9
+    },
+    {
+      "name": "binDir",
+      "kind": "variable",
+      "file": "src/shared/paths.ts",
+      "line": 24,
+      "column": 9
+    },
+    {
+      "name": "PathOptions",
+      "kind": "type",
+      "file": "src/shared/paths.ts",
+      "line": 4,
+      "column": 18
+    },
+    {
+      "name": "serializeHookOutput",
+      "kind": "function",
+      "file": "src/shared/serialize.ts",
+      "line": 3,
+      "column": 17
+    },
+    {
+      "name": "writeHookOutput",
+      "kind": "function",
+      "file": "src/shared/serialize.ts",
+      "line": 7,
+      "column": 17
+    },
+    {
+      "name": "isTelemetryDisabled",
+      "kind": "function",
+      "file": "src/shared/telemetry.ts",
+      "line": 9,
+      "column": 17
+    },
+    {
+      "name": "shouldEmitDailyActive",
+      "kind": "function",
+      "file": "src/shared/telemetry.ts",
+      "line": 19,
+      "column": 17
+    },
+    {
+      "name": "getDistinctId",
+      "kind": "function",
+      "file": "src/shared/telemetry.ts",
+      "line": 29,
+      "column": 17
+    },
+    {
+      "name": "STATE_DIR",
+      "kind": "variable",
+      "file": "src/shared/telemetry.ts",
+      "line": 6,
+      "column": 7
+    },
+    {
+      "name": "STATE_FILE",
+      "kind": "variable",
+      "file": "src/shared/telemetry.ts",
+      "line": 7,
+      "column": 7
+    },
+    {
+      "name": "env",
+      "kind": "variable",
+      "file": "src/shared/telemetry.ts",
+      "line": 10,
+      "column": 9
+    },
+    {
+      "name": "today",
+      "kind": "variable",
+      "file": "src/shared/telemetry.ts",
+      "line": 21,
+      "column": 9
+    },
+    {
+      "name": "state",
+      "kind": "variable",
+      "file": "src/shared/telemetry.ts",
+      "line": 22,
+      "column": 9
+    },
+    {
+      "name": "KimiEnv",
+      "kind": "type",
+      "file": "src/shared/types.ts",
+      "line": 1,
+      "column": 18
+    },
+    {
+      "name": "HookPayload",
+      "kind": "type",
+      "file": "src/shared/types.ts",
+      "line": 8,
+      "column": 18
+    },
+    {
+      "name": "HookOutput",
+      "kind": "type",
+      "file": "src/shared/types.ts",
+      "line": 22,
+      "column": 18
+    },
+    {
+      "name": "HookDecision",
+      "kind": "type",
+      "file": "src/shared/types.ts",
+      "line": 20,
+      "column": 13
+    },
+    {
+      "name": "out",
+      "kind": "variable",
+      "file": "tests/unit/components/bootstrap.test.ts",
+      "line": 6,
+      "column": 11
+    },
+    {
+      "name": "fetchData",
+      "kind": "function",
+      "file": "tests/unit/components/codegraph.test.ts",
+      "line": 29,
+      "column": 23
+    },
+    {
+      "name": "a",
+      "kind": "function",
+      "file": "tests/unit/components/codegraph.test.ts",
+      "line": 86,
+      "column": 68
+    },
+    {
+      "name": "b",
+      "kind": "function",
+      "file": "tests/unit/components/codegraph.test.ts",
+      "line": 87,
+      "column": 77
+    },
+    {
+      "name": "add",
+      "kind": "function",
+      "file": "tests/unit/components/codegraph.test.ts",
+      "line": 94,
+      "column": 71
+    },
+    {
+      "name": "sum",
+      "kind": "function",
+      "file": "tests/unit/components/codegraph.test.ts",
+      "line": 157,
+      "column": 71
+    },
+    {
+      "name": "UserService",
+      "kind": "class",
+      "file": "tests/unit/components/codegraph.test.ts",
+      "line": 30,
+      "column": 7
+    },
+    {
+      "name": "MyClass",
+      "kind": "class",
+      "file": "tests/unit/components/codegraph.test.ts",
+      "line": 48,
+      "column": 7
+    },
+    {
+      "name": "tmpDir",
+      "kind": "variable",
+      "file": "tests/unit/components/codegraph.test.ts",
+      "line": 11,
+      "column": 7
+    },
+    {
+      "name": "content",
+      "kind": "variable",
+      "file": "tests/unit/components/codegraph.test.ts",
+      "line": 28,
+      "column": 13
+    },
+    {
+      "name": "PI",
+      "kind": "variable",
+      "file": "tests/unit/components/codegraph.test.ts",
+      "line": 31,
+      "column": 14
+    },
+    {
+      "name": "symbols",
+      "kind": "variable",
+      "file": "tests/unit/components/codegraph.test.ts",
+      "line": 35,
+      "column": 13
+    },
+    {
+      "name": "names",
+      "kind": "variable",
+      "file": "tests/unit/components/codegraph.test.ts",
+      "line": 36,
+      "column": 13
+    },
+    {
+      "name": "content",
+      "kind": "variable",
+      "file": "tests/unit/components/codegraph.test.ts",
+      "line": 46,
+      "column": 13
+    },
+    {
+      "name": "symbols",
+      "kind": "variable",
+      "file": "tests/unit/components/codegraph.test.ts",
+      "line": 51,
+      "column": 13
+    },
+    {
+      "name": "content",
+      "kind": "variable",
+      "file": "tests/unit/components/codegraph.test.ts",
+      "line": 57,
+      "column": 13
+    },
+    {
+      "name": "symbols",
+      "kind": "variable",
+      "file": "tests/unit/components/codegraph.test.ts",
+      "line": 61,
+      "column": 13
+    },
+    {
+      "name": "content",
+      "kind": "variable",
+      "file": "tests/unit/components/codegraph.test.ts",
+      "line": 67,
+      "column": 13
+    },
+    {
+      "name": "symbols",
+      "kind": "variable",
+      "file": "tests/unit/components/codegraph.test.ts",
+      "line": 72,
+      "column": 13
+    },
+    {
+      "name": "files",
+      "kind": "variable",
+      "file": "tests/unit/components/codegraph.test.ts",
+      "line": 88,
+      "column": 13
+    },
+    {
+      "name": "index",
+      "kind": "variable",
+      "file": "tests/unit/components/codegraph.test.ts",
+      "line": 96,
+      "column": 13
+    },
+    {
+      "name": "index",
+      "kind": "variable",
+      "file": "tests/unit/components/codegraph.test.ts",
+      "line": 105,
+      "column": 13
+    },
+    {
+      "name": "loaded",
+      "kind": "variable",
+      "file": "tests/unit/components/codegraph.test.ts",
+      "line": 108,
+      "column": 13
+    },
+    {
+      "name": "index",
+      "kind": "variable",
+      "file": "tests/unit/components/codegraph.test.ts",
+      "line": 115,
+      "column": 13
+    },
+    {
+      "name": "index",
+      "kind": "variable",
+      "file": "tests/unit/components/codegraph.test.ts",
+      "line": 130,
+      "column": 13
+    },
+    {
+      "name": "related",
+      "kind": "variable",
+      "file": "tests/unit/components/codegraph.test.ts",
+      "line": 139,
+      "column": 13
+    },
+    {
+      "name": "index",
+      "kind": "variable",
+      "file": "tests/unit/components/codegraph.test.ts",
+      "line": 144,
+      "column": 13
+    },
+    {
+      "name": "out",
+      "kind": "variable",
+      "file": "tests/unit/components/codegraph.test.ts",
+      "line": 151,
+      "column": 13
+    },
+    {
+      "name": "originalCwd",
+      "kind": "variable",
+      "file": "tests/unit/components/codegraph.test.ts",
+      "line": 158,
+      "column": 13
+    },
+    {
+      "name": "loaded",
+      "kind": "variable",
+      "file": "tests/unit/components/codegraph.test.ts",
+      "line": 163,
+      "column": 15
+    },
+    {
+      "name": "Config",
+      "kind": "type",
+      "file": "tests/unit/components/codegraph.test.ts",
+      "line": 32,
+      "column": 18
+    },
+    {
+      "name": "ID",
+      "kind": "type",
+      "file": "tests/unit/components/codegraph.test.ts",
+      "line": 33,
+      "column": 13
+    },
+    {
+      "name": "Item",
+      "kind": "type",
+      "file": "tests/unit/components/codegraph.test.ts",
+      "line": 59,
+      "column": 6
+    },
+    {
+      "name": "tmp",
+      "kind": "variable",
+      "file": "tests/unit/components/comment-checker.test.ts",
+      "line": 8,
+      "column": 7
+    },
+    {
+      "name": "p",
+      "kind": "variable",
+      "file": "tests/unit/components/comment-checker.test.ts",
+      "line": 13,
+      "column": 11
+    },
+    {
+      "name": "x",
+      "kind": "variable",
+      "file": "tests/unit/components/comment-checker.test.ts",
+      "line": 14,
+      "column": 51
+    },
+    {
+      "name": "r",
+      "kind": "variable",
+      "file": "tests/unit/components/comment-checker.test.ts",
+      "line": 15,
+      "column": 11
+    },
+    {
+      "name": "p",
+      "kind": "variable",
+      "file": "tests/unit/components/comment-checker.test.ts",
+      "line": 21,
+      "column": 11
+    },
+    {
+      "name": "x",
+      "kind": "variable",
+      "file": "tests/unit/components/comment-checker.test.ts",
+      "line": 22,
+      "column": 32
+    },
+    {
+      "name": "r",
+      "kind": "variable",
+      "file": "tests/unit/components/comment-checker.test.ts",
+      "line": 23,
+      "column": 11
+    },
+    {
+      "name": "out",
+      "kind": "variable",
+      "file": "tests/unit/components/executor-verify.test.ts",
+      "line": 6,
+      "column": 11
+    },
+    {
+      "name": "out",
+      "kind": "variable",
+      "file": "tests/unit/components/executor-verify.test.ts",
+      "line": 11,
+      "column": 11
+    },
+    {
+      "name": "out",
+      "kind": "variable",
+      "file": "tests/unit/components/git-bash.test.ts",
+      "line": 6,
+      "column": 11
+    },
+    {
+      "name": "transport",
+      "kind": "variable",
+      "file": "tests/unit/components/lsp-client.test.ts",
+      "line": 7,
+      "column": 11
+    },
+    {
+      "name": "sentDiagnostics",
+      "kind": "variable",
+      "file": "tests/unit/components/lsp-client.test.ts",
+      "line": 11,
+      "column": 9
+    },
+    {
+      "name": "client",
+      "kind": "variable",
+      "file": "tests/unit/components/lsp-client.test.ts",
+      "line": 28,
+      "column": 11
+    },
+    {
+      "name": "x",
+      "kind": "variable",
+      "file": "tests/unit/components/lsp-client.test.ts",
+      "line": 30,
+      "column": 69
+    },
+    {
+      "name": "diagnostics",
+      "kind": "variable",
+      "file": "tests/unit/components/lsp-client.test.ts",
+      "line": 31,
+      "column": 11
+    },
+    {
+      "name": "tmp",
+      "kind": "variable",
+      "file": "tests/unit/components/lsp.test.ts",
+      "line": 9,
+      "column": 7
+    },
+    {
+      "name": "file",
+      "kind": "variable",
+      "file": "tests/unit/components/lsp.test.ts",
+      "line": 20,
+      "column": 11
+    },
+    {
+      "name": "x",
+      "kind": "variable",
+      "file": "tests/unit/components/lsp.test.ts",
+      "line": 21,
+      "column": 35
+    },
+    {
+      "name": "diagnostics",
+      "kind": "variable",
+      "file": "tests/unit/components/lsp.test.ts",
+      "line": 22,
+      "column": 11
+    },
+    {
+      "name": "file",
+      "kind": "variable",
+      "file": "tests/unit/components/lsp.test.ts",
+      "line": 27,
+      "column": 11
+    },
+    {
+      "name": "x",
+      "kind": "variable",
+      "file": "tests/unit/components/lsp.test.ts",
+      "line": 28,
+      "column": 35
+    },
+    {
+      "name": "transport",
+      "kind": "variable",
+      "file": "tests/unit/components/lsp.test.ts",
+      "line": 30,
+      "column": 11
+    },
+    {
+      "name": "diagnostics",
+      "kind": "variable",
+      "file": "tests/unit/components/lsp.test.ts",
+      "line": 53,
+      "column": 11
+    },
+    {
+      "name": "tmp",
+      "kind": "variable",
+      "file": "tests/unit/components/rules.test.ts",
+      "line": 8,
+      "column": 7
+    },
+    {
+      "name": "rules",
+      "kind": "variable",
+      "file": "tests/unit/components/rules.test.ts",
+      "line": 16,
+      "column": 11
+    },
+    {
+      "name": "ctx",
+      "kind": "variable",
+      "file": "tests/unit/components/rules.test.ts",
+      "line": 19,
+      "column": 11
+    },
+    {
+      "name": "tmp",
+      "kind": "variable",
+      "file": "tests/unit/components/start-work-continuation.test.ts",
+      "line": 8,
+      "column": 7
+    },
+    {
+      "name": "original",
+      "kind": "variable",
+      "file": "tests/unit/components/telemetry.test.ts",
+      "line": 11,
+      "column": 11
+    },
+    {
+      "name": "out",
+      "kind": "variable",
+      "file": "tests/unit/components/ultrawork.test.ts",
+      "line": 6,
+      "column": 11
+    },
+    {
+      "name": "out",
+      "kind": "variable",
+      "file": "tests/unit/components/ultrawork.test.ts",
+      "line": 11,
+      "column": 11
+    },
+    {
+      "name": "out",
+      "kind": "variable",
+      "file": "tests/unit/components/ulw-loop.test.ts",
+      "line": 6,
+      "column": 11
+    },
+    {
+      "name": "out",
+      "kind": "variable",
+      "file": "tests/unit/components/ulw-loop.test.ts",
+      "line": 11,
+      "column": 11
+    },
+    {
+      "name": "tmpDir",
+      "kind": "variable",
+      "file": "tests/unit/install/config-patcher.test.ts",
+      "line": 9,
+      "column": 7
+    },
+    {
+      "name": "configPath",
+      "kind": "variable",
+      "file": "tests/unit/install/config-patcher.test.ts",
+      "line": 14,
+      "column": 11
+    },
+    {
+      "name": "hooks",
+      "kind": "variable",
+      "file": "tests/unit/install/config-patcher.test.ts",
+      "line": 15,
+      "column": 11
+    },
+    {
+      "name": "r1",
+      "kind": "variable",
+      "file": "tests/unit/install/config-patcher.test.ts",
+      "line": 16,
+      "column": 11
+    },
+    {
+      "name": "r2",
+      "kind": "variable",
+      "file": "tests/unit/install/config-patcher.test.ts",
+      "line": 18,
+      "column": 11
+    },
+    {
+      "name": "configPath",
+      "kind": "variable",
+      "file": "tests/unit/install/config-patcher.test.ts",
+      "line": 23,
+      "column": 11
+    },
+    {
+      "name": "hooks",
+      "kind": "variable",
+      "file": "tests/unit/install/config-patcher.test.ts",
+      "line": 25,
+      "column": 11
+    },
+    {
+      "name": "r",
+      "kind": "variable",
+      "file": "tests/unit/install/config-patcher.test.ts",
+      "line": 26,
+      "column": 11
+    },
+    {
+      "name": "configPath",
+      "kind": "variable",
+      "file": "tests/unit/install/config-patcher.test.ts",
+      "line": 32,
+      "column": 11
+    },
+    {
+      "name": "hooks",
+      "kind": "variable",
+      "file": "tests/unit/install/config-patcher.test.ts",
+      "line": 34,
+      "column": 11
+    },
+    {
+      "name": "r",
+      "kind": "variable",
+      "file": "tests/unit/install/config-patcher.test.ts",
+      "line": 35,
+      "column": 11
+    },
+    {
+      "name": "env",
+      "kind": "variable",
+      "file": "tests/unit/shared/paths.test.ts",
+      "line": 6,
+      "column": 11
+    }
+  ],
+  "byFile": {
+    "src/cli/index.ts": [
+      {
+        "name": "extractArg",
+        "kind": "function",
+        "file": "src/cli/index.ts",
+        "line": 6,
+        "column": 10
+      },
+      {
+        "name": "args",
+        "kind": "variable",
+        "file": "src/cli/index.ts",
+        "line": 3,
+        "column": 7
+      },
+      {
+        "name": "command",
+        "kind": "variable",
+        "file": "src/cli/index.ts",
+        "line": 4,
+        "column": 7
+      },
+      {
+        "name": "idx",
+        "kind": "variable",
+        "file": "src/cli/index.ts",
+        "line": 7,
+        "column": 9
+      },
+      {
+        "name": "options",
+        "kind": "variable",
+        "file": "src/cli/index.ts",
+        "line": 11,
+        "column": 7
+      }
+    ],
+    "src/components/bootstrap/cli.ts": [
+      {
+        "name": "main",
+        "kind": "function",
+        "file": "src/components/bootstrap/cli.ts",
+        "line": 4,
+        "column": 16
+      },
+      {
+        "name": "event",
+        "kind": "variable",
+        "file": "src/components/bootstrap/cli.ts",
+        "line": 5,
+        "column": 9
+      },
+      {
+        "name": "raw",
+        "kind": "variable",
+        "file": "src/components/bootstrap/cli.ts",
+        "line": 10,
+        "column": 7
+      },
+      {
+        "name": "chunk",
+        "kind": "variable",
+        "file": "src/components/bootstrap/cli.ts",
+        "line": 12,
+        "column": 20
+      },
+      {
+        "name": "payload",
+        "kind": "variable",
+        "file": "src/components/bootstrap/cli.ts",
+        "line": 13,
+        "column": 9
+      }
+    ],
+    "src/components/bootstrap/session-start.ts": [
+      {
+        "name": "getBootstrapContext",
+        "kind": "function",
+        "file": "src/components/bootstrap/session-start.ts",
+        "line": 9,
+        "column": 17
+      },
+      {
+        "name": "runSessionStart",
+        "kind": "function",
+        "file": "src/components/bootstrap/session-start.ts",
+        "line": 17,
+        "column": 17
+      },
+      {
+        "name": "ctx",
+        "kind": "variable",
+        "file": "src/components/bootstrap/session-start.ts",
+        "line": 18,
+        "column": 9
+      },
+      {
+        "name": "BootstrapContext",
+        "kind": "type",
+        "file": "src/components/bootstrap/session-start.ts",
+        "line": 3,
+        "column": 18
+      }
+    ],
+    "src/components/codegraph/bootstrap.ts": [
+      {
+        "name": "runBootstrap",
+        "kind": "function",
+        "file": "src/components/codegraph/bootstrap.ts",
+        "line": 4,
+        "column": 17
+      },
+      {
+        "name": "runPostToolUse",
+        "kind": "function",
+        "file": "src/components/codegraph/bootstrap.ts",
+        "line": 22,
+        "column": 17
+      },
+      {
+        "name": "projectDir",
+        "kind": "variable",
+        "file": "src/components/codegraph/bootstrap.ts",
+        "line": 5,
+        "column": 9
+      },
+      {
+        "name": "index",
+        "kind": "variable",
+        "file": "src/components/codegraph/bootstrap.ts",
+        "line": 8,
+        "column": 13
+      }
+    ],
+    "src/components/codegraph/cli.ts": [
+      {
+        "name": "main",
+        "kind": "function",
+        "file": "src/components/codegraph/cli.ts",
+        "line": 4,
+        "column": 16
+      },
+      {
+        "name": "event",
+        "kind": "variable",
+        "file": "src/components/codegraph/cli.ts",
+        "line": 5,
+        "column": 9
+      },
+      {
+        "name": "raw",
+        "kind": "variable",
+        "file": "src/components/codegraph/cli.ts",
+        "line": 6,
+        "column": 7
+      },
+      {
+        "name": "chunk",
+        "kind": "variable",
+        "file": "src/components/codegraph/cli.ts",
+        "line": 7,
+        "column": 20
+      },
+      {
+        "name": "payload",
+        "kind": "variable",
+        "file": "src/components/codegraph/cli.ts",
+        "line": 8,
+        "column": 9
+      }
+    ],
+    "src/components/codegraph/indexer.ts": [
+      {
+        "name": "listProjectFiles",
+        "kind": "function",
+        "file": "src/components/codegraph/indexer.ts",
+        "line": 8,
+        "column": 17
+      },
+      {
+        "name": "walk",
+        "kind": "function",
+        "file": "src/components/codegraph/indexer.ts",
+        "line": 11,
+        "column": 12
+      },
+      {
+        "name": "buildIndex",
+        "kind": "function",
+        "file": "src/components/codegraph/indexer.ts",
+        "line": 34,
+        "column": 17
+      },
+      {
+        "name": "indexPath",
+        "kind": "function",
+        "file": "src/components/codegraph/indexer.ts",
+        "line": 52,
+        "column": 17
+      },
+      {
+        "name": "loadIndex",
+        "kind": "function",
+        "file": "src/components/codegraph/indexer.ts",
+        "line": 56,
+        "column": 17
+      },
+      {
+        "name": "saveIndex",
+        "kind": "function",
+        "file": "src/components/codegraph/indexer.ts",
+        "line": 62,
+        "column": 17
+      },
+      {
+        "name": "SUPPORTED_EXTS",
+        "kind": "variable",
+        "file": "src/components/codegraph/indexer.ts",
+        "line": 6,
+        "column": 7
+      },
+      {
+        "name": "files",
+        "kind": "variable",
+        "file": "src/components/codegraph/indexer.ts",
+        "line": 9,
+        "column": 9
+      },
+      {
+        "name": "entries",
+        "kind": "variable",
+        "file": "src/components/codegraph/indexer.ts",
+        "line": 12,
+        "column": 9
+      },
+      {
+        "name": "entry",
+        "kind": "variable",
+        "file": "src/components/codegraph/indexer.ts",
+        "line": 18,
+        "column": 16
+      },
+      {
+        "name": "full",
+        "kind": "variable",
+        "file": "src/components/codegraph/indexer.ts",
+        "line": 19,
+        "column": 13
+      },
+      {
+        "name": "ext",
+        "kind": "variable",
+        "file": "src/components/codegraph/indexer.ts",
+        "line": 24,
+        "column": 15
+      },
+      {
+        "name": "files",
+        "kind": "variable",
+        "file": "src/components/codegraph/indexer.ts",
+        "line": 35,
+        "column": 9
+      },
+      {
+        "name": "allSymbols",
+        "kind": "variable",
+        "file": "src/components/codegraph/indexer.ts",
+        "line": 36,
+        "column": 9
+      },
+      {
+        "name": "byFile",
+        "kind": "variable",
+        "file": "src/components/codegraph/indexer.ts",
+        "line": 37,
+        "column": 9
+      },
+      {
+        "name": "rel",
+        "kind": "variable",
+        "file": "src/components/codegraph/indexer.ts",
+        "line": 39,
+        "column": 14
+      },
+      {
+        "name": "full",
+        "kind": "variable",
+        "file": "src/components/codegraph/indexer.ts",
+        "line": 40,
+        "column": 11
+      },
+      {
+        "name": "content",
+        "kind": "variable",
+        "file": "src/components/codegraph/indexer.ts",
+        "line": 41,
+        "column": 11
+      },
+      {
+        "name": "symbols",
+        "kind": "variable",
+        "file": "src/components/codegraph/indexer.ts",
+        "line": 42,
+        "column": 11
+      },
+      {
+        "name": "p",
+        "kind": "variable",
+        "file": "src/components/codegraph/indexer.ts",
+        "line": 57,
+        "column": 9
+      },
+      {
+        "name": "p",
+        "kind": "variable",
+        "file": "src/components/codegraph/indexer.ts",
+        "line": 63,
+        "column": 9
+      }
+    ],
+    "src/components/codegraph/search.ts": [
+      {
+        "name": "search",
+        "kind": "function",
+        "file": "src/components/codegraph/search.ts",
+        "line": 9,
+        "column": 17
+      },
+      {
+        "name": "relate",
+        "kind": "function",
+        "file": "src/components/codegraph/search.ts",
+        "line": 24,
+        "column": 17
+      },
+      {
+        "name": "results",
+        "kind": "variable",
+        "file": "src/components/codegraph/search.ts",
+        "line": 10,
+        "column": 7
+      },
+      {
+        "name": "lower",
+        "kind": "variable",
+        "file": "src/components/codegraph/search.ts",
+        "line": 12,
+        "column": 11
+      },
+      {
+        "name": "targets",
+        "kind": "variable",
+        "file": "src/components/codegraph/search.ts",
+        "line": 25,
+        "column": 9
+      },
+      {
+        "name": "files",
+        "kind": "variable",
+        "file": "src/components/codegraph/search.ts",
+        "line": 27,
+        "column": 9
+      },
+      {
+        "name": "SearchQuery",
+        "kind": "type",
+        "file": "src/components/codegraph/search.ts",
+        "line": 3,
+        "column": 18
+      }
+    ],
+    "src/components/codegraph/symbols.ts": [
+      {
+        "name": "inferLanguageId",
+        "kind": "function",
+        "file": "src/components/codegraph/symbols.ts",
+        "line": 43,
+        "column": 17
+      },
+      {
+        "name": "parseFile",
+        "kind": "function",
+        "file": "src/components/codegraph/symbols.ts",
+        "line": 48,
+        "column": 17
+      },
+      {
+        "name": "PARSERS",
+        "kind": "variable",
+        "file": "src/components/codegraph/symbols.ts",
+        "line": 15,
+        "column": 7
+      },
+      {
+        "name": "ext",
+        "kind": "variable",
+        "file": "src/components/codegraph/symbols.ts",
+        "line": 44,
+        "column": 9
+      },
+      {
+        "name": "ext",
+        "kind": "variable",
+        "file": "src/components/codegraph/symbols.ts",
+        "line": 49,
+        "column": 9
+      },
+      {
+        "name": "patterns",
+        "kind": "variable",
+        "file": "src/components/codegraph/symbols.ts",
+        "line": 50,
+        "column": 9
+      },
+      {
+        "name": "symbols",
+        "kind": "variable",
+        "file": "src/components/codegraph/symbols.ts",
+        "line": 53,
+        "column": 9
+      },
+      {
+        "name": "lines",
+        "kind": "variable",
+        "file": "src/components/codegraph/symbols.ts",
+        "line": 54,
+        "column": 9
+      },
+      {
+        "name": "pattern",
+        "kind": "variable",
+        "file": "src/components/codegraph/symbols.ts",
+        "line": 56,
+        "column": 14
+      },
+      {
+        "name": "match",
+        "kind": "variable",
+        "file": "src/components/codegraph/symbols.ts",
+        "line": 57,
+        "column": 9
+      },
+      {
+        "name": "name",
+        "kind": "variable",
+        "file": "src/components/codegraph/symbols.ts",
+        "line": 61,
+        "column": 13
+      },
+      {
+        "name": "index",
+        "kind": "variable",
+        "file": "src/components/codegraph/symbols.ts",
+        "line": 63,
+        "column": 13
+      },
+      {
+        "name": "line",
+        "kind": "variable",
+        "file": "src/components/codegraph/symbols.ts",
+        "line": 64,
+        "column": 13
+      },
+      {
+        "name": "column",
+        "kind": "variable",
+        "file": "src/components/codegraph/symbols.ts",
+        "line": 65,
+        "column": 13
+      },
+      {
+        "name": "kind",
+        "kind": "variable",
+        "file": "src/components/codegraph/symbols.ts",
+        "line": 66,
+        "column": 11
+      },
+      {
+        "name": "Symbol",
+        "kind": "type",
+        "file": "src/components/codegraph/symbols.ts",
+        "line": 1,
+        "column": 18
+      },
+      {
+        "name": "CodeGraphIndex",
+        "kind": "type",
+        "file": "src/components/codegraph/symbols.ts",
+        "line": 9,
+        "column": 18
+      }
+    ],
+    "src/components/comment-checker/check.ts": [
+      {
+        "name": "checkFile",
+        "kind": "function",
+        "file": "src/components/comment-checker/check.ts",
+        "line": 10,
+        "column": 17
+      },
+      {
+        "name": "COMMENT_PATTERN",
+        "kind": "variable",
+        "file": "src/components/comment-checker/check.ts",
+        "line": 3,
+        "column": 7
+      },
+      {
+        "name": "content",
+        "kind": "variable",
+        "file": "src/components/comment-checker/check.ts",
+        "line": 11,
+        "column": 9
+      },
+      {
+        "name": "matches",
+        "kind": "variable",
+        "file": "src/components/comment-checker/check.ts",
+        "line": 12,
+        "column": 9
+      },
+      {
+        "name": "CheckResult",
+        "kind": "type",
+        "file": "src/components/comment-checker/check.ts",
+        "line": 5,
+        "column": 18
+      }
+    ],
+    "src/components/comment-checker/cli.ts": [
+      {
+        "name": "main",
+        "kind": "function",
+        "file": "src/components/comment-checker/cli.ts",
+        "line": 4,
+        "column": 16
+      },
+      {
+        "name": "raw",
+        "kind": "variable",
+        "file": "src/components/comment-checker/cli.ts",
+        "line": 5,
+        "column": 7
+      },
+      {
+        "name": "chunk",
+        "kind": "variable",
+        "file": "src/components/comment-checker/cli.ts",
+        "line": 7,
+        "column": 20
+      },
+      {
+        "name": "payload",
+        "kind": "variable",
+        "file": "src/components/comment-checker/cli.ts",
+        "line": 8,
+        "column": 9
+      },
+      {
+        "name": "filePath",
+        "kind": "variable",
+        "file": "src/components/comment-checker/cli.ts",
+        "line": 9,
+        "column": 9
+      },
+      {
+        "name": "result",
+        "kind": "variable",
+        "file": "src/components/comment-checker/cli.ts",
+        "line": 14,
+        "column": 9
+      }
+    ],
+    "src/components/executor-verify/cli.ts": [
+      {
+        "name": "main",
+        "kind": "function",
+        "file": "src/components/executor-verify/cli.ts",
+        "line": 4,
+        "column": 16
+      },
+      {
+        "name": "raw",
+        "kind": "variable",
+        "file": "src/components/executor-verify/cli.ts",
+        "line": 5,
+        "column": 7
+      },
+      {
+        "name": "chunk",
+        "kind": "variable",
+        "file": "src/components/executor-verify/cli.ts",
+        "line": 7,
+        "column": 20
+      },
+      {
+        "name": "payload",
+        "kind": "variable",
+        "file": "src/components/executor-verify/cli.ts",
+        "line": 8,
+        "column": 9
+      }
+    ],
+    "src/components/executor-verify/verify.ts": [
+      {
+        "name": "verifyEvidence",
+        "kind": "function",
+        "file": "src/components/executor-verify/verify.ts",
+        "line": 3,
+        "column": 17
+      },
+      {
+        "name": "output",
+        "kind": "variable",
+        "file": "src/components/executor-verify/verify.ts",
+        "line": 4,
+        "column": 9
+      }
+    ],
+    "src/components/git-bash/cli.ts": [
+      {
+        "name": "main",
+        "kind": "function",
+        "file": "src/components/git-bash/cli.ts",
+        "line": 4,
+        "column": 16
+      },
+      {
+        "name": "raw",
+        "kind": "variable",
+        "file": "src/components/git-bash/cli.ts",
+        "line": 5,
+        "column": 7
+      },
+      {
+        "name": "chunk",
+        "kind": "variable",
+        "file": "src/components/git-bash/cli.ts",
+        "line": 7,
+        "column": 20
+      },
+      {
+        "name": "payload",
+        "kind": "variable",
+        "file": "src/components/git-bash/cli.ts",
+        "line": 8,
+        "column": 9
+      }
+    ],
+    "src/components/git-bash/mcp-server.ts": [
+      {
+        "name": "startGitBashServer",
+        "kind": "function",
+        "file": "src/components/git-bash/mcp-server.ts",
+        "line": 5,
+        "column": 17
+      },
+      {
+        "name": "server",
+        "kind": "variable",
+        "file": "src/components/git-bash/mcp-server.ts",
+        "line": 6,
+        "column": 9
+      },
+      {
+        "name": "transport",
+        "kind": "variable",
+        "file": "src/components/git-bash/mcp-server.ts",
+        "line": 21,
+        "column": 9
+      }
+    ],
+    "src/components/git-bash/recommend.ts": [
+      {
+        "name": "recommendGitBash",
+        "kind": "function",
+        "file": "src/components/git-bash/recommend.ts",
+        "line": 4,
+        "column": 17
+      }
+    ],
+    "src/components/lsp/cli.ts": [
+      {
+        "name": "main",
+        "kind": "function",
+        "file": "src/components/lsp/cli.ts",
+        "line": 4,
+        "column": 16
+      },
+      {
+        "name": "event",
+        "kind": "variable",
+        "file": "src/components/lsp/cli.ts",
+        "line": 5,
+        "column": 9
+      },
+      {
+        "name": "projectDir",
+        "kind": "variable",
+        "file": "src/components/lsp/cli.ts",
+        "line": 6,
+        "column": 9
+      },
+      {
+        "name": "raw",
+        "kind": "variable",
+        "file": "src/components/lsp/cli.ts",
+        "line": 12,
+        "column": 7
+      },
+      {
+        "name": "chunk",
+        "kind": "variable",
+        "file": "src/components/lsp/cli.ts",
+        "line": 13,
+        "column": 20
+      },
+      {
+        "name": "payload",
+        "kind": "variable",
+        "file": "src/components/lsp/cli.ts",
+        "line": 14,
+        "column": 9
+      },
+      {
+        "name": "filePath",
+        "kind": "variable",
+        "file": "src/components/lsp/cli.ts",
+        "line": 15,
+        "column": 9
+      },
+      {
+        "name": "files",
+        "kind": "variable",
+        "file": "src/components/lsp/cli.ts",
+        "line": 16,
+        "column": 9
+      },
+      {
+        "name": "cached",
+        "kind": "variable",
+        "file": "src/components/lsp/cli.ts",
+        "line": 17,
+        "column": 9
+      },
+      {
+        "name": "f",
+        "kind": "variable",
+        "file": "src/components/lsp/cli.ts",
+        "line": 18,
+        "column": 14
+      },
+      {
+        "name": "lspCommand",
+        "kind": "variable",
+        "file": "src/components/lsp/cli.ts",
+        "line": 21,
+        "column": 9
+      },
+      {
+        "name": "lspArgs",
+        "kind": "variable",
+        "file": "src/components/lsp/cli.ts",
+        "line": 22,
+        "column": 9
+      },
+      {
+        "name": "transport",
+        "kind": "variable",
+        "file": "src/components/lsp/cli.ts",
+        "line": 23,
+        "column": 9
+      },
+      {
+        "name": "all",
+        "kind": "variable",
+        "file": "src/components/lsp/cli.ts",
+        "line": 25,
+        "column": 9
+      },
+      {
+        "name": "f",
+        "kind": "variable",
+        "file": "src/components/lsp/cli.ts",
+        "line": 27,
+        "column": 16
+      },
+      {
+        "name": "diagnostics",
+        "kind": "variable",
+        "file": "src/components/lsp/cli.ts",
+        "line": 28,
+        "column": 13
+      }
+    ],
+    "src/components/lsp/diagnostics.ts": [
+      {
+        "name": "readCache",
+        "kind": "function",
+        "file": "src/components/lsp/diagnostics.ts",
+        "line": 16,
+        "column": 17
+      },
+      {
+        "name": "writeCache",
+        "kind": "function",
+        "file": "src/components/lsp/diagnostics.ts",
+        "line": 21,
+        "column": 17
+      },
+      {
+        "name": "createTransport",
+        "kind": "function",
+        "file": "src/components/lsp/diagnostics.ts",
+        "line": 27,
+        "column": 17
+      },
+      {
+        "name": "runDiagnostics",
+        "kind": "function",
+        "file": "src/components/lsp/diagnostics.ts",
+        "line": 36,
+        "column": 23
+      },
+      {
+        "name": "inferLanguageId",
+        "kind": "function",
+        "file": "src/components/lsp/diagnostics.ts",
+        "line": 61,
+        "column": 10
+      },
+      {
+        "name": "CACHE_FILE",
+        "kind": "variable",
+        "file": "src/components/lsp/diagnostics.ts",
+        "line": 14,
+        "column": 7
+      },
+      {
+        "name": "p",
+        "kind": "variable",
+        "file": "src/components/lsp/diagnostics.ts",
+        "line": 17,
+        "column": 9
+      },
+      {
+        "name": "p",
+        "kind": "variable",
+        "file": "src/components/lsp/diagnostics.ts",
+        "line": 22,
+        "column": 9
+      },
+      {
+        "name": "content",
+        "kind": "variable",
+        "file": "src/components/lsp/diagnostics.ts",
+        "line": 37,
+        "column": 9
+      },
+      {
+        "name": "uri",
+        "kind": "variable",
+        "file": "src/components/lsp/diagnostics.ts",
+        "line": 38,
+        "column": 9
+      },
+      {
+        "name": "languageId",
+        "kind": "variable",
+        "file": "src/components/lsp/diagnostics.ts",
+        "line": 39,
+        "column": 9
+      },
+      {
+        "name": "client",
+        "kind": "variable",
+        "file": "src/components/lsp/diagnostics.ts",
+        "line": 45,
+        "column": 9
+      },
+      {
+        "name": "raw",
+        "kind": "variable",
+        "file": "src/components/lsp/diagnostics.ts",
+        "line": 49,
+        "column": 11
+      },
+      {
+        "name": "ext",
+        "kind": "variable",
+        "file": "src/components/lsp/diagnostics.ts",
+        "line": 62,
+        "column": 9
+      },
+      {
+        "name": "Diagnostic",
+        "kind": "type",
+        "file": "src/components/lsp/diagnostics.ts",
+        "line": 7,
+        "column": 18
+      },
+      {
+        "name": "LspTransport",
+        "kind": "type",
+        "file": "src/components/lsp/diagnostics.ts",
+        "line": 5,
+        "column": 34
+      }
+    ],
+    "src/components/lsp/lsp-client.ts": [
+      {
+        "name": "LspClient",
+        "kind": "class",
+        "file": "src/components/lsp/lsp-client.ts",
+        "line": 19,
+        "column": 14
+      },
+      {
+        "name": "handler",
+        "kind": "variable",
+        "file": "src/components/lsp/lsp-client.ts",
+        "line": 51,
+        "column": 13
+      },
+      {
+        "name": "id",
+        "kind": "variable",
+        "file": "src/components/lsp/lsp-client.ts",
+        "line": 84,
+        "column": 11
+      },
+      {
+        "name": "params",
+        "kind": "variable",
+        "file": "src/components/lsp/lsp-client.ts",
+        "line": 103,
+        "column": 13
+      },
+      {
+        "name": "handler",
+        "kind": "variable",
+        "file": "src/components/lsp/lsp-client.ts",
+        "line": 104,
+        "column": 18
+      },
+      {
+        "name": "resolve",
+        "kind": "variable",
+        "file": "src/components/lsp/lsp-client.ts",
+        "line": 108,
+        "column": 13
+      },
+      {
+        "name": "Diagnostic",
+        "kind": "type",
+        "file": "src/components/lsp/lsp-client.ts",
+        "line": 3,
+        "column": 18
+      },
+      {
+        "name": "PublishDiagnosticsParams",
+        "kind": "type",
+        "file": "src/components/lsp/lsp-client.ts",
+        "line": 14,
+        "column": 18
+      }
+    ],
+    "src/components/lsp/mcp-server.ts": [
+      {
+        "name": "startLspServer",
+        "kind": "function",
+        "file": "src/components/lsp/mcp-server.ts",
+        "line": 6,
+        "column": 17
+      },
+      {
+        "name": "server",
+        "kind": "variable",
+        "file": "src/components/lsp/mcp-server.ts",
+        "line": 7,
+        "column": 9
+      },
+      {
+        "name": "lspCommand",
+        "kind": "variable",
+        "file": "src/components/lsp/mcp-server.ts",
+        "line": 19,
+        "column": 11
+      },
+      {
+        "name": "lspArgs",
+        "kind": "variable",
+        "file": "src/components/lsp/mcp-server.ts",
+        "line": 20,
+        "column": 11
+      },
+      {
+        "name": "transport",
+        "kind": "variable",
+        "file": "src/components/lsp/mcp-server.ts",
+        "line": 24,
+        "column": 15
+      },
+      {
+        "name": "status",
+        "kind": "variable",
+        "file": "src/components/lsp/mcp-server.ts",
+        "line": 25,
+        "column": 15
+      },
+      {
+        "name": "file",
+        "kind": "variable",
+        "file": "src/components/lsp/mcp-server.ts",
+        "line": 30,
+        "column": 15
+      },
+      {
+        "name": "transport",
+        "kind": "variable",
+        "file": "src/components/lsp/mcp-server.ts",
+        "line": 31,
+        "column": 15
+      },
+      {
+        "name": "diagnostics",
+        "kind": "variable",
+        "file": "src/components/lsp/mcp-server.ts",
+        "line": 33,
+        "column": 17
+      },
+      {
+        "name": "transport",
+        "kind": "variable",
+        "file": "src/components/lsp/mcp-server.ts",
+        "line": 48,
+        "column": 9
+      }
+    ],
+    "src/components/lsp/transport.ts": [
+      {
+        "name": "StdioLspTransport",
+        "kind": "class",
+        "file": "src/components/lsp/transport.ts",
+        "line": 20,
+        "column": 14
+      },
+      {
+        "name": "MockLspTransport",
+        "kind": "class",
+        "file": "src/components/lsp/transport.ts",
+        "line": 84,
+        "column": 14
+      },
+      {
+        "name": "body",
+        "kind": "variable",
+        "file": "src/components/lsp/transport.ts",
+        "line": 43,
+        "column": 11
+      },
+      {
+        "name": "header",
+        "kind": "variable",
+        "file": "src/components/lsp/transport.ts",
+        "line": 44,
+        "column": 11
+      },
+      {
+        "name": "headerMatch",
+        "kind": "variable",
+        "file": "src/components/lsp/transport.ts",
+        "line": 67,
+        "column": 13
+      },
+      {
+        "name": "contentLength",
+        "kind": "variable",
+        "file": "src/components/lsp/transport.ts",
+        "line": 69,
+        "column": 13
+      },
+      {
+        "name": "headerEnd",
+        "kind": "variable",
+        "file": "src/components/lsp/transport.ts",
+        "line": 70,
+        "column": 13
+      },
+      {
+        "name": "body",
+        "kind": "variable",
+        "file": "src/components/lsp/transport.ts",
+        "line": 72,
+        "column": 13
+      },
+      {
+        "name": "message",
+        "kind": "variable",
+        "file": "src/components/lsp/transport.ts",
+        "line": 75,
+        "column": 15
+      },
+      {
+        "name": "msg",
+        "kind": "variable",
+        "file": "src/components/lsp/transport.ts",
+        "line": 92,
+        "column": 16
+      },
+      {
+        "name": "reply",
+        "kind": "variable",
+        "file": "src/components/lsp/transport.ts",
+        "line": 103,
+        "column": 13
+      },
+      {
+        "name": "response",
+        "kind": "variable",
+        "file": "src/components/lsp/transport.ts",
+        "line": 110,
+        "column": 13
+      },
+      {
+        "name": "LspMessage",
+        "kind": "type",
+        "file": "src/components/lsp/transport.ts",
+        "line": 3,
+        "column": 18
+      },
+      {
+        "name": "LspTransport",
+        "kind": "type",
+        "file": "src/components/lsp/transport.ts",
+        "line": 12,
+        "column": 18
+      },
+      {
+        "name": "ChildProcess",
+        "kind": "type",
+        "file": "src/components/lsp/transport.ts",
+        "line": 1,
+        "column": 22
+      }
+    ],
+    "src/components/rules/cli.ts": [
+      {
+        "name": "main",
+        "kind": "function",
+        "file": "src/components/rules/cli.ts",
+        "line": 4,
+        "column": 16
+      },
+      {
+        "name": "event",
+        "kind": "variable",
+        "file": "src/components/rules/cli.ts",
+        "line": 5,
+        "column": 9
+      },
+      {
+        "name": "projectDir",
+        "kind": "variable",
+        "file": "src/components/rules/cli.ts",
+        "line": 6,
+        "column": 9
+      },
+      {
+        "name": "rules",
+        "kind": "variable",
+        "file": "src/components/rules/cli.ts",
+        "line": 7,
+        "column": 9
+      },
+      {
+        "name": "additionalContext",
+        "kind": "variable",
+        "file": "src/components/rules/cli.ts",
+        "line": 8,
+        "column": 9
+      },
+      {
+        "name": "hookEventName",
+        "kind": "variable",
+        "file": "src/components/rules/cli.ts",
+        "line": 9,
+        "column": 9
+      }
+    ],
+    "src/components/rules/discover.ts": [
+      {
+        "name": "discoverRules",
+        "kind": "function",
+        "file": "src/components/rules/discover.ts",
+        "line": 9,
+        "column": 17
+      },
+      {
+        "name": "formatRulesContext",
+        "kind": "function",
+        "file": "src/components/rules/discover.ts",
+        "line": 25,
+        "column": 17
+      },
+      {
+        "name": "ruleFiles",
+        "kind": "variable",
+        "file": "src/components/rules/discover.ts",
+        "line": 10,
+        "column": 9
+      },
+      {
+        "name": "rulesDir",
+        "kind": "variable",
+        "file": "src/components/rules/discover.ts",
+        "line": 11,
+        "column": 9
+      },
+      {
+        "name": "entry",
+        "kind": "variable",
+        "file": "src/components/rules/discover.ts",
+        "line": 13,
+        "column": 16
+      },
+      {
+        "name": "full",
+        "kind": "variable",
+        "file": "src/components/rules/discover.ts",
+        "line": 14,
+        "column": 13
+      },
+      {
+        "name": "agentsMdPath",
+        "kind": "variable",
+        "file": "src/components/rules/discover.ts",
+        "line": 20,
+        "column": 9
+      },
+      {
+        "name": "agentsMd",
+        "kind": "variable",
+        "file": "src/components/rules/discover.ts",
+        "line": 21,
+        "column": 9
+      },
+      {
+        "name": "parts",
+        "kind": "variable",
+        "file": "src/components/rules/discover.ts",
+        "line": 26,
+        "column": 9
+      },
+      {
+        "name": "f",
+        "kind": "variable",
+        "file": "src/components/rules/discover.ts",
+        "line": 28,
+        "column": 14
+      },
+      {
+        "name": "DiscoveredRules",
+        "kind": "type",
+        "file": "src/components/rules/discover.ts",
+        "line": 4,
+        "column": 18
+      }
+    ],
+    "src/components/start-work-continuation/boulder.ts": [
+      {
+        "name": "readBoulder",
+        "kind": "function",
+        "file": "src/components/start-work-continuation/boulder.ts",
+        "line": 9,
+        "column": 17
+      },
+      {
+        "name": "hasIncompleteWork",
+        "kind": "function",
+        "file": "src/components/start-work-continuation/boulder.ts",
+        "line": 14,
+        "column": 17
+      },
+      {
+        "name": "p",
+        "kind": "variable",
+        "file": "src/components/start-work-continuation/boulder.ts",
+        "line": 10,
+        "column": 9
+      },
+      {
+        "name": "BoulderState",
+        "kind": "type",
+        "file": "src/components/start-work-continuation/boulder.ts",
+        "line": 4,
+        "column": 18
+      }
+    ],
+    "src/components/start-work-continuation/cli.ts": [
+      {
+        "name": "main",
+        "kind": "function",
+        "file": "src/components/start-work-continuation/cli.ts",
+        "line": 4,
+        "column": 16
+      },
+      {
+        "name": "event",
+        "kind": "variable",
+        "file": "src/components/start-work-continuation/cli.ts",
+        "line": 5,
+        "column": 9
+      },
+      {
+        "name": "projectDir",
+        "kind": "variable",
+        "file": "src/components/start-work-continuation/cli.ts",
+        "line": 6,
+        "column": 9
+      },
+      {
+        "name": "state",
+        "kind": "variable",
+        "file": "src/components/start-work-continuation/cli.ts",
+        "line": 7,
+        "column": 9
+      },
+      {
+        "name": "hookEventName",
+        "kind": "variable",
+        "file": "src/components/start-work-continuation/cli.ts",
+        "line": 8,
+        "column": 9
+      }
+    ],
+    "src/components/telemetry/cli.ts": [
+      {
+        "name": "main",
+        "kind": "function",
+        "file": "src/components/telemetry/cli.ts",
+        "line": 4,
+        "column": 16
+      },
+      {
+        "name": "id",
+        "kind": "variable",
+        "file": "src/components/telemetry/cli.ts",
+        "line": 6,
+        "column": 11
+      }
+    ],
+    "src/components/ultrawork/cli.ts": [
+      {
+        "name": "main",
+        "kind": "function",
+        "file": "src/components/ultrawork/cli.ts",
+        "line": 4,
+        "column": 16
+      },
+      {
+        "name": "raw",
+        "kind": "variable",
+        "file": "src/components/ultrawork/cli.ts",
+        "line": 5,
+        "column": 7
+      },
+      {
+        "name": "chunk",
+        "kind": "variable",
+        "file": "src/components/ultrawork/cli.ts",
+        "line": 7,
+        "column": 20
+      },
+      {
+        "name": "payload",
+        "kind": "variable",
+        "file": "src/components/ultrawork/cli.ts",
+        "line": 8,
+        "column": 9
+      }
+    ],
+    "src/components/ultrawork/detect.ts": [
+      {
+        "name": "detectUltrawork",
+        "kind": "function",
+        "file": "src/components/ultrawork/detect.ts",
+        "line": 5,
+        "column": 17
+      },
+      {
+        "name": "KEYWORDS",
+        "kind": "variable",
+        "file": "src/components/ultrawork/detect.ts",
+        "line": 3,
+        "column": 7
+      },
+      {
+        "name": "prompt",
+        "kind": "variable",
+        "file": "src/components/ultrawork/detect.ts",
+        "line": 6,
+        "column": 9
+      }
+    ],
+    "src/components/ulw-loop/cli.ts": [
+      {
+        "name": "main",
+        "kind": "function",
+        "file": "src/components/ulw-loop/cli.ts",
+        "line": 4,
+        "column": 16
+      },
+      {
+        "name": "event",
+        "kind": "variable",
+        "file": "src/components/ulw-loop/cli.ts",
+        "line": 5,
+        "column": 9
+      },
+      {
+        "name": "raw",
+        "kind": "variable",
+        "file": "src/components/ulw-loop/cli.ts",
+        "line": 6,
+        "column": 7
+      },
+      {
+        "name": "chunk",
+        "kind": "variable",
+        "file": "src/components/ulw-loop/cli.ts",
+        "line": 8,
+        "column": 20
+      },
+      {
+        "name": "payload",
+        "kind": "variable",
+        "file": "src/components/ulw-loop/cli.ts",
+        "line": 9,
+        "column": 9
+      }
+    ],
+    "src/components/ulw-loop/steer.ts": [
+      {
+        "name": "parseSteer",
+        "kind": "function",
+        "file": "src/components/ulw-loop/steer.ts",
+        "line": 5,
+        "column": 17
+      },
+      {
+        "name": "enforceGoalBudget",
+        "kind": "function",
+        "file": "src/components/ulw-loop/steer.ts",
+        "line": 19,
+        "column": 17
+      },
+      {
+        "name": "STEER_PATTERN",
+        "kind": "variable",
+        "file": "src/components/ulw-loop/steer.ts",
+        "line": 3,
+        "column": 7
+      },
+      {
+        "name": "prompt",
+        "kind": "variable",
+        "file": "src/components/ulw-loop/steer.ts",
+        "line": 6,
+        "column": 9
+      },
+      {
+        "name": "match",
+        "kind": "variable",
+        "file": "src/components/ulw-loop/steer.ts",
+        "line": 7,
+        "column": 9
+      },
+      {
+        "name": "toolInput",
+        "kind": "variable",
+        "file": "src/components/ulw-loop/steer.ts",
+        "line": 20,
+        "column": 9
+      }
+    ],
+    "src/install/config-patcher.ts": [
+      {
+        "name": "normalizeCommand",
+        "kind": "function",
+        "file": "src/install/config-patcher.ts",
+        "line": 11,
+        "column": 10
+      },
+      {
+        "name": "hookKey",
+        "kind": "function",
+        "file": "src/install/config-patcher.ts",
+        "line": 15,
+        "column": 10
+      },
+      {
+        "name": "hookFromDef",
+        "kind": "function",
+        "file": "src/install/config-patcher.ts",
+        "line": 19,
+        "column": 10
+      },
+      {
+        "name": "patchConfigToml",
+        "kind": "function",
+        "file": "src/install/config-patcher.ts",
+        "line": 28,
+        "column": 17
+      },
+      {
+        "name": "raw",
+        "kind": "variable",
+        "file": "src/install/config-patcher.ts",
+        "line": 33,
+        "column": 9
+      },
+      {
+        "name": "parsed",
+        "kind": "variable",
+        "file": "src/install/config-patcher.ts",
+        "line": 34,
+        "column": 9
+      },
+      {
+        "name": "existingHooks",
+        "kind": "variable",
+        "file": "src/install/config-patcher.ts",
+        "line": 35,
+        "column": 9
+      },
+      {
+        "name": "existingKeys",
+        "kind": "variable",
+        "file": "src/install/config-patcher.ts",
+        "line": 36,
+        "column": 9
+      },
+      {
+        "name": "toAdd",
+        "kind": "variable",
+        "file": "src/install/config-patcher.ts",
+        "line": 40,
+        "column": 9
+      },
+      {
+        "name": "diff",
+        "kind": "variable",
+        "file": "src/install/config-patcher.ts",
+        "line": 45,
+        "column": 9
+      },
+      {
+        "name": "backupPath",
+        "kind": "variable",
+        "file": "src/install/config-patcher.ts",
+        "line": 51,
+        "column": 9
+      },
+      {
+        "name": "newHooks",
+        "kind": "variable",
+        "file": "src/install/config-patcher.ts",
+        "line": 54,
+        "column": 9
+      },
+      {
+        "name": "PatchResult",
+        "kind": "type",
+        "file": "src/install/config-patcher.ts",
+        "line": 5,
+        "column": 18
+      }
+    ],
+    "src/install/hook-defs.ts": [
+      {
+        "name": "getHookDefs",
+        "kind": "function",
+        "file": "src/install/hook-defs.ts",
+        "line": 8,
+        "column": 17
+      },
+      {
+        "name": "cli",
+        "kind": "variable",
+        "file": "src/install/hook-defs.ts",
+        "line": 9,
+        "column": 9
+      },
+      {
+        "name": "HookDef",
+        "kind": "type",
+        "file": "src/install/hook-defs.ts",
+        "line": 1,
+        "column": 18
+      }
+    ],
+    "src/install/install-kimi.ts": [
+      {
+        "name": "runKimiInstaller",
+        "kind": "function",
+        "file": "src/install/install-kimi.ts",
+        "line": 17,
+        "column": 23
+      },
+      {
+        "name": "env",
+        "kind": "variable",
+        "file": "src/install/install-kimi.ts",
+        "line": 18,
+        "column": 9
+      },
+      {
+        "name": "version",
+        "kind": "variable",
+        "file": "src/install/install-kimi.ts",
+        "line": 19,
+        "column": 9
+      },
+      {
+        "name": "cache",
+        "kind": "variable",
+        "file": "src/install/install-kimi.ts",
+        "line": 20,
+        "column": 9
+      },
+      {
+        "name": "pluginRoot",
+        "kind": "variable",
+        "file": "src/install/install-kimi.ts",
+        "line": 25,
+        "column": 11
+      },
+      {
+        "name": "configPath",
+        "kind": "variable",
+        "file": "src/install/install-kimi.ts",
+        "line": 30,
+        "column": 9
+      },
+      {
+        "name": "hooks",
+        "kind": "variable",
+        "file": "src/install/install-kimi.ts",
+        "line": 31,
+        "column": 9
+      },
+      {
+        "name": "result",
+        "kind": "variable",
+        "file": "src/install/install-kimi.ts",
+        "line": 32,
+        "column": 9
+      },
+      {
+        "name": "InstallOptions",
+        "kind": "type",
+        "file": "src/install/install-kimi.ts",
+        "line": 8,
+        "column": 18
+      }
+    ],
+    "src/shared/paths.ts": [
+      {
+        "name": "resolveKimiEnv",
+        "kind": "function",
+        "file": "src/shared/paths.ts",
+        "line": 10,
+        "column": 17
+      },
+      {
+        "name": "pluginCacheDir",
+        "kind": "function",
+        "file": "src/shared/paths.ts",
+        "line": 31,
+        "column": 17
+      },
+      {
+        "name": "omoConfigDir",
+        "kind": "function",
+        "file": "src/shared/paths.ts",
+        "line": 35,
+        "column": 17
+      },
+      {
+        "name": "kimiCodeHome",
+        "kind": "variable",
+        "file": "src/shared/paths.ts",
+        "line": 15,
+        "column": 9
+      },
+      {
+        "name": "projectDirectory",
+        "kind": "variable",
+        "file": "src/shared/paths.ts",
+        "line": 19,
+        "column": 9
+      },
+      {
+        "name": "defaultHome",
+        "kind": "variable",
+        "file": "src/shared/paths.ts",
+        "line": 23,
+        "column": 9
+      },
+      {
+        "name": "binDir",
+        "kind": "variable",
+        "file": "src/shared/paths.ts",
+        "line": 24,
+        "column": 9
+      },
+      {
+        "name": "PathOptions",
+        "kind": "type",
+        "file": "src/shared/paths.ts",
+        "line": 4,
+        "column": 18
+      }
+    ],
+    "src/shared/serialize.ts": [
+      {
+        "name": "serializeHookOutput",
+        "kind": "function",
+        "file": "src/shared/serialize.ts",
+        "line": 3,
+        "column": 17
+      },
+      {
+        "name": "writeHookOutput",
+        "kind": "function",
+        "file": "src/shared/serialize.ts",
+        "line": 7,
+        "column": 17
+      }
+    ],
+    "src/shared/telemetry.ts": [
+      {
+        "name": "isTelemetryDisabled",
+        "kind": "function",
+        "file": "src/shared/telemetry.ts",
+        "line": 9,
+        "column": 17
+      },
+      {
+        "name": "shouldEmitDailyActive",
+        "kind": "function",
+        "file": "src/shared/telemetry.ts",
+        "line": 19,
+        "column": 17
+      },
+      {
+        "name": "getDistinctId",
+        "kind": "function",
+        "file": "src/shared/telemetry.ts",
+        "line": 29,
+        "column": 17
+      },
+      {
+        "name": "STATE_DIR",
+        "kind": "variable",
+        "file": "src/shared/telemetry.ts",
+        "line": 6,
+        "column": 7
+      },
+      {
+        "name": "STATE_FILE",
+        "kind": "variable",
+        "file": "src/shared/telemetry.ts",
+        "line": 7,
+        "column": 7
+      },
+      {
+        "name": "env",
+        "kind": "variable",
+        "file": "src/shared/telemetry.ts",
+        "line": 10,
+        "column": 9
+      },
+      {
+        "name": "today",
+        "kind": "variable",
+        "file": "src/shared/telemetry.ts",
+        "line": 21,
+        "column": 9
+      },
+      {
+        "name": "state",
+        "kind": "variable",
+        "file": "src/shared/telemetry.ts",
+        "line": 22,
+        "column": 9
+      }
+    ],
+    "src/shared/types.ts": [
+      {
+        "name": "KimiEnv",
+        "kind": "type",
+        "file": "src/shared/types.ts",
+        "line": 1,
+        "column": 18
+      },
+      {
+        "name": "HookPayload",
+        "kind": "type",
+        "file": "src/shared/types.ts",
+        "line": 8,
+        "column": 18
+      },
+      {
+        "name": "HookOutput",
+        "kind": "type",
+        "file": "src/shared/types.ts",
+        "line": 22,
+        "column": 18
+      },
+      {
+        "name": "HookDecision",
+        "kind": "type",
+        "file": "src/shared/types.ts",
+        "line": 20,
+        "column": 13
+      }
+    ],
+    "tests/unit/components/bootstrap.test.ts": [
+      {
+        "name": "out",
+        "kind": "variable",
+        "file": "tests/unit/components/bootstrap.test.ts",
+        "line": 6,
+        "column": 11
+      }
+    ],
+    "tests/unit/components/codegraph.test.ts": [
+      {
+        "name": "fetchData",
+        "kind": "function",
+        "file": "tests/unit/components/codegraph.test.ts",
+        "line": 29,
+        "column": 23
+      },
+      {
+        "name": "a",
+        "kind": "function",
+        "file": "tests/unit/components/codegraph.test.ts",
+        "line": 86,
+        "column": 68
+      },
+      {
+        "name": "b",
+        "kind": "function",
+        "file": "tests/unit/components/codegraph.test.ts",
+        "line": 87,
+        "column": 77
+      },
+      {
+        "name": "add",
+        "kind": "function",
+        "file": "tests/unit/components/codegraph.test.ts",
+        "line": 94,
+        "column": 71
+      },
+      {
+        "name": "sum",
+        "kind": "function",
+        "file": "tests/unit/components/codegraph.test.ts",
+        "line": 157,
+        "column": 71
+      },
+      {
+        "name": "UserService",
+        "kind": "class",
+        "file": "tests/unit/components/codegraph.test.ts",
+        "line": 30,
+        "column": 7
+      },
+      {
+        "name": "MyClass",
+        "kind": "class",
+        "file": "tests/unit/components/codegraph.test.ts",
+        "line": 48,
+        "column": 7
+      },
+      {
+        "name": "tmpDir",
+        "kind": "variable",
+        "file": "tests/unit/components/codegraph.test.ts",
+        "line": 11,
+        "column": 7
+      },
+      {
+        "name": "content",
+        "kind": "variable",
+        "file": "tests/unit/components/codegraph.test.ts",
+        "line": 28,
+        "column": 13
+      },
+      {
+        "name": "PI",
+        "kind": "variable",
+        "file": "tests/unit/components/codegraph.test.ts",
+        "line": 31,
+        "column": 14
+      },
+      {
+        "name": "symbols",
+        "kind": "variable",
+        "file": "tests/unit/components/codegraph.test.ts",
+        "line": 35,
+        "column": 13
+      },
+      {
+        "name": "names",
+        "kind": "variable",
+        "file": "tests/unit/components/codegraph.test.ts",
+        "line": 36,
+        "column": 13
+      },
+      {
+        "name": "content",
+        "kind": "variable",
+        "file": "tests/unit/components/codegraph.test.ts",
+        "line": 46,
+        "column": 13
+      },
+      {
+        "name": "symbols",
+        "kind": "variable",
+        "file": "tests/unit/components/codegraph.test.ts",
+        "line": 51,
+        "column": 13
+      },
+      {
+        "name": "content",
+        "kind": "variable",
+        "file": "tests/unit/components/codegraph.test.ts",
+        "line": 57,
+        "column": 13
+      },
+      {
+        "name": "symbols",
+        "kind": "variable",
+        "file": "tests/unit/components/codegraph.test.ts",
+        "line": 61,
+        "column": 13
+      },
+      {
+        "name": "content",
+        "kind": "variable",
+        "file": "tests/unit/components/codegraph.test.ts",
+        "line": 67,
+        "column": 13
+      },
+      {
+        "name": "symbols",
+        "kind": "variable",
+        "file": "tests/unit/components/codegraph.test.ts",
+        "line": 72,
+        "column": 13
+      },
+      {
+        "name": "files",
+        "kind": "variable",
+        "file": "tests/unit/components/codegraph.test.ts",
+        "line": 88,
+        "column": 13
+      },
+      {
+        "name": "index",
+        "kind": "variable",
+        "file": "tests/unit/components/codegraph.test.ts",
+        "line": 96,
+        "column": 13
+      },
+      {
+        "name": "index",
+        "kind": "variable",
+        "file": "tests/unit/components/codegraph.test.ts",
+        "line": 105,
+        "column": 13
+      },
+      {
+        "name": "loaded",
+        "kind": "variable",
+        "file": "tests/unit/components/codegraph.test.ts",
+        "line": 108,
+        "column": 13
+      },
+      {
+        "name": "index",
+        "kind": "variable",
+        "file": "tests/unit/components/codegraph.test.ts",
+        "line": 115,
+        "column": 13
+      },
+      {
+        "name": "index",
+        "kind": "variable",
+        "file": "tests/unit/components/codegraph.test.ts",
+        "line": 130,
+        "column": 13
+      },
+      {
+        "name": "related",
+        "kind": "variable",
+        "file": "tests/unit/components/codegraph.test.ts",
+        "line": 139,
+        "column": 13
+      },
+      {
+        "name": "index",
+        "kind": "variable",
+        "file": "tests/unit/components/codegraph.test.ts",
+        "line": 144,
+        "column": 13
+      },
+      {
+        "name": "out",
+        "kind": "variable",
+        "file": "tests/unit/components/codegraph.test.ts",
+        "line": 151,
+        "column": 13
+      },
+      {
+        "name": "originalCwd",
+        "kind": "variable",
+        "file": "tests/unit/components/codegraph.test.ts",
+        "line": 158,
+        "column": 13
+      },
+      {
+        "name": "loaded",
+        "kind": "variable",
+        "file": "tests/unit/components/codegraph.test.ts",
+        "line": 163,
+        "column": 15
+      },
+      {
+        "name": "Config",
+        "kind": "type",
+        "file": "tests/unit/components/codegraph.test.ts",
+        "line": 32,
+        "column": 18
+      },
+      {
+        "name": "ID",
+        "kind": "type",
+        "file": "tests/unit/components/codegraph.test.ts",
+        "line": 33,
+        "column": 13
+      },
+      {
+        "name": "Item",
+        "kind": "type",
+        "file": "tests/unit/components/codegraph.test.ts",
+        "line": 59,
+        "column": 6
+      }
+    ],
+    "tests/unit/components/comment-checker.test.ts": [
+      {
+        "name": "tmp",
+        "kind": "variable",
+        "file": "tests/unit/components/comment-checker.test.ts",
+        "line": 8,
+        "column": 7
+      },
+      {
+        "name": "p",
+        "kind": "variable",
+        "file": "tests/unit/components/comment-checker.test.ts",
+        "line": 13,
+        "column": 11
+      },
+      {
+        "name": "x",
+        "kind": "variable",
+        "file": "tests/unit/components/comment-checker.test.ts",
+        "line": 14,
+        "column": 51
+      },
+      {
+        "name": "r",
+        "kind": "variable",
+        "file": "tests/unit/components/comment-checker.test.ts",
+        "line": 15,
+        "column": 11
+      },
+      {
+        "name": "p",
+        "kind": "variable",
+        "file": "tests/unit/components/comment-checker.test.ts",
+        "line": 21,
+        "column": 11
+      },
+      {
+        "name": "x",
+        "kind": "variable",
+        "file": "tests/unit/components/comment-checker.test.ts",
+        "line": 22,
+        "column": 32
+      },
+      {
+        "name": "r",
+        "kind": "variable",
+        "file": "tests/unit/components/comment-checker.test.ts",
+        "line": 23,
+        "column": 11
+      }
+    ],
+    "tests/unit/components/executor-verify.test.ts": [
+      {
+        "name": "out",
+        "kind": "variable",
+        "file": "tests/unit/components/executor-verify.test.ts",
+        "line": 6,
+        "column": 11
+      },
+      {
+        "name": "out",
+        "kind": "variable",
+        "file": "tests/unit/components/executor-verify.test.ts",
+        "line": 11,
+        "column": 11
+      }
+    ],
+    "tests/unit/components/git-bash.test.ts": [
+      {
+        "name": "out",
+        "kind": "variable",
+        "file": "tests/unit/components/git-bash.test.ts",
+        "line": 6,
+        "column": 11
+      }
+    ],
+    "tests/unit/components/lsp-client.test.ts": [
+      {
+        "name": "transport",
+        "kind": "variable",
+        "file": "tests/unit/components/lsp-client.test.ts",
+        "line": 7,
+        "column": 11
+      },
+      {
+        "name": "sentDiagnostics",
+        "kind": "variable",
+        "file": "tests/unit/components/lsp-client.test.ts",
+        "line": 11,
+        "column": 9
+      },
+      {
+        "name": "client",
+        "kind": "variable",
+        "file": "tests/unit/components/lsp-client.test.ts",
+        "line": 28,
+        "column": 11
+      },
+      {
+        "name": "x",
+        "kind": "variable",
+        "file": "tests/unit/components/lsp-client.test.ts",
+        "line": 30,
+        "column": 69
+      },
+      {
+        "name": "diagnostics",
+        "kind": "variable",
+        "file": "tests/unit/components/lsp-client.test.ts",
+        "line": 31,
+        "column": 11
+      }
+    ],
+    "tests/unit/components/lsp.test.ts": [
+      {
+        "name": "tmp",
+        "kind": "variable",
+        "file": "tests/unit/components/lsp.test.ts",
+        "line": 9,
+        "column": 7
+      },
+      {
+        "name": "file",
+        "kind": "variable",
+        "file": "tests/unit/components/lsp.test.ts",
+        "line": 20,
+        "column": 11
+      },
+      {
+        "name": "x",
+        "kind": "variable",
+        "file": "tests/unit/components/lsp.test.ts",
+        "line": 21,
+        "column": 35
+      },
+      {
+        "name": "diagnostics",
+        "kind": "variable",
+        "file": "tests/unit/components/lsp.test.ts",
+        "line": 22,
+        "column": 11
+      },
+      {
+        "name": "file",
+        "kind": "variable",
+        "file": "tests/unit/components/lsp.test.ts",
+        "line": 27,
+        "column": 11
+      },
+      {
+        "name": "x",
+        "kind": "variable",
+        "file": "tests/unit/components/lsp.test.ts",
+        "line": 28,
+        "column": 35
+      },
+      {
+        "name": "transport",
+        "kind": "variable",
+        "file": "tests/unit/components/lsp.test.ts",
+        "line": 30,
+        "column": 11
+      },
+      {
+        "name": "diagnostics",
+        "kind": "variable",
+        "file": "tests/unit/components/lsp.test.ts",
+        "line": 53,
+        "column": 11
+      }
+    ],
+    "tests/unit/components/rules.test.ts": [
+      {
+        "name": "tmp",
+        "kind": "variable",
+        "file": "tests/unit/components/rules.test.ts",
+        "line": 8,
+        "column": 7
+      },
+      {
+        "name": "rules",
+        "kind": "variable",
+        "file": "tests/unit/components/rules.test.ts",
+        "line": 16,
+        "column": 11
+      },
+      {
+        "name": "ctx",
+        "kind": "variable",
+        "file": "tests/unit/components/rules.test.ts",
+        "line": 19,
+        "column": 11
+      }
+    ],
+    "tests/unit/components/start-work-continuation.test.ts": [
+      {
+        "name": "tmp",
+        "kind": "variable",
+        "file": "tests/unit/components/start-work-continuation.test.ts",
+        "line": 8,
+        "column": 7
+      }
+    ],
+    "tests/unit/components/telemetry.test.ts": [
+      {
+        "name": "original",
+        "kind": "variable",
+        "file": "tests/unit/components/telemetry.test.ts",
+        "line": 11,
+        "column": 11
+      }
+    ],
+    "tests/unit/components/ultrawork.test.ts": [
+      {
+        "name": "out",
+        "kind": "variable",
+        "file": "tests/unit/components/ultrawork.test.ts",
+        "line": 6,
+        "column": 11
+      },
+      {
+        "name": "out",
+        "kind": "variable",
+        "file": "tests/unit/components/ultrawork.test.ts",
+        "line": 11,
+        "column": 11
+      }
+    ],
+    "tests/unit/components/ulw-loop.test.ts": [
+      {
+        "name": "out",
+        "kind": "variable",
+        "file": "tests/unit/components/ulw-loop.test.ts",
+        "line": 6,
+        "column": 11
+      },
+      {
+        "name": "out",
+        "kind": "variable",
+        "file": "tests/unit/components/ulw-loop.test.ts",
+        "line": 11,
+        "column": 11
+      }
+    ],
+    "tests/unit/install/config-patcher.test.ts": [
+      {
+        "name": "tmpDir",
+        "kind": "variable",
+        "file": "tests/unit/install/config-patcher.test.ts",
+        "line": 9,
+        "column": 7
+      },
+      {
+        "name": "configPath",
+        "kind": "variable",
+        "file": "tests/unit/install/config-patcher.test.ts",
+        "line": 14,
+        "column": 11
+      },
+      {
+        "name": "hooks",
+        "kind": "variable",
+        "file": "tests/unit/install/config-patcher.test.ts",
+        "line": 15,
+        "column": 11
+      },
+      {
+        "name": "r1",
+        "kind": "variable",
+        "file": "tests/unit/install/config-patcher.test.ts",
+        "line": 16,
+        "column": 11
+      },
+      {
+        "name": "r2",
+        "kind": "variable",
+        "file": "tests/unit/install/config-patcher.test.ts",
+        "line": 18,
+        "column": 11
+      },
+      {
+        "name": "configPath",
+        "kind": "variable",
+        "file": "tests/unit/install/config-patcher.test.ts",
+        "line": 23,
+        "column": 11
+      },
+      {
+        "name": "hooks",
+        "kind": "variable",
+        "file": "tests/unit/install/config-patcher.test.ts",
+        "line": 25,
+        "column": 11
+      },
+      {
+        "name": "r",
+        "kind": "variable",
+        "file": "tests/unit/install/config-patcher.test.ts",
+        "line": 26,
+        "column": 11
+      },
+      {
+        "name": "configPath",
+        "kind": "variable",
+        "file": "tests/unit/install/config-patcher.test.ts",
+        "line": 32,
+        "column": 11
+      },
+      {
+        "name": "hooks",
+        "kind": "variable",
+        "file": "tests/unit/install/config-patcher.test.ts",
+        "line": 34,
+        "column": 11
+      },
+      {
+        "name": "r",
+        "kind": "variable",
+        "file": "tests/unit/install/config-patcher.test.ts",
+        "line": 35,
+        "column": 11
+      }
+    ],
+    "tests/unit/shared/paths.test.ts": [
+      {
+        "name": "env",
+        "kind": "variable",
+        "file": "tests/unit/shared/paths.test.ts",
+        "line": 6,
+        "column": 11
+      }
+    ]
+  }
+}
