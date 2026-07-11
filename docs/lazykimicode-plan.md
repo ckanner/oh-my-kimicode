@@ -287,7 +287,7 @@ npx lazykimicode install --dry-run
 ### 7.2 Marketplace install (optional)
 
 ```bash
-/plugins install https://github.com/<org>/lazykimicode/releases/download/v0.1.0/lazykimicode.zip
+/plugins install https://github.com/<org>/lazykimicode/releases/download/v<VERSION>/lazykimicode.zip
 /plugins enable lazykimicode
 /new
 ```
@@ -434,7 +434,7 @@ git commit -m "docs: add lazykimicode design and implementation plan"
 ```json
 {
   "name": "@lazykimicode/lazykimicode",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "description": "OmO agent harness for Kimi Code CLI",
   "type": "module",
   "bin": {
@@ -654,7 +654,7 @@ describe('paths', () => {
   });
 
   it('computes default cache dir', () => {
-    expect(pluginCacheDir('/tmp/kimi', '0.1.0')).toBe('/tmp/kimi/plugins/cache/lazykimicode/0.1.0');
+    expect(pluginCacheDir('/tmp/kimi', '0.1.3')).toBe('/tmp/kimi/plugins/cache/lazykimicode/0.1.3');
   });
 });
 ```
@@ -788,7 +788,7 @@ describe('patchConfigToml', () => {
 
   it('adds hooks idempotently', () => {
     const configPath = path.join(tmpDir, 'config.toml');
-    const hooks = getHookDefs('0.1.0', '/tmp/cache');
+    const hooks = getHookDefs('0.1.3', '/tmp/cache');
     const r1 = patchConfigToml(configPath, hooks);
     expect(r1.wrote).toBe(true);
     const r2 = patchConfigToml(configPath, hooks);
@@ -798,7 +798,7 @@ describe('patchConfigToml', () => {
   it('backs up existing config', () => {
     const configPath = path.join(tmpDir, 'config.toml');
     fs.writeFileSync(configPath, 'default_model = "kimi"\n');
-    const hooks = getHookDefs('0.1.0', '/tmp/cache');
+    const hooks = getHookDefs('0.1.3', '/tmp/cache');
     const r = patchConfigToml(configPath, hooks);
     expect(r.backupPath).toBeDefined();
     expect(fs.existsSync(r.backupPath!)).toBe(true);
@@ -1233,7 +1233,7 @@ import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 
 export function startCodegraphServer() {
-  const server = new Server({ name: 'codegraph', version: '0.1.0' }, {
+  const server = new Server({ name: 'codegraph', version: '0.1.3' }, {
     capabilities: { tools: {} },
   });
   server.setRequestHandler('tools/list', async () => ({
@@ -1902,8 +1902,7 @@ export interface InstallOptions {
 
 export async function runKimiInstaller(options: InstallOptions = {}): Promise<void> {
   const env = resolveKimiEnv(options);
-  const version = process.env.OMO_KIMI_VERSION ?? '0.1.0';
-  const cache = pluginCacheDir(env.kimiCodeHome, version);
+  const cache = pluginCacheDir(env.kimiCodeHome, env.version);
 
   if (!options.dryRun) {
     fs.rmSync(cache, { recursive: true, force: true });
@@ -1916,7 +1915,7 @@ export async function runKimiInstaller(options: InstallOptions = {}): Promise<vo
   }
 
   const configPath = path.join(env.kimiCodeHome, 'config.toml');
-  const hooks = getHookDefs(version, cache);
+  const hooks = getHookDefs(env.version, cache);
   const result = patchConfigToml(configPath, hooks, options.dryRun);
 
   if (options.dryRun) {
@@ -1925,7 +1924,7 @@ export async function runKimiInstaller(options: InstallOptions = {}): Promise<vo
     return;
   }
 
-  console.log(`Installed lazykimicode ${version} to ${cache}`);
+  console.log(`Installed lazykimicode ${env.version} to ${cache}`);
   if (result.backupPath) console.log(`Backed up config to ${result.backupPath}`);
 }
 ```
