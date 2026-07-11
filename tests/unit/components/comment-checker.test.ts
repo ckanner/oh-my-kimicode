@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
-import { checkFile } from '../../../src/components/comment-checker/check.js';
+import { checkFile, findStaleMarkers } from '../../../src/components/comment-checker/check.js';
 
 describe('comment-checker', () => {
   let tmp: string;
@@ -44,5 +44,19 @@ describe('comment-checker', () => {
     const r = checkFile(path.join(tmp, 'missing.ts'));
     expect(r.hasIssue).toBe(false);
     expect(r.matches).toHaveLength(0);
+  });
+
+  it('detects TODO in block comments', () => {
+    const content = 'function foo() {\n  /* TODO: fix this */\n}';
+    const markers = findStaleMarkers(content);
+    expect(markers).toHaveLength(1);
+    expect(markers[0].marker).toBe('TODO');
+  });
+
+  it('detects FIXME in HTML-style comments', () => {
+    const content = '<!-- FIXME: broken -->';
+    const markers = findStaleMarkers(content);
+    expect(markers).toHaveLength(1);
+    expect(markers[0].marker).toBe('FIXME');
   });
 });
