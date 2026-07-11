@@ -1,6 +1,6 @@
 {
   "name": "lazykimicode",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "OmO agent harness for Kimi Code CLI",
   "type": "module",
   "bin": {
