@@ -1,5 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { EventEmitter } from 'node:events';
+import fs from 'node:fs';
 import type { ChildProcessWithoutNullStreams } from 'node:child_process';
 import { recommendGitBash } from '../../../src/components/git-bash/recommend.js';
 import { handleRequest, executeGitBash, findBashPath } from '../../../src/components/git-bash/mcp-server.js';
@@ -23,6 +24,16 @@ function createMockSpawn(stdout: string, stderr: string, exitCode: number) {
 }
 
 describe('git-bash', () => {
+  let existsSyncSpy: ReturnType<typeof vi.spyOn>;
+
+  beforeEach(() => {
+    existsSyncSpy = vi.spyOn(fs, 'existsSync').mockReturnValue(false);
+  });
+
+  afterEach(() => {
+    existsSyncSpy.mockRestore();
+  });
+
   describe('recommend hook', () => {
     it('returns empty context on non-Windows', () => {
       const out = recommendGitBash({ hookEventName: 'PreToolUse' }, 'darwin');
@@ -105,12 +116,28 @@ describe('git-bash', () => {
       expect(result.isError).toBe(true);
     });
 
-    it('findBashPath returns null on non-Windows', () => {
-      expect(findBashPath('linux')).toBeNull();
+    it('returns error when bash is not found on Windows', async () => {
+      const response = await handleRequest(
+        {
+          jsonrpc: '2.0',
+          id: 7,
+          method: 'tools/call',
+          params: { name: 'git_bash', arguments: { command: 'echo hello' } },
+        },
+        { platform: 'win32' },
+      );
+      const result = response.result as { content: Array<{ text: string }>; isError: boolean };
+      expect(result.isError).toBe(true);
+      expect(result.content[0].text).toContain('bash not found');
     });
 
-    it('findBashPath returns bash.exe on Windows', () => {
-      expect(findBashPath('win32')).toBe('bash.exe');
+    it('findBashPath returns null when no candidate exists', () => {
+      expect(findBashPath()).toBeNull();
+    });
+
+    it('findBashPath returns the first existing candidate', () => {
+      existsSyncSpy.mockImplementation((p: fs.PathLike) => String(p) === 'bash.exe');
+      expect(findBashPath()).toBe('bash.exe');
     });
   });
 

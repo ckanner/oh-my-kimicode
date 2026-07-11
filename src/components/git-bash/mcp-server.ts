@@ -1,4 +1,5 @@
 import { spawn, type ChildProcessWithoutNullStreams } from 'node:child_process';
+import fs from 'node:fs';
 import os from 'node:os';
 import { VERSION } from '../../shared/version.js';
 
@@ -28,23 +29,21 @@ export interface ServerOptions {
 }
 
 const GIT_BASH_CANDIDATES = [
-  'bash.exe',
   'C:\\Program Files\\Git\\bin\\bash.exe',
   'C:\\Program Files (x86)\\Git\\bin\\bash.exe',
+  'C:\\Program Files\\Git\\usr\\bin\\bash.exe',
+  'C:\\Program Files (x86)\\Git\\usr\\bin\\bash.exe',
+  '/usr/bin/bash',
+  '/bin/bash',
+  'bash.exe',
+  'bash',
 ];
 
-export function findBashPath(platform?: string): string | null {
-  if ((platform ?? os.platform()) !== 'win32') return null;
+export function findBashPath(): string | null {
   for (const candidate of GIT_BASH_CANDIDATES) {
-    if (candidate === 'bash.exe') return candidate; // rely on PATH
-    try {
-      // Lightweight existence check; real validation happens at spawn time.
-      return candidate;
-    } catch {
-      continue;
-    }
+    if (fs.existsSync(candidate)) return candidate;
   }
-  return 'bash.exe';
+  return null;
 }
 
 export async function executeGitBash(
@@ -54,7 +53,7 @@ export async function executeGitBash(
 ): Promise<{ stdout: string; stderr: string; exitCode: number }> {
   const platform = options.platform ?? os.platform();
   const spawnImpl = options.spawnImpl ?? spawn;
-  const bashPath = options.bashPath ?? findBashPath(platform);
+  const bashPath = options.bashPath ?? findBashPath();
 
   return new Promise((resolve, reject) => {
     let child: ChildProcessWithoutNullStreams;
@@ -159,8 +158,20 @@ export async function handleRequest(request: McpRequest, options: ServerOptions 
         };
       }
 
+      const bashPath = options.bashPath ?? findBashPath();
+      if (!bashPath) {
+        return {
+          jsonrpc: '2.0',
+          id,
+          result: {
+            content: [{ type: 'text', text: JSON.stringify({ error: 'bash not found' }) }],
+            isError: true,
+          },
+        };
+      }
+
       try {
-        const { stdout, stderr, exitCode } = await executeGitBash(command, cwd, options);
+        const { stdout, stderr, exitCode } = await executeGitBash(command, cwd, { ...options, bashPath });
         const content: Array<{ type: string; text: string }> = [];
         if (stdout) content.push({ type: 'text', text: stdout });
         if (stderr) content.push({ type: 'text', text: stderr });
