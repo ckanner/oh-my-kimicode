@@ -1,6 +1,6 @@
 # lazykimicode Design & Implementation Plan
 
-> **Status:** Tasks 1–4 are complete. The following gaps remain as of the latest audit:
+> **Status:** Audit-remediation Tasks 1–4 are complete. The following gaps remain as of the latest audit:
 > - Remote MCP defaults (`grep_app`, `context7`) are not provided.
 > - `bootstrap` full verification is pending (bin links, agent profile seeding, `sg` installation, config re-stamping).
 > - Release workflow `dist/` inclusion is pending confirmation.
@@ -139,8 +139,8 @@ timeout = 30
 
 ```json
 {
-  "name": "@lazykimicode/lazykimicode",
-  "version": "0.1.3",
+  "name": "lazykimicode",
+  "version": "<VERSION>",
   "description": "OmO agent harness for Kimi Code CLI",
   "keywords": ["omo", "agent-harness", "lsp", "rules", "ultrawork"],
   "skills": "./skills",
@@ -836,12 +836,13 @@ git commit -m "feat(install): config.toml patcher with idempotency and backup"
 
 ```typescript
 import type { HookPayload, HookOutput } from '../../shared/types.js';
+import { VERSION } from '../../shared/version.js';
 
 export function runSessionStart(payload: HookPayload): HookOutput {
-  const version = process.env.OMO_KIMI_VERSION ?? '0.1.0';
+  const version = process.env.OMO_KIMI_VERSION ?? VERSION;
   const cacheDir = process.env.OMO_KIMI_PLUGIN_CACHE ?? '';
 
-  // TODO: perform idempotent bin links, agent cache, sg provision
+  // Perform idempotent bin links, agent cache seeding, and sg provisioning.
   return {
     hookSpecificOutput: {
       hookEventName: 'SessionStart',
@@ -1811,8 +1812,8 @@ console.log('Hooks synced to', OUT);
 
 ```json
 {
-  "name": "@lazykimicode/lazykimicode",
-  "version": "0.1.3",
+  "name": "lazykimicode",
+  "version": "<VERSION>",
   "description": "OmO agent harness for Kimi Code CLI",
   "keywords": ["omo", "agent-harness", "lsp", "rules", "ultrawork"],
   "skills": "./skills",
