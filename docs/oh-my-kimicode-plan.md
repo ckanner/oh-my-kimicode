@@ -422,13 +422,13 @@ git commit -m "docs: add oh-my-kimicode design and implementation plan"
 - Create: `eslint.config.mjs`
 
 **Interfaces:**
-- Produces: package name `@oh-my-kimicode/oh-my-kimicode`, bin `oh-my-kimicode`
+- Produces: package name `oh-my-kimicode`, bin `oh-my-kimicode`
 
 - [ ] **Step 1: Write root `package.json`**
 
 ```json
 {
-  "name": "@oh-my-kimicode/oh-my-kimicode",
+  "name": "oh-my-kimicode",
   "version": "0.1.0",
   "description": "OmO agent harness for Kimi Code CLI",
   "type": "module",

@@ -1,5 +1,5 @@
 {
-  "name": "@oh-my-kimicode/oh-my-kimicode",
+  "name": "oh-my-kimicode",
   "version": "0.1.0",
   "description": "OmO agent harness for Kimi Code CLI",
   "type": "module",
