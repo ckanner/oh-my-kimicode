@@ -1,11 +1,8 @@
 # lazykimicode Design & Implementation Plan
 
-> **Status:** Audit-remediation Tasks 1–4 are complete. The following gaps remain as of the latest audit:
-> - Remote MCP defaults (`grep_app`, `context7`) are not provided.
-> - `bootstrap` full verification is pending (bin links, agent profile seeding, `sg` installation, config re-stamping).
-> - Release workflow `dist/` inclusion is pending confirmation.
-> - PostHog release-key injection is pending confirmation.
-> See `docs/audit-report.md` for the full list.
+> **Status:** Partially implemented. Audit-remediation Tasks 1–4 and remaining-gap Tasks 1–3 are complete. The following minor/verification items remain:
+> - Remote MCP defaults (`grep_app`, `context7`) are provided as disabled placeholders; actual enablement requires user API keys.
+> - Release workflow now includes `dist/` in the zip; verify on next tag push.
 >
 > **Verification:** `pnpm run lint && pnpm run typecheck && pnpm test && pnpm run build` passes (25 test files, 236 tests).
 
