@@ -38,7 +38,11 @@ describe('uninstall integration', () => {
     const mcpServers = (parsed.mcpServers ?? {}) as Record<string, unknown>;
 
     expect(hooks.some((h) => String(h.command ?? '').includes('lazykimicode'))).toBe(false);
-    expect(mcpServers.git_bash).toBeUndefined();
+    const lazykimicodeMcpEntries = Object.entries(mcpServers).filter(([name, entry]) => {
+      const text = JSON.stringify(entry);
+      return name === 'git_bash' || name.includes('lazykimicode') || text.includes('lazykimicode');
+    });
+    expect(lazykimicodeMcpEntries).toEqual([]);
     expect(fs.existsSync(path.join(tmpDir, 'plugins', 'cache', 'lazykimicode'))).toBe(false);
   });
 });
