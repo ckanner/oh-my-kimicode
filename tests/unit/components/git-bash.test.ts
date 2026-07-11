@@ -66,7 +66,9 @@ describe('git-bash', () => {
         method: 'tools/call',
         params: { name: 'unknown' },
       });
-      expect(response.error?.code).toBe(-32602);
+      const result = response.result as { content: Array<{ text: string }>; isError: boolean };
+      expect(result.isError).toBe(true);
+      expect(result.content[0].text).toContain('unknown tool');
     });
 
     it('returns recommendation on non-Windows', async () => {

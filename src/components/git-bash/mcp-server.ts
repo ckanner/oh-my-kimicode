@@ -144,7 +144,10 @@ export async function handleRequest(request: McpRequest, options: ServerOptions 
         return {
           jsonrpc: '2.0',
           id,
-          error: { code: -32602, message: `Unknown tool: ${params?.name ?? 'undefined'}` },
+          result: {
+            content: [{ type: 'text', text: 'unknown tool' }],
+            isError: true,
+          },
         };
       }
 
