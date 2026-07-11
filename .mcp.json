@@ -1,0 +1,12 @@
+{
+  "grep_app": {
+    "url": "https://api.grep.app/mcp",
+    "enabled": false,
+    "note": "Enable after obtaining an API key"
+  },
+  "context7": {
+    "url": "https://context7.com/mcp",
+    "enabled": false,
+    "note": "Enable after obtaining an API key"
+  }
+}
