@@ -1,5 +1,5 @@
 name: Release
-on:
+'on':
   push:
     tags: ['v*']
 jobs:
@@ -16,9 +16,12 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - run: pnpm install
       - name: Inject PostHog API key
-        if: ${{ secrets.OMO_KIMI_POSTHOG_API_KEY != '' }}
+        env:
+          OMO_KIMI_POSTHOG_API_KEY: ${{ secrets.OMO_KIMI_POSTHOG_API_KEY }}
         run: |
-          sed -i "s/phc_placeholder_replace_in_build/${{ secrets.OMO_KIMI_POSTHOG_API_KEY }}/g" src/components/telemetry/posthog.ts
+          if [ -n "$OMO_KIMI_POSTHOG_API_KEY" ]; then
+            sed -i "s/phc_placeholder_replace_in_build/$OMO_KIMI_POSTHOG_API_KEY/g" src/components/telemetry/posthog.ts
+          fi
       - run: pnpm run build
       - run: pnpm run sync:skills
       - run: pnpm run sync:hooks
