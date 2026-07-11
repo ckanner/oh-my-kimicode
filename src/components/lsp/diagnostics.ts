@@ -35,10 +35,12 @@ export function createTransport(command?: string, args?: string[], cwd?: string)
 }
 
 export async function runDiagnostics(file: string, transport?: LspTransport, rootUri?: string): Promise<Diagnostic[]> {
-  const content = fs.readFileSync(file, 'utf-8');
-  const uri = pathToFileURL(path.resolve(file)).href;
-  const languageId = languageIdFromExtension(path.extname(file).replace('.', ''));
-  const resolvedRootUri = rootUri ?? pathToFileURL(process.env.OMO_KIMI_PROJECT ?? process.cwd()).href + '/';
+  const projectDir = process.env.OMO_KIMI_PROJECT ?? process.cwd();
+  const filePath = path.resolve(projectDir, file);
+  const content = fs.readFileSync(filePath, 'utf-8');
+  const uri = pathToFileURL(filePath).href;
+  const languageId = languageIdFromExtension(path.extname(filePath).replace('.', ''));
+  const resolvedRootUri = rootUri ?? pathToFileURL(projectDir).href + '/';
 
   if (!transport) {
     return [];

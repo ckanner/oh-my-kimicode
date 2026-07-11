@@ -123,4 +123,35 @@ describe('lsp diagnostics', () => {
     fs.rmSync(envProjectDir, { recursive: true, force: true });
     fs.rmSync(explicitProjectDir, { recursive: true, force: true });
   });
+
+  it('resolves relative file paths against OMO_KIMI_PROJECT', async () => {
+    const projectDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lsp-rel-'));
+    process.env.OMO_KIMI_PROJECT = projectDir;
+    const file = path.join(projectDir, 'src', 'x.ts');
+    fs.mkdirSync(path.dirname(file), { recursive: true });
+    fs.writeFileSync(file, 'const x = 1;\n');
+
+    let capturedUri: string | undefined;
+    const transport = new MockLspTransport([
+      { jsonrpc: '2.0', id: 1, result: { capabilities: {} } },
+    ]);
+    transport.onSend((msg) => {
+      if (msg.method === 'textDocument/didOpen') {
+        capturedUri = (msg.params as { textDocument: { uri: string } }).textDocument.uri;
+      }
+      if (msg.method === 'textDocument/didOpen' || msg.method === 'textDocument/didChange') {
+        return {
+          jsonrpc: '2.0',
+          method: 'textDocument/publishDiagnostics',
+          params: { uri: pathToFileURL(file).href, diagnostics: [] },
+        };
+      }
+      return undefined;
+    });
+
+    await runDiagnostics('src/x.ts', transport);
+    expect(capturedUri).toBe(pathToFileURL(file).href);
+
+    fs.rmSync(projectDir, { recursive: true, force: true });
+  });
 });

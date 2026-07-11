@@ -16,9 +16,12 @@ export interface ToolRequest {
   };
 }
 
+export function getProjectDir(): string {
+  return process.env.OMO_KIMI_PROJECT ?? process.cwd();
+}
+
 export function getRootUri(): string {
-  const projectDir = process.env.OMO_KIMI_PROJECT ?? process.cwd();
-  return pathToFileURL(projectDir).href + '/';
+  return pathToFileURL(getProjectDir()).href + '/';
 }
 
 export async function handleToolRequest(
@@ -56,8 +59,9 @@ export async function handleToolRequest(
       }
       const client = new LspClient(transport);
       try {
-        const uri = pathToFileURL(path.resolve(args.file)).href;
-        const text = fs.existsSync(args.file) ? fs.readFileSync(args.file, 'utf-8') : '';
+        const filePath = path.resolve(getProjectDir(), args.file);
+        const uri = pathToFileURL(filePath).href;
+        const text = fs.existsSync(filePath) ? fs.readFileSync(filePath, 'utf-8') : '';
         await client.initialize(rootUri);
         client.openDocument(uri, languageIdFromExtension(path.extname(args.file).replace('.', '')), text);
         const locations = await (req.params.name === 'lsp_goto_definition'
@@ -78,8 +82,9 @@ export async function handleToolRequest(
       }
       const client = new LspClient(transport);
       try {
-        const uri = pathToFileURL(path.resolve(file)).href;
-        const text = fs.existsSync(file) ? fs.readFileSync(file, 'utf-8') : '';
+        const filePath = path.resolve(getProjectDir(), file);
+        const uri = pathToFileURL(filePath).href;
+        const text = fs.existsSync(filePath) ? fs.readFileSync(filePath, 'utf-8') : '';
         await client.initialize(rootUri);
         client.openDocument(uri, languageIdFromExtension(path.extname(file).replace('.', '')), text);
         const symbols = await client.documentSymbol(uri);
@@ -99,8 +104,9 @@ export async function handleToolRequest(
       }
       const client = new LspClient(transport);
       try {
-        const uri = pathToFileURL(path.resolve(args.file)).href;
-        const text = fs.existsSync(args.file) ? fs.readFileSync(args.file, 'utf-8') : '';
+        const filePath = path.resolve(getProjectDir(), args.file);
+        const uri = pathToFileURL(filePath).href;
+        const text = fs.existsSync(filePath) ? fs.readFileSync(filePath, 'utf-8') : '';
         await client.initialize(rootUri);
         client.openDocument(uri, languageIdFromExtension(path.extname(args.file).replace('.', '')), text);
         const pos = { line: args.line, character: args.character };
