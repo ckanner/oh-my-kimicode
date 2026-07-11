@@ -75,6 +75,37 @@ impl Point {}
       expect(symbols.map((s) => s.name)).toContain('Point');
     });
 
+    it('parses Rust enum, trait, mod', () => {
+      const content = `
+enum Color { Red, Green }
+trait Drawable { fn draw(&self); }
+mod utils { fn help() {} }
+`;
+      const symbols = parseFile('sample.rs', content);
+      const names = symbols.map((s) => `${s.name}:${s.kind}`);
+      expect(names).toContain('Color:enum');
+      expect(names).toContain('Drawable:trait');
+      expect(names).toContain('utils:module');
+    });
+
+    it('parses Go method with receiver', () => {
+      const content = 'func (r *Receiver) Method() {}';
+      const symbols = parseFile('sample.go', content);
+      expect(symbols.map((s) => s.name)).toContain('Method');
+    });
+
+    it('parses TS class methods and arrow functions', () => {
+      const content = `
+class User { login() {} }
+const greet = () => {};
+`;
+      const symbols = parseFile('sample.ts', content);
+      const names = symbols.map((s) => s.name);
+      expect(names).toContain('User');
+      expect(names).toContain('login');
+      expect(names).toContain('greet');
+    });
+
     it('returns empty array for unsupported language', () => {
       expect(parseFile('file.rb', 'def foo; end')).toEqual([]);
     });
