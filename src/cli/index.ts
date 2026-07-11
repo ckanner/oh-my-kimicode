@@ -51,7 +51,7 @@ Commands:
   install (default)   Install lazykimicode hooks and plugin cache
   uninstall           Remove lazykimicode hooks, cache, and bin links
   doctor              Run health checks on the installation
-  version             Show package version
+  version, --version, -v  Show package version
   help                Show this help
 
 Install options:

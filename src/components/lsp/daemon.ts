@@ -7,6 +7,7 @@ import { pathToFileURL } from 'node:url';
 import { LspClient } from './lsp-client.js';
 import { VERSION } from '../../shared/version.js';
 import { StdioLspTransport, type LspTransport } from './transport.js';
+import { languageIdFromExtension } from './language-id.js';
 
 const projectDir = process.env.OMO_KIMI_PROJECT ?? process.cwd();
 const lspCommand = process.env.OMO_KIMI_LSP_COMMAND;
@@ -88,17 +89,7 @@ class LspDaemon {
 }
 
 function inferLanguageId(filePath: string): string {
-  const ext = path.extname(filePath);
-  switch (ext) {
-    case '.ts': return 'typescript';
-    case '.tsx': return 'typescriptreact';
-    case '.js': return 'javascript';
-    case '.jsx': return 'javascriptreact';
-    case '.py': return 'python';
-    case '.json': return 'json';
-    case '.md': return 'markdown';
-    default: return 'plaintext';
-  }
+  return languageIdFromExtension(path.extname(filePath).slice(1));
 }
 
 function resolveUri(file: string): string {

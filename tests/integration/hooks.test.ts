@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterEach } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
@@ -8,7 +8,24 @@ import type { HookOutput } from '../../src/shared/types.js';
 const PROJECT_ROOT = path.resolve(process.cwd());
 const PLUGIN_DIR = path.join(PROJECT_ROOT, 'plugin');
 
+const tmpDirsToClean: string[] = [];
+
+function registerTmpDir(...dirs: string[]) {
+  tmpDirsToClean.push(...dirs);
+}
+
 describe('hook execution integration', () => {
+  afterEach(() => {
+    for (const dir of tmpDirsToClean) {
+      try {
+        fs.rmSync(dir, { recursive: true, force: true });
+      } catch {
+        // ignore cleanup errors
+      }
+    }
+    tmpDirsToClean.length = 0;
+  });
+
   beforeAll(() => {
     if (!fs.existsSync(path.join(PLUGIN_DIR, 'components', 'bootstrap', 'dist', 'cli.mjs'))) {
       execFileSync('node', ['scripts/build.mjs'], { cwd: PROJECT_ROOT, stdio: 'inherit' });
@@ -18,10 +35,12 @@ describe('hook execution integration', () => {
   function runHook(component: string, event: string, payload?: Record<string, unknown>, projectDir?: string): { output: HookOutput; exitCode: number } {
     const cli = path.join(PLUGIN_DIR, 'components', component, 'dist', 'cli.mjs');
     const input = payload ? JSON.stringify(payload) : '';
+    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), 'omo-hooks-'));
+    registerTmpDir(stateDir);
     const env: NodeJS.ProcessEnv = {
       ...process.env,
       OMO_KIMI_DISABLE_POSTHOG: '1',
-      OMO_KIMI_STATE_DIR: fs.mkdtempSync(path.join(os.tmpdir(), 'omo-hooks-')),
+      OMO_KIMI_STATE_DIR: stateDir,
     };
     if (projectDir) {
       env.OMO_KIMI_PROJECT = projectDir;

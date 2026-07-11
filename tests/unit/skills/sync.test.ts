@@ -31,12 +31,34 @@ function parseFrontmatter(content: string): Record<string, string> | null {
   const end = lines.indexOf('---', 1);
   if (end === -1) return null;
   const frontmatter: Record<string, string> = {};
-  for (let i = 1; i < end; i++) {
+  let i = 1;
+  while (i < end) {
     const line = lines[i];
     const idx = line.indexOf(':');
     if (idx > 0) {
-      frontmatter[line.slice(0, idx).trim()] = line.slice(idx + 1).trim();
+      const key = line.slice(0, idx).trim();
+      let value = line.slice(idx + 1).trim();
+      if (value === '>-' || value === '>' || value === '|' || value === '|-') {
+        const blockLines: string[] = [];
+        i++;
+        while (i < end && (lines[i].startsWith(' ') || lines[i].startsWith('\t') || lines[i] === '')) {
+          blockLines.push(lines[i]);
+          i++;
+        }
+        const nonEmpty = blockLines.filter((l) => l.trim() !== '');
+        if (nonEmpty.length > 0) {
+          const minIndent = Math.min(...nonEmpty.map((l) => l.length - l.trimStart().length));
+          const trimmed = blockLines.map((l) => l.slice(minIndent));
+          const folded = value === '>-' || value === '>';
+          value = trimmed.join(folded ? ' ' : '\n').trim();
+        } else {
+          value = '';
+        }
+        i--;
+      }
+      frontmatter[key] = value;
     }
+    i++;
   }
   return frontmatter;
 }
@@ -72,6 +94,11 @@ describe('skill quality', () => {
       for (const field of REQUIRED_FIELDS) {
         expect(frontmatter?.[field], `${name}: missing ${field}`).toBeTruthy();
       }
+      expect(frontmatter?.name, `${name}: frontmatter name must match directory`).toBe(name);
+      expect(frontmatter?.type, `${name}: frontmatter type must be 'prompt'`).toBe('prompt');
+      expect(frontmatter?.description.length, `${name}: description is too short`).toBeGreaterThan(10);
+      expect(frontmatter?.whenToUse.length, `${name}: whenToUse is too short`).toBeGreaterThan(5);
+      expect(content, `${name}: missing Kimi Code Harness Compatibility section`).toMatch(/#{1,6}\s+Kimi Code Harness Compatibility/i);
     }
   });
 
