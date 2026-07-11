@@ -1,5 +1,4 @@
 import { fileURLToPath } from 'node:url';
-import path from 'node:path';
 import { readBoulder, hasUncheckedTasks, formatResumeContext } from './boulder.js';
 import { writeHookOutput, exitCodeForHookOutput } from '../../shared/serialize.js';
 import type { HookPayload, HookOutput } from '../../shared/types.js';

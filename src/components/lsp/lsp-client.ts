@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import type { LspMessage, LspTransport } from './transport.js';
 
 export interface Diagnostic {
@@ -68,9 +70,19 @@ export class LspClient {
       };
       this.diagnosticsHandlers.add(handler);
       // Some servers require a change notification to publish diagnostics.
+      // Send the file's current content so diagnostics reflect reality.
+      let text = '';
+      try {
+        const filePath = fileURLToPath(uri);
+        if (fs.existsSync(filePath)) {
+          text = fs.readFileSync(filePath, 'utf-8');
+        }
+      } catch {
+        text = '';
+      }
       this.notify('textDocument/didChange', {
         textDocument: { uri, version: 2 },
-        contentChanges: [{ text: '' }], // placeholder; real client would send current text
+        contentChanges: [{ text }],
       });
       // Timeout fallback
       setTimeout(() => {

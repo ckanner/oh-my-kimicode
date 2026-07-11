@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { languageIdFromExtension } from './language-id.js';
 import { LspClient } from './lsp-client.js';
 import { StdioLspTransport, type LspTransport } from './transport.js';
 
@@ -33,10 +34,11 @@ export function createTransport(command?: string, args?: string[], cwd?: string)
   }
 }
 
-export async function runDiagnostics(file: string, transport?: LspTransport): Promise<Diagnostic[]> {
+export async function runDiagnostics(file: string, transport?: LspTransport, rootUri?: string): Promise<Diagnostic[]> {
   const content = fs.readFileSync(file, 'utf-8');
   const uri = pathToFileURL(path.resolve(file)).href;
-  const languageId = inferLanguageId(file);
+  const languageId = languageIdFromExtension(path.extname(file).replace('.', ''));
+  const resolvedRootUri = rootUri ?? pathToFileURL(process.env.OMO_KIMI_PROJECT ?? process.cwd()).href + '/';
 
   if (!transport) {
     return [];
@@ -44,7 +46,7 @@ export async function runDiagnostics(file: string, transport?: LspTransport): Pr
 
   const client = new LspClient(transport);
   try {
-    await client.initialize(pathToFileURL(process.cwd()).href + '/');
+    await client.initialize(resolvedRootUri);
     client.openDocument(uri, languageId, content);
     const raw = await client.requestDiagnostics(uri);
     return raw.map((d) => ({
@@ -55,19 +57,5 @@ export async function runDiagnostics(file: string, transport?: LspTransport): Pr
     }));
   } finally {
     client.close();
-  }
-}
-
-function inferLanguageId(filePath: string): string {
-  const ext = path.extname(filePath);
-  switch (ext) {
-    case '.ts': return 'typescript';
-    case '.tsx': return 'typescriptreact';
-    case '.js': return 'javascript';
-    case '.jsx': return 'javascriptreact';
-    case '.py': return 'python';
-    case '.json': return 'json';
-    case '.md': return 'markdown';
-    default: return 'plaintext';
   }
 }

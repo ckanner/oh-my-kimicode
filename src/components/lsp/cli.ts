@@ -1,9 +1,11 @@
 import { readCache, writeCache, runDiagnostics, createTransport } from './diagnostics.js';
 import { writeHookOutput } from '../../shared/serialize.js';
+import { pathToFileURL } from 'node:url';
 
 async function main() {
   const event = process.argv[3];
   const projectDir = process.env.OMO_KIMI_PROJECT ?? process.cwd();
+  const rootUri = pathToFileURL(projectDir).href + '/';
   if (event === 'post-compact') {
     writeCache(projectDir, []);
     writeHookOutput({ hookSpecificOutput: { hookEventName: 'PostCompact', additionalContext: '' } });
@@ -25,7 +27,7 @@ async function main() {
   const all: string[] = [];
   try {
     for (const f of files) {
-      const diagnostics = await runDiagnostics(f, transport);
+      const diagnostics = await runDiagnostics(f, transport, rootUri);
       if (diagnostics.length) {
         all.push(...diagnostics.map((d) => `${d.file}:${d.line}: ${d.severity}: ${d.message}`));
       }

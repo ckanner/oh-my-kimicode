@@ -5,8 +5,117 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { runDiagnostics, createTransport } from './diagnostics.js';
+import { languageIdFromExtension } from './language-id.js';
 import { LspClient } from './lsp-client.js';
 import { VERSION } from '../../shared/version.js';
+
+export interface ToolRequest {
+  params: {
+    name: string;
+    arguments?: Record<string, unknown>;
+  };
+}
+
+const projectDir = process.env.OMO_KIMI_PROJECT ?? process.cwd();
+export const rootUri = pathToFileURL(projectDir).href + '/';
+
+export async function handleToolRequest(
+  req: ToolRequest,
+  rootUri: string,
+  options: { createTransport?: typeof createTransport } = {},
+): Promise<{ content: Array<{ type: string; text: string }>; isError?: boolean }> {
+  const createTransportImpl = options.createTransport ?? createTransport;
+  const lspCommand = process.env.OMO_KIMI_LSP_COMMAND;
+  const lspArgs = process.env.OMO_KIMI_LSP_ARGS?.split(' ') ?? [];
+
+  switch (req.params.name) {
+    case 'lsp_status': {
+      const transport = lspCommand ? createTransportImpl(lspCommand, lspArgs) : undefined;
+      const status = transport ? 'ready' : 'no LSP configured';
+      transport?.close();
+      return { content: [{ type: 'text', text: status }] };
+    }
+    case 'lsp_diagnostics': {
+      const file = (req.params.arguments as { file: string }).file;
+      const transport = lspCommand ? createTransportImpl(lspCommand, lspArgs) : undefined;
+      try {
+        const diagnostics = transport ? await runDiagnostics(file, transport, rootUri) : [];
+        return { content: [{ type: 'text', text: JSON.stringify({ diagnostics }) }] };
+      } finally {
+        transport?.close();
+      }
+    }
+    case 'lsp_goto_definition':
+    case 'lsp_find_references': {
+      const args = req.params.arguments as { file: string; line: number; character: number };
+      const transport = lspCommand ? createTransportImpl(lspCommand, lspArgs) : undefined;
+      if (!transport) {
+        return { content: [{ type: 'text', text: JSON.stringify({ locations: [] }) }] };
+      }
+      const client = new LspClient(transport);
+      try {
+        const uri = pathToFileURL(path.resolve(args.file)).href;
+        const text = fs.existsSync(args.file) ? fs.readFileSync(args.file, 'utf-8') : '';
+        await client.initialize(rootUri);
+        client.openDocument(uri, languageIdFromExtension(path.extname(args.file).replace('.', '')), text);
+        const locations = await (req.params.name === 'lsp_goto_definition'
+          ? client.gotoDefinition(uri, { line: args.line, character: args.character })
+          : client.findReferences(uri, { line: args.line, character: args.character }));
+        return { content: [{ type: 'text', text: JSON.stringify({ locations }) }] };
+      } catch (err) {
+        return { content: [{ type: 'text', text: JSON.stringify({ error: (err as Error).message }) }], isError: true };
+      } finally {
+        client.close();
+      }
+    }
+    case 'lsp_symbols': {
+      const file = (req.params.arguments as { file: string }).file;
+      const transport = lspCommand ? createTransportImpl(lspCommand, lspArgs) : undefined;
+      if (!transport) {
+        return { content: [{ type: 'text', text: JSON.stringify({ symbols: [] }) }] };
+      }
+      const client = new LspClient(transport);
+      try {
+        const uri = pathToFileURL(path.resolve(file)).href;
+        const text = fs.existsSync(file) ? fs.readFileSync(file, 'utf-8') : '';
+        await client.initialize(rootUri);
+        client.openDocument(uri, languageIdFromExtension(path.extname(file).replace('.', '')), text);
+        const symbols = await client.documentSymbol(uri);
+        return { content: [{ type: 'text', text: JSON.stringify({ symbols }) }] };
+      } catch (err) {
+        return { content: [{ type: 'text', text: JSON.stringify({ error: (err as Error).message }) }], isError: true };
+      } finally {
+        client.close();
+      }
+    }
+    case 'lsp_prepare_rename':
+    case 'lsp_rename': {
+      const args = req.params.arguments as { file: string; line: number; character: number; newName?: string };
+      const transport = lspCommand ? createTransportImpl(lspCommand, lspArgs) : undefined;
+      if (!transport) {
+        return { content: [{ type: 'text', text: JSON.stringify({ result: null }) }] };
+      }
+      const client = new LspClient(transport);
+      try {
+        const uri = pathToFileURL(path.resolve(args.file)).href;
+        const text = fs.existsSync(args.file) ? fs.readFileSync(args.file, 'utf-8') : '';
+        await client.initialize(rootUri);
+        client.openDocument(uri, languageIdFromExtension(path.extname(args.file).replace('.', '')), text);
+        const pos = { line: args.line, character: args.character };
+        const result = req.params.name === 'lsp_prepare_rename'
+          ? await client.prepareRename(uri, pos)
+          : await client.rename(uri, pos, args.newName ?? '');
+        return { content: [{ type: 'text', text: JSON.stringify({ result }) }] };
+      } catch (err) {
+        return { content: [{ type: 'text', text: JSON.stringify({ error: (err as Error).message }) }], isError: true };
+      } finally {
+        client.close();
+      }
+    }
+    default:
+      return { content: [{ type: 'text', text: 'unknown tool' }], isError: true };
+  }
+}
 
 export function startLspServer() {
   const server = new Server({ name: 'lsp', version: VERSION }, { capabilities: { tools: {} } });
@@ -23,98 +132,7 @@ export function startLspServer() {
     ],
   }));
 
-  server.setRequestHandler(CallToolRequestSchema, async (req) => {
-    const lspCommand = process.env.OMO_KIMI_LSP_COMMAND;
-    const lspArgs = process.env.OMO_KIMI_LSP_ARGS?.split(' ') ?? [];
-
-    switch (req.params.name) {
-      case 'lsp_status': {
-        const transport = lspCommand ? createTransport(lspCommand, lspArgs) : undefined;
-        const status = transport ? 'ready' : 'no LSP configured';
-        transport?.close();
-        return { content: [{ type: 'text', text: status }] };
-      }
-      case 'lsp_diagnostics': {
-        const file = (req.params.arguments as { file: string }).file;
-        const transport = lspCommand ? createTransport(lspCommand, lspArgs) : undefined;
-        try {
-          const diagnostics = transport ? await runDiagnostics(file, transport) : [];
-          return { content: [{ type: 'text', text: JSON.stringify({ diagnostics }) }] };
-        } finally {
-          transport?.close();
-        }
-      }
-      case 'lsp_goto_definition':
-      case 'lsp_find_references': {
-        const args = req.params.arguments as { file: string; line: number; character: number };
-        const transport = lspCommand ? createTransport(lspCommand, lspArgs) : undefined;
-        if (!transport) {
-          return { content: [{ type: 'text', text: JSON.stringify({ locations: [] }) }] };
-        }
-        const client = new LspClient(transport);
-        try {
-          const uri = pathToFileURL(path.resolve(args.file)).href;
-          const text = fs.existsSync(args.file) ? fs.readFileSync(args.file, 'utf-8') : '';
-          await client.initialize(pathToFileURL(process.cwd()).href);
-          client.openDocument(uri, path.extname(args.file).replace('.', '') || 'text', text);
-          const locations = await (req.params.name === 'lsp_goto_definition'
-            ? client.gotoDefinition(uri, { line: args.line, character: args.character })
-            : client.findReferences(uri, { line: args.line, character: args.character }));
-          return { content: [{ type: 'text', text: JSON.stringify({ locations }) }] };
-        } catch (err) {
-          return { content: [{ type: 'text', text: JSON.stringify({ error: (err as Error).message }) }], isError: true };
-        } finally {
-          client.close();
-        }
-      }
-      case 'lsp_symbols': {
-        const file = (req.params.arguments as { file: string }).file;
-        const transport = lspCommand ? createTransport(lspCommand, lspArgs) : undefined;
-        if (!transport) {
-          return { content: [{ type: 'text', text: JSON.stringify({ symbols: [] }) }] };
-        }
-        const client = new LspClient(transport);
-        try {
-          const uri = pathToFileURL(path.resolve(file)).href;
-          const text = fs.existsSync(file) ? fs.readFileSync(file, 'utf-8') : '';
-          await client.initialize(pathToFileURL(process.cwd()).href);
-          client.openDocument(uri, path.extname(file).replace('.', '') || 'text', text);
-          const symbols = await client.documentSymbol(uri);
-          return { content: [{ type: 'text', text: JSON.stringify({ symbols }) }] };
-        } catch (err) {
-          return { content: [{ type: 'text', text: JSON.stringify({ error: (err as Error).message }) }], isError: true };
-        } finally {
-          client.close();
-        }
-      }
-      case 'lsp_prepare_rename':
-      case 'lsp_rename': {
-        const args = req.params.arguments as { file: string; line: number; character: number; newName?: string };
-        const transport = lspCommand ? createTransport(lspCommand, lspArgs) : undefined;
-        if (!transport) {
-          return { content: [{ type: 'text', text: JSON.stringify({ result: null }) }] };
-        }
-        const client = new LspClient(transport);
-        try {
-          const uri = pathToFileURL(path.resolve(args.file)).href;
-          const text = fs.existsSync(args.file) ? fs.readFileSync(args.file, 'utf-8') : '';
-          await client.initialize(pathToFileURL(process.cwd()).href);
-          client.openDocument(uri, path.extname(args.file).replace('.', '') || 'text', text);
-          const pos = { line: args.line, character: args.character };
-          const result = req.params.name === 'lsp_prepare_rename'
-            ? await client.prepareRename(uri, pos)
-            : await client.rename(uri, pos, args.newName ?? '');
-          return { content: [{ type: 'text', text: JSON.stringify({ result }) }] };
-        } catch (err) {
-          return { content: [{ type: 'text', text: JSON.stringify({ error: (err as Error).message }) }], isError: true };
-        } finally {
-          client.close();
-        }
-      }
-      default:
-        return { content: [{ type: 'text', text: 'unknown tool' }], isError: true };
-    }
-  });
+  server.setRequestHandler(CallToolRequestSchema, async (req) => handleToolRequest(req, rootUri));
 
   const transport = new StdioServerTransport();
   server.connect(transport);

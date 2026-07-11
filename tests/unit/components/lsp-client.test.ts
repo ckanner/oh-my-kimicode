@@ -1,8 +1,16 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import fs from 'node:fs';
+import path from 'node:path';
+import os from 'node:os';
+import { pathToFileURL } from 'node:url';
 import { LspClient } from '../../../src/components/lsp/lsp-client.js';
 import { MockLspTransport } from '../../../src/components/lsp/transport.js';
 
 describe('LspClient', () => {
+  let tmp: string;
+  beforeEach(() => { tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'lsp-client-')); });
+  afterEach(() => { fs.rmSync(tmp, { recursive: true, force: true }); });
+
   it('requests goto definition', async () => {
     const transport = new MockLspTransport([
       { jsonrpc: '2.0', id: 1, result: { capabilities: {} } },
@@ -78,6 +86,31 @@ describe('LspClient', () => {
     await client.initialize('file:///tmp/');
     const result = await client.documentSymbol('file:///tmp/test.ts');
     expect(result).toEqual([{ name: 'foo', kind: 12 }]);
+    client.close();
+  });
+
+  it('sends current file content in didChange notification', async () => {
+    const file = path.join(tmp, 'test.ts');
+    const content = 'const foo = 1;\n';
+    fs.writeFileSync(file, content);
+
+    const transport = new MockLspTransport([
+      { jsonrpc: '2.0', id: 1, result: { capabilities: {} } },
+    ]);
+    let didChangeText: string | undefined;
+    transport.onSend((msg) => {
+      if (msg.method === 'textDocument/didChange') {
+        didChangeText = (msg.params as { contentChanges: Array<{ text: string }> }).contentChanges[0].text;
+      }
+      return undefined;
+    });
+
+    const client = new LspClient(transport);
+    await client.initialize('file:///tmp/');
+    client.requestDiagnostics(pathToFileURL(file).href);
+    // Wait for the asynchronous send to be observed by the mock transport.
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(didChangeText).toBe(content);
     client.close();
   });
 });
