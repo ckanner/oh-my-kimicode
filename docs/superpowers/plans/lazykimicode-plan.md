@@ -1136,7 +1136,7 @@ export function writeCache(projectDir: string, files: string[]): void {
 }
 
 export async function runDiagnostics(file: string): Promise<Diagnostic[]> {
-  // Placeholder: real implementation shells out to lsp-tools-mcp / lsp-daemon
+  // Production implementation uses LspClient + StdioLspTransport in src/components/lsp/
   return [];
 }
 ```

@@ -252,4 +252,4 @@
 - [x] `pnpm run lint && pnpm run typecheck && pnpm test && pnpm run build` 全部通过。
 - [x] 新增测试 ≥ 30 个，覆盖 CLI/MCP 边界和强化回归。
 - [x] `AGENTS.md`、`README.md`、`capabilities.md`、Plan 文档与代码一致。
-- [ ] 所有 review 中发现的问题都有对应修复或明确的文档化说明。
+- [x] 所有 review 中发现的问题都有对应修复或明确的文档化说明；剩余未决事项已在 `docs/superpowers/plans/audit-report.md` 与 `docs/superpowers/plans/2026-07-11-remaining-gaps-remediation.md` 中记录。
