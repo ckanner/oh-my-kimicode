@@ -28,6 +28,13 @@
         "./components/lsp/dist/daemon.mjs"
       ],
       "cwd": "./"
+    },
+    "git_bash": {
+      "command": "node",
+      "args": [
+        "./components/git-bash/dist/mcp-server.mjs"
+      ],
+      "cwd": "./"
     }
   },
   "interface": {

@@ -8,10 +8,11 @@ const SOURCE_PATHS = [
   path.join(ROOT, 'src/components/codegraph/serve.mjs'),
   path.join(ROOT, 'src/components/lsp/mcp-server.ts'),
   path.join(ROOT, 'src/components/lsp/daemon.ts'),
+  path.join(ROOT, 'src/components/git-bash/mcp-server.ts'),
 ];
 
-const TOOL_NAME_RE = /\{ name: '([^']+)', description:/g;
-const SKILL_TOOL_RE = /\b(?:codegraph|lsp)_[a-z_]+\b/g;
+const TOOL_NAME_RE = /\{\s*name:\s*'([^']+)',/g;
+const SKILL_TOOL_RE = /\b(?:(?:codegraph|lsp)_[a-z_]+|git_bash)\b/g;
 const OUTDATED_CLI_RE = /lsp-tools-mcp/;
 
 function declaredToolNames(): Set<string> {
@@ -39,10 +40,18 @@ describe('MCP tool / skill alignment', () => {
   const declared = declaredToolNames();
 
   it('declares the tools referenced by skills', () => {
-    const expected = ['codegraph_status', 'lsp_prepare_rename', 'lsp_rename'];
+    const expected = ['codegraph_status', 'lsp_prepare_rename', 'lsp_rename', 'git_bash'];
     for (const name of expected) {
       expect(declared).toContain(name);
     }
+  });
+
+  it('declares git_bash in plugin manifest', () => {
+    const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, 'plugin/kimi.plugin.json'), 'utf-8'));
+    expect(manifest.mcpServers).toHaveProperty('git_bash');
+    expect(manifest.mcpServers.git_bash.command).toBe('node');
+    expect(manifest.mcpServers.git_bash.args).toContain('./components/git-bash/dist/mcp-server.mjs');
+    expect(manifest.mcpServers.git_bash.cwd).toBe('./');
   });
 
   it('does not reference unknown MCP tools in skills', () => {
