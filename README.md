@@ -140,6 +140,9 @@ If the skill name is unique, `/skill:<skill-name>` also works.
 | `KIMI_LOCAL_BIN_DIR` | Override bin directory for managed binaries |
 | `OMO_TEAMS_DIR` | Override team-mode state directory (default `~/.omo/teams`) |
 
+Release builds inject the PostHog API key via CI. Local/debug builds without
+`OMO_KIMI_POSTHOG_API_KEY` will skip telemetry with a build-time warning.
+
 ---
 
 ## Uninstall

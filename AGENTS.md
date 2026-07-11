@@ -37,6 +37,9 @@ pnpm run build
 | `ultrawork` | `UserPromptSubmit` | Detect `ultrawork`/`ulw` keywords and trigger autonomous mode |
 | `ulw-loop` | `UserPromptSubmit`, `PreToolUse` | Steering parser; guard against budgeted `CreateGoal` |
 
+Release builds inject the PostHog API key via CI. Local/debug builds without
+`OMO_KIMI_POSTHOG_API_KEY` will skip telemetry with a build-time warning.
+
 ## Test
 
 ```bash
