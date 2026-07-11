@@ -21,4 +21,14 @@ describe('remote MCP defaults', () => {
       expect((cfg as { enabled?: boolean }).enabled).toBe(false);
     }
   });
+
+  it('each entry has url and note', () => {
+    const rootMcp = path.join(ROOT, '.mcp.json');
+    const root = JSON.parse(fs.readFileSync(rootMcp, 'utf-8'));
+    for (const [name, cfg] of Object.entries(root)) {
+      const c = cfg as { url?: string; note?: string };
+      expect(c.url, `${name} missing url`).toBeTruthy();
+      expect(c.note, `${name} missing note`).toBeTruthy();
+    }
+  });
 });

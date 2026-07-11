@@ -24,4 +24,12 @@ describe('getHookDefs', () => {
     expect(names).toContain('rules');
     expect(names).toContain('lsp');
   });
+
+  it('codegraph PostToolUse matcher matches codegraph tools', () => {
+    const hooks = getHookDefs('0.1.3', '/tmp/cache');
+    const cgPost = hooks.find(
+      (h) => h.event === 'PostToolUse' && h.command.includes('/codegraph/'),
+    );
+    expect(cgPost?.matcher).toBe('^(codegraph[._].*|mcp__codegraph__.*)$');
+  });
 });
