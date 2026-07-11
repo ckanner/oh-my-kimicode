@@ -3,7 +3,7 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import fs from 'node:fs';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
+import { pathToFileURL, fileURLToPath } from 'node:url';
 import { runDiagnostics, createTransport } from './diagnostics.js';
 import { languageIdFromExtension } from './language-id.js';
 import { LspClient } from './lsp-client.js';
@@ -136,4 +136,10 @@ export function startLspServer() {
 
   const transport = new StdioServerTransport();
   server.connect(transport);
+}
+
+const modulePath = path.resolve(fileURLToPath(import.meta.url));
+const entryPath = path.resolve(process.argv[1] ?? '');
+if (modulePath === entryPath) {
+  startLspServer();
 }
