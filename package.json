@@ -20,6 +20,14 @@
     "omo",
     "lazykimi"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ckanner/lazykimicode.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ckanner/lazykimicode/issues"
+  },
+  "homepage": "https://github.com/ckanner/lazykimicode#readme",
   "files": [
     "dist/",
     "plugin/",
