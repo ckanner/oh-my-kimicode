@@ -6,7 +6,7 @@
 > - Remote MCP defaults (`grep_app`, `context7`) are not provided.
 > See `docs/audit-report.md` for the full list.
 >
-> **Verification:** `pnpm run lint && pnpm run typecheck && pnpm test && pnpm run build` passes (23 test files, 228 tests).
+> **Verification:** `pnpm run lint && pnpm run typecheck && pnpm test && pnpm run build` passes (25 test files, 236 tests).
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:subagent-driven-development` (recommended) or `superpowers:executing-plans` to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -354,7 +354,7 @@ Current suite covers:
 - `tests/integration/install.test.ts` — run installer with `KIMI_CODE_HOME=<temp>`, assert plugin cache exists, hooks written, no duplicate hooks on second run.
 - `tests/integration/hooks.test.ts` — pipe synthetic Kimi hook payloads to component CLIs and assert JSON stdout.
 
-**Latest result:** 23 test files, 228 tests passing.
+**Latest result:** 25 test files, 236 tests passing.
 
 ### 8.3 Manual validation checklist
 
