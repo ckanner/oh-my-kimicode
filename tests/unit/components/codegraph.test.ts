@@ -243,6 +243,27 @@ impl Point {}
       expect(out.hookSpecificOutput?.additionalContext).toContain('reindex');
     });
 
+    it('returns guidance when toolOutput has isError true', () => {
+      const payload: HookPayload = {
+        hookEventName: 'PostToolUse',
+        toolName: 'mcp__codegraph__search',
+        toolOutput: { isError: true, content: 'search failed' },
+      };
+      const out = runPostToolUse(payload);
+      expect(out.hookSpecificOutput?.additionalContext).toContain('CodeGraph');
+      expect(out.hookSpecificOutput?.additionalContext).toContain('reindex');
+    });
+
+    it('returns guidance when toolOutput has a truthy error property', () => {
+      const payload: HookPayload = {
+        hookEventName: 'PostToolUse',
+        toolName: 'mcp__codegraph__search',
+        toolOutput: { error: 'index missing' },
+      };
+      const out = runPostToolUse(payload);
+      expect(out.hookSpecificOutput?.additionalContext).toContain('reindex');
+    });
+
     it('returns empty context on success', () => {
       const payload: HookPayload = {
         hookEventName: 'PostToolUse',

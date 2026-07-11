@@ -24,7 +24,8 @@ function isToolFailure(toolOutput: unknown): boolean {
     return /error|failed/i.test(toolOutput);
   }
   if (typeof toolOutput === 'object' && toolOutput !== null) {
-    return 'error' in toolOutput && (toolOutput as { error: unknown }).error != null;
+    const obj = toolOutput as Record<string, unknown>;
+    return ('error' in obj && obj.error != null) || ('isError' in obj && obj.isError === true);
   }
   return false;
 }
