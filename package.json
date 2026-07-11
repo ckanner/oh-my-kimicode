@@ -1,6 +1,6 @@
 {
   "name": "oh-my-kimicode",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "OmO agent harness for Kimi Code CLI",
   "type": "module",
   "bin": {
