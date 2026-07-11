@@ -134,7 +134,7 @@ timeout = 30
 
 ```json
 {
-  "name": "oh-my-kimicode",
+  "name": "@oh-my-kimicode/oh-my-kimicode",
   "version": "0.1.0",
   "description": "OmO agent harness for Kimi Code CLI",
   "keywords": ["omo", "agent-harness", "lsp", "rules", "ultrawork"],
@@ -422,13 +422,13 @@ git commit -m "docs: add oh-my-kimicode design and implementation plan"
 - Create: `eslint.config.mjs`
 
 **Interfaces:**
-- Produces: package name `oh-my-kimicode`, bin `oh-my-kimicode`
+- Produces: package name `@oh-my-kimicode/oh-my-kimicode`, bin `oh-my-kimicode`
 
 - [ ] **Step 1: Write root `package.json`**
 
 ```json
 {
-  "name": "oh-my-kimicode",
+  "name": "@oh-my-kimicode/oh-my-kimicode",
   "version": "0.1.0",
   "description": "OmO agent harness for Kimi Code CLI",
   "type": "module",
@@ -1806,7 +1806,7 @@ console.log('Hooks synced to', OUT);
 
 ```json
 {
-  "name": "oh-my-kimicode",
+  "name": "@oh-my-kimicode/oh-my-kimicode",
   "version": "0.1.0",
   "description": "OmO agent harness for Kimi Code CLI",
   "keywords": ["omo", "agent-harness", "lsp", "rules", "ultrawork"],
