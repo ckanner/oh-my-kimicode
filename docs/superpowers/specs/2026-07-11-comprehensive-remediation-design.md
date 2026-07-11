@@ -217,7 +217,7 @@
 
 ### 5.2 `docs/capabilities.md`
 
-- 更新 “Latest result” 为 39 test files / 238 tests。
+- 更新 “Latest result” 为 39 test files / 243 tests。
 
 ### 5.3 `docs/superpowers/plans/lazykimicode-plan.md`
 

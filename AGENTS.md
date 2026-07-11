@@ -46,7 +46,7 @@ Release builds inject the PostHog API key via CI. Local/debug builds without
 pnpm test
 ```
 
-Latest result: **39 test files, 238 tests passing**.
+Latest result: **39 test files, 243 tests passing**.
 
 ## Adding a new component
 

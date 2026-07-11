@@ -224,7 +224,7 @@ repository. Both are disabled by default until an API key is set."
 pnpm run lint && pnpm run typecheck && pnpm test && pnpm run build
 ```
 
-Expected: PASS（39 test files / 238 tests，build 成功）。
+Expected: PASS（39 test files / 243 tests，build 成功）。
 
 - [x] **Step 4: 提交**
 
