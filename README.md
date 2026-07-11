@@ -101,7 +101,7 @@ export OMO_KIMI_LSP_COMMAND=typescript-language-server
 export OMO_KIMI_LSP_ARGS="--stdio"
 ```
 
-On Windows, the installer also registers a `git_bash` MCP in `config.toml` for shell operations.
+On Windows, the installer registers a `git_bash` MCP (declared in `plugin/kimi.plugin.json`) for shell operations.
 
 ### Skills
 
@@ -175,6 +175,8 @@ After changing skills or component `hooks.json`, regenerate plugin assets:
 pnpm run sync:skills
 pnpm run sync:hooks
 ```
+
+Latest full-suite result: **38 test files, 211 tests passing**.
 
 ---
 
