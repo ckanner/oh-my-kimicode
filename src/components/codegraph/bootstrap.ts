@@ -21,7 +21,7 @@ export function runBootstrap(_payload: HookPayload): HookOutput {
 
 function isToolFailure(toolOutput: unknown): boolean {
   if (typeof toolOutput === 'string') {
-    return /error|failed/i.test(toolOutput);
+    return /\b(error|failed)\b/i.test(toolOutput);
   }
   if (typeof toolOutput === 'object' && toolOutput !== null) {
     const obj = toolOutput as Record<string, unknown>;
