@@ -121,6 +121,8 @@ export function startLspDaemon() {
       { name: 'lsp_goto_definition', description: 'Go to definition', inputSchema: { type: 'object', properties: { file: { type: 'string' }, line: { type: 'number' }, character: { type: 'number' } }, required: ['file', 'line', 'character'] } },
       { name: 'lsp_find_references', description: 'Find references', inputSchema: { type: 'object', properties: { file: { type: 'string' }, line: { type: 'number' }, character: { type: 'number' } }, required: ['file', 'line', 'character'] } },
       { name: 'lsp_symbols', description: 'List document symbols for a file', inputSchema: { type: 'object', properties: { file: { type: 'string' } }, required: ['file'] } },
+      { name: 'lsp_prepare_rename', description: 'Validate a symbol rename is possible', inputSchema: { type: 'object', properties: { file: { type: 'string' }, line: { type: 'number' }, character: { type: 'number' } }, required: ['file', 'line', 'character'] } },
+      { name: 'lsp_rename', description: 'Execute a symbol rename', inputSchema: { type: 'object', properties: { file: { type: 'string' }, line: { type: 'number' }, character: { type: 'number' }, newName: { type: 'string' } }, required: ['file', 'line', 'character', 'newName'] } },
     ],
   }));
 
@@ -174,6 +176,23 @@ export function startLspDaemon() {
             return client.documentSymbol(uri);
           });
           return { content: [{ type: 'text', text: JSON.stringify({ symbols }) }] };
+        }
+        case 'lsp_prepare_rename':
+        case 'lsp_rename': {
+          if (!daemon.isConfigured()) {
+            return { content: [{ type: 'text', text: JSON.stringify({ result: null }) }] };
+          }
+          const args = req.params.arguments as { file: string; line: number; character: number; newName?: string };
+          const uri = resolveUri(args.file);
+          const text = readFileText(args.file);
+          const result = await daemon.withClient(async (client) => {
+            client.openDocument(uri, inferLanguageId(args.file), text);
+            const pos = { line: args.line, character: args.character };
+            return req.params.name === 'lsp_prepare_rename'
+              ? client.prepareRename(uri, pos)
+              : client.rename(uri, pos, args.newName ?? '');
+          });
+          return { content: [{ type: 'text', text: JSON.stringify({ result }) }] };
         }
         default:
           return { content: [{ type: 'text', text: 'unknown tool' }], isError: true };

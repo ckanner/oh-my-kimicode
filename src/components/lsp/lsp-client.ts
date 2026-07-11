@@ -104,6 +104,23 @@ export class LspClient {
     return (msg as { result?: unknown }).result;
   }
 
+  async prepareRename(uri: string, position: Position): Promise<unknown> {
+    const msg = await this.request('textDocument/prepareRename', {
+      textDocument: { uri },
+      position,
+    });
+    return (msg as { result?: unknown }).result;
+  }
+
+  async rename(uri: string, position: Position, newName: string): Promise<unknown> {
+    const msg = await this.request('textDocument/rename', {
+      textDocument: { uri },
+      position,
+      newName,
+    });
+    return (msg as { result?: unknown }).result;
+  }
+
   shutdown(): Promise<LspMessage> {
     return this.request('shutdown', {});
   }

@@ -67,10 +67,10 @@ async function buildInstaller() {
     format: 'esm',
     outfile: path.join(outdir, 'index.mjs'),
   });
-  // Also write scripts/install-local.mjs as a thin wrapper for npm-published layout.
+  // Also write scripts/install_local.mjs as a thin wrapper for npm-published layout.
   fs.writeFileSync(
-    path.join('scripts', 'install-local.mjs'),
-    `#!/usr/bin/env node\nimport fs from 'node:fs';\nimport path from 'node:path';\nimport { fileURLToPath } from 'node:url';\nconst __dirname = path.dirname(fileURLToPath(import.meta.url));\nconst built = path.resolve(__dirname, '..', 'dist', 'cli', 'index.mjs');\nif (!fs.existsSync(built)) {\n  console.error('Built installer not found. Run \`pnpm run build\` first.');\n  process.exit(1);\n}\nawait import(built);\n`,
+    path.join('scripts', 'install_local.mjs'),
+    `#!/usr/bin/env node\nimport fs from 'node:fs';\nimport path from 'node:path';\nimport { fileURLToPath } from 'node:url';\nimport { spawnSync } from 'node:child_process';\n\nconst __dirname = path.dirname(fileURLToPath(import.meta.url));\nconst built = path.resolve(__dirname, '..', 'dist', 'cli', 'index.mjs');\nif (!fs.existsSync(built)) {\n  console.error('Built installer not found. Run \`pnpm run build\` first.');\n  process.exit(1);\n}\nconst result = spawnSync(process.execPath, [built, ...process.argv.slice(2)], { stdio: 'inherit' });\nprocess.exit(result.status ?? 1);\n`,
   );
 }
 

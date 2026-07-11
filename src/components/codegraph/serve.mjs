@@ -23,6 +23,7 @@ function startCodegraphServer() {
       { name: 'codegraph_search', description: 'Structural code search', inputSchema: { type: 'object', properties: { query: { type: 'string' }, kind: { type: 'string' }, file: { type: 'string' } }, required: ['query'] } },
       { name: 'codegraph_relate', description: 'Find symbols in files related to a symbol', inputSchema: { type: 'object', properties: { symbol: { type: 'string' } }, required: ['symbol'] } },
       { name: 'codegraph_reindex', description: 'Rebuild the CodeGraph index', inputSchema: { type: 'object', properties: {}, required: [] } },
+      { name: 'codegraph_status', description: 'CodeGraph index status', inputSchema: { type: 'object', properties: {}, required: [] } },
       { name: 'codegraph_explore', description: 'Search symbols and their file neighbors', inputSchema: { type: 'object', properties: { query: { type: 'string' }, kind: { type: 'string' }, file: { type: 'string' }, limit: { type: 'number' } }, required: ['query'] } },
       { name: 'codegraph_files', description: 'List files containing matching symbols', inputSchema: { type: 'object', properties: { query: { type: 'string' } }, required: [] } },
       { name: 'codegraph_callers', description: 'Find files that reference a symbol', inputSchema: { type: 'object', properties: { symbol: { type: 'string' } }, required: ['symbol'] } },
@@ -34,14 +35,13 @@ function startCodegraphServer() {
   server.setRequestHandler(CallToolRequestSchema, async (req) => {
     try {
       const args = req.params.arguments;
-      const index = ensureIndex();
       switch (req.params.name) {
         case 'codegraph_search': {
-          const results = search(index, { query: args.query, kind: args.kind, file: args.file });
+          const results = search(ensureIndex(), { query: args.query, kind: args.kind, file: args.file });
           return { content: [{ type: 'text', text: JSON.stringify({ results }) }] };
         }
         case 'codegraph_relate': {
-          const results = relate(index, args.symbol);
+          const results = relate(ensureIndex(), args.symbol);
           return { content: [{ type: 'text', text: JSON.stringify({ results }) }] };
         }
         case 'codegraph_reindex': {
@@ -49,24 +49,28 @@ function startCodegraphServer() {
           saveIndex(projectDir, newIndex);
           return { content: [{ type: 'text', text: JSON.stringify({ symbolCount: newIndex.symbols.length }) }] };
         }
+        case 'codegraph_status': {
+          const loaded = loadIndex(projectDir);
+          return { content: [{ type: 'text', text: JSON.stringify({ status: loaded ? 'ready' : 'not_indexed', symbolCount: loaded?.symbols.length ?? 0 }) }] };
+        }
         case 'codegraph_explore': {
-          const results = explore(index, { query: args.query, kind: args.kind, file: args.file, limit: args.limit });
+          const results = explore(ensureIndex(), { query: args.query, kind: args.kind, file: args.file, limit: args.limit });
           return { content: [{ type: 'text', text: JSON.stringify({ results }) }] };
         }
         case 'codegraph_files': {
-          const fileList = files(index, args.query);
+          const fileList = files(ensureIndex(), args.query);
           return { content: [{ type: 'text', text: JSON.stringify({ files: fileList }) }] };
         }
         case 'codegraph_callers': {
-          const results = callers(index, projectDir, args.symbol);
+          const results = callers(ensureIndex(), projectDir, args.symbol);
           return { content: [{ type: 'text', text: JSON.stringify({ callers: results }) }] };
         }
         case 'codegraph_callees': {
-          const results = callees(index, projectDir, args.symbol);
+          const results = callees(ensureIndex(), projectDir, args.symbol);
           return { content: [{ type: 'text', text: JSON.stringify({ callees: results }) }] };
         }
         case 'codegraph_impact': {
-          const fileList = impact(index, projectDir, args.symbol);
+          const fileList = impact(ensureIndex(), projectDir, args.symbol);
           return { content: [{ type: 'text', text: JSON.stringify({ files: fileList }) }] };
         }
         default:

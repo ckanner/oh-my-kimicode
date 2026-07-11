@@ -4,7 +4,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
-import { execSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
+import { execSync, spawnSync } from "node:child_process";
 function getTeamsDir() {
   return process.env.OMO_TEAMS_DIR ?? path.join(os.homedir(), ".omo", "teams");
 }
@@ -120,6 +121,16 @@ function withTeamWriteOrCreate(sessionId, fn) {
 function getRepoRoot() {
   return execSync("git rev-parse --show-toplevel").toString().trim();
 }
+function runGit(args, cwd) {
+  const result = spawnSync("git", args, { cwd, encoding: "utf-8" });
+  if (result.error) throw result.error;
+  if (result.status !== 0) {
+    const err = result.stderr?.trim() || `git ${args.join(" ")} failed with status ${result.status}`;
+    throw new Error(err);
+  }
+}
+var CliUsageError = class extends Error {
+};
 function parseArgs(argv) {
   const args = {};
   for (let i = 0; i < argv.length; i++) {
@@ -263,41 +274,77 @@ function worktreeAdd(sessionId, memberId, baseBranch, branch) {
     const base = baseBranch ?? team.baseBranch;
     const memberBranch = branch ?? `${memberId}/${base}`;
     const worktreePath = path.join(teamDir(sessionId), "worktrees", memberId);
-    execSync(`git worktree add -b ${memberBranch} ${worktreePath} ${base}`, {
-      cwd: repoRoot,
-      stdio: "pipe"
-    });
+    runGit(["worktree", "add", "-b", memberBranch, worktreePath, base], repoRoot);
     member.branch = memberBranch;
     member.worktreePath = worktreePath;
     team.worktreeMode = true;
     console.log(`Worktree added at ${worktreePath}`);
   });
 }
-function worktreeRemove(sessionId, memberId, force = false) {
+function worktreeRemove(sessionId, memberId, force = false, deleteBranch = false) {
   withTeamWrite(sessionId, (team) => {
     const member = team.members.find((m) => m.id === memberId);
     if (!member) throw new Error(`Member ${memberId} not found`);
     if (!member.worktreePath) throw new Error(`Member ${memberId} has no worktree`);
-    const flags = force ? "--force" : "";
-    execSync(`git worktree remove ${flags} ${member.worktreePath}`.trim(), { stdio: "pipe" });
+    const worktreePath = path.resolve(member.worktreePath);
+    const expectedPrefix = path.resolve(path.join(teamDir(sessionId), "worktrees"));
+    if (!worktreePath.startsWith(expectedPrefix + path.sep) && worktreePath !== expectedPrefix) {
+      throw new Error(`Worktree path is outside the team worktrees directory: ${worktreePath}`);
+    }
+    if (!fs.existsSync(worktreePath)) {
+      throw new Error(`Worktree path does not exist: ${worktreePath}`);
+    }
+    const repoRoot = getRepoRoot();
+    const args = ["worktree", "remove"];
+    if (force) args.push("--force");
+    args.push(worktreePath);
+    runGit(args, repoRoot);
+    if (deleteBranch && member.branch) {
+      try {
+        runGit(["branch", "-D", member.branch], repoRoot);
+      } catch {
+      }
+    }
     member.worktreePath = "";
+    member.branch = "";
+    member.status = "archived";
+    member.statusNote = "worktree removed";
+    member.reportedAt = (/* @__PURE__ */ new Date()).toISOString();
     console.log(`Worktree removed for ${memberId}`);
   });
 }
 function integrate(sessionId, memberId) {
   const conflicts = [];
-  withTeamRead(sessionId, (team) => {
-    if (!team) throw new Error(`Team ${sessionId} not found`);
+  withTeamWrite(sessionId, (team) => {
+    const repoRoot = getRepoRoot();
     const members = memberId ? team.members.filter((m) => m.id === memberId && m.branch) : team.members.filter((m) => m.branch && m.status !== "archived");
+    if (members.length === 0) {
+      console.log("No branches to integrate");
+      return;
+    }
+    const currentBranch = execSync("git branch --show-current", {
+      cwd: repoRoot,
+      encoding: "utf-8"
+    }).trim();
+    if (currentBranch !== team.baseBranch) {
+      runGit(["checkout", team.baseBranch], repoRoot);
+    }
     for (const member of members) {
       try {
-        execSync(`git merge --no-ff ${member.branch}`, { stdio: "pipe" });
+        runGit(["merge", "--no-ff", member.branch], repoRoot);
         console.log(`Integrated ${member.id} from ${member.branch}`);
+        try {
+          runGit(["branch", "-D", member.branch], repoRoot);
+        } catch {
+        }
+        member.status = "reported";
+        member.statusNote = `integrated into ${team.baseBranch}`;
+        member.reportedAt = (/* @__PURE__ */ new Date()).toISOString();
       } catch (err) {
         const message = err.message;
         conflicts.push(`${member.id} (${member.branch}): ${message}`);
         try {
-          execSync("git merge --abort", { stdio: "pipe" });
+          runGit(["merge", "--abort"], repoRoot);
         } catch {
         }
       }
@@ -423,9 +470,16 @@ function main() {
         );
         break;
       case "worktree-remove":
-        worktreeRemove(args.team, args.id, args.force === true);
+        if (!args.team || !args.id) throw new CliUsageError("--team and --id are required");
+        worktreeRemove(
+          args.team,
+          args.id,
+          args.force === true,
+          args["delete-branch"] === true
+        );
         break;
       case "integrate":
+        if (!args.team) throw new CliUsageError("--team is required");
         integrate(args.team, args.id);
         break;
       case "archive":
@@ -449,10 +503,10 @@ function main() {
     }
   } catch (err) {
     console.error(err.message);
-    process.exit(1);
+    process.exit(err instanceof CliUsageError ? 1 : 0);
   }
 }
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (path.resolve(fileURLToPath(import.meta.url)) === path.resolve(process.argv[1] ?? "")) {
   main();
 }
 export {

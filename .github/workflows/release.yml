@@ -15,6 +15,10 @@ jobs:
           node-version: 22
           registry-url: 'https://registry.npmjs.org'
       - run: pnpm install
+      - name: Inject PostHog API key
+        if: ${{ secrets.OMO_KIMI_POSTHOG_API_KEY != '' }}
+        run: |
+          sed -i "s/phc_placeholder_replace_in_build/${{ secrets.OMO_KIMI_POSTHOG_API_KEY }}/g" src/components/telemetry/posthog.ts
       - run: pnpm run build
       - run: pnpm run sync:skills
       - run: pnpm run sync:hooks

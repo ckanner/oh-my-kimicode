@@ -8,9 +8,15 @@ coverage/
 # Generated plugin assets
 plugin/components/*/dist/
 plugin/hooks/
+plugin/components/teammode/scripts/team.mjs
 
 # Keep plugin manifest and skills source
 !plugin/kimi.plugin.json
 !plugin/.mcp.json
 !plugin/skills/
 !plugin/skills/**/SKILL.md
+
+# Generated installer wrapper
+scripts/install_local.mjs
+
+.worktrees/
