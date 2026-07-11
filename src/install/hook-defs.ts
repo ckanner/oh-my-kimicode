@@ -12,6 +12,7 @@ export function getHookDefs(version: string, pluginCache: string): HookDef[] {
   return [
     { event: 'SessionStart', matcher: '^startup$', command: cli('bootstrap', 'session-start'), timeout: 60 },
     { event: 'SessionStart', matcher: '.*', command: cli('rules', 'session-start'), timeout: 30 },
+    { event: 'SessionStart', matcher: '.*', command: cli('codegraph', 'session-start'), timeout: 30 },
     { event: 'SessionStart', matcher: '.*', command: cli('telemetry', 'session-start'), timeout: 10 },
     { event: 'UserPromptSubmit', matcher: '.*', command: cli('rules', 'user-prompt-submit'), timeout: 30 },
     { event: 'UserPromptSubmit', matcher: '.*', command: cli('ultrawork', 'user-prompt-submit'), timeout: 10 },
@@ -21,6 +22,7 @@ export function getHookDefs(version: string, pluginCache: string): HookDef[] {
     { event: 'PostToolUse', matcher: '^(Write|Edit)$', command: cli('comment-checker', 'post-tool-use'), timeout: 30 },
     { event: 'PostToolUse', matcher: '^(Write|Edit)$', command: cli('lsp', 'post-tool-use'), timeout: 60 },
     { event: 'PostToolUse', matcher: '^(Write|Edit)$', command: cli('rules', 'post-tool-use'), timeout: 30 },
+    { event: 'PostToolUse', matcher: '^(codegraph[._].*|mcp__codegraph__.*)$', command: cli('codegraph', 'post-tool-use'), timeout: 10 },
     { event: 'PostCompact', matcher: '.*', command: cli('rules', 'post-compact'), timeout: 10 },
     { event: 'PostCompact', matcher: '.*', command: cli('lsp', 'post-compact'), timeout: 10 },
     { event: 'PostCompact', matcher: '.*', command: cli('git-bash', 'post-compact'), timeout: 10 },
