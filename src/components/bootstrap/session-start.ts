@@ -39,9 +39,13 @@ export function runSessionStart(_payload: HookPayload): HookOutput {
   }
 
   const projectDir = process.env.OMO_KIMI_PROJECT ?? process.cwd();
-  const boulder = readBoulder(projectDir);
-  if (boulder && hasUncheckedTasks(boulder)) {
-    details += `\n${formatResumeContext(boulder)}`;
+  try {
+    const boulder = readBoulder(projectDir);
+    if (boulder && hasUncheckedTasks(boulder)) {
+      details += `\n${formatResumeContext(boulder)}`;
+    }
+  } catch (e) {
+    details += `\nBoulder resume check failed: ${e instanceof Error ? e.message : String(e)}`;
   }
 
   return {

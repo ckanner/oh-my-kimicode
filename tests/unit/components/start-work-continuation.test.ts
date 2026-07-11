@@ -104,6 +104,23 @@ describe('start-work-continuation', () => {
     expect(ctx).toContain('Unchecked task');
     expect(ctx).toContain('t2');
   });
+
+  it('formats legacy resume context with title and status when no tasks exist', () => {
+    const boulder = {
+      active_work_id: 'x',
+      works: {
+        x: {
+          title: 'Legacy work',
+          status: 'active',
+          completed: false,
+        },
+      },
+    };
+    const ctx = formatResumeContext(boulder);
+    expect(ctx).toContain('Legacy work');
+    expect(ctx).toContain('Status: active (incomplete)');
+    expect(ctx).toContain('Please finish this work');
+  });
 });
 
 describe('start-work-continuation resume guidance', () => {

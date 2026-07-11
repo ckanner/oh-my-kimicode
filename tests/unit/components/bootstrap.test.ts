@@ -93,6 +93,18 @@ describe('bootstrap', () => {
     }
   });
 
+  it('does not crash when boulder.json is malformed', () => {
+    fs.mkdirSync(path.join(tmpDir, '.omo'), { recursive: true });
+    fs.writeFileSync(path.join(tmpDir, '.omo', 'boulder.json'), 'not json', 'utf-8');
+    process.env.OMO_KIMI_PROJECT = tmpDir;
+    try {
+      const out = runSessionStart({ hookEventName: 'SessionStart' });
+      expect(out.hookSpecificOutput?.additionalContext).toContain('Boulder resume check failed');
+    } finally {
+      delete process.env.OMO_KIMI_PROJECT;
+    }
+  });
+
   describe('provision', () => {
     it('creates agent cache with profiles', () => {
       const dir = ensureAgentCache(tmpDir);

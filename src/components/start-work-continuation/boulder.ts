@@ -41,6 +41,15 @@ export function formatResumeContext(boulder: Boulder): string {
   if (!work) return 'Active work not found. Please check .omo/boulder.json.';
   const tasks = Array.isArray(work.tasks) ? work.tasks : [];
   const unchecked = tasks.filter((t) => t.status === 'unchecked');
+
+  if (tasks.length === 0) {
+    return [
+      `Active work: ${work.title}`,
+      `Status: ${work.status}${work.completed === false ? ' (incomplete)' : ''}`,
+      'Please finish this work before you continue.',
+    ].join('\n');
+  }
+
   const lines = [
     `Active work: ${work.title}`,
     `Unchecked tasks (${unchecked.length}):`,
