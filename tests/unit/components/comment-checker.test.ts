@@ -74,4 +74,22 @@ describe('comment-checker', () => {
     expect(markers).toHaveLength(1);
     expect(markers[0].marker).toBe('FIXME');
   });
+
+  it('ignores block comment markers inside string literals', () => {
+    const content = 'const s = "/* TODO */";';
+    const markers = findStaleMarkers(content);
+    expect(markers).toHaveLength(0);
+  });
+
+  it('ignores block comment markers inside single-quoted strings', () => {
+    const content = "const s = '/* FIXME */';";
+    const markers = findStaleMarkers(content);
+    expect(markers).toHaveLength(0);
+  });
+
+  it('does not double-report the same marker on the same line', () => {
+    const content = '// TODO /* TODO */';
+    const markers = findStaleMarkers(content);
+    expect(markers.filter((m) => m.marker === 'TODO')).toHaveLength(1);
+  });
 });
