@@ -8,7 +8,7 @@
 
 ## 1. 摘要
 
-本仓库定位为 **Kimi Code CLI 版的 OmO 分发版**，目标是把 LazyCodex（Codex CLI 插件）的能力移植到 Kimi Code CLI。当前代码已经搭起整体骨架，核心组件 CLI、MCP、Skill、安装器均已存在，测试（25 个测试文件 / 236 个测试）与构建均能通过。近期修复轮次已关闭大部分 P0/P1 缺口，现状为：
+本仓库定位为 **Kimi Code CLI 版的 OmO 分发版**，目标是把 LazyCodex（Codex CLI 插件）的能力移植到 Kimi Code CLI。当前代码已经搭起整体骨架，核心组件 CLI、MCP、Skill、安装器均已存在，测试（26 个测试文件 / 238 个测试）与构建均能通过。近期修复轮次已关闭大部分 P0/P1 缺口，现状为：
 
 - **早期关键缺口已修复**：`codegraph` hooks 注册、`codegraph` `PostToolUse` 失败引导、版本号硬编码、Plan/AGENTS.md 状态同步、release workflow `dist/` 打包、根目录 `.mcp.json` 远程 MCP 占位配置均已落实。
 - **已确认无需修复**：PostHog release key 注入、`bootstrap` 组件完整验证在实现与测试中已覆盖。
