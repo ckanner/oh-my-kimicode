@@ -8,7 +8,7 @@
 
 ## 1. 摘要
 
-本仓库定位为 **Kimi Code CLI 版的 OmO 分发版**，目标是把 LazyCodex（Codex CLI 插件）的能力移植到 Kimi Code CLI。当前代码已经搭起整体骨架，核心组件 CLI、MCP、Skill、安装器均已存在，测试（23 个文件 / 228 个测试）与构建均能通过。但是：
+本仓库定位为 **Kimi Code CLI 版的 OmO 分发版**，目标是把 LazyCodex（Codex CLI 插件）的能力移植到 Kimi Code CLI。当前代码已经搭起整体骨架，核心组件 CLI、MCP、Skill、安装器均已存在，测试（25 个测试文件 / 236 个测试）与构建均能通过。但是：
 
 - **Plan 中声称已“实现并验证”的若干能力，源码中存在空壳或不一致。**
 - **最关键的实现缺口：`src/install/hook-defs.ts` 漏掉了 `codegraph` 的两个 hook**，导致 CodeGraph 的 `SessionStart` 初始化和 `PostToolUse` 失败引导实际上不会被安装到 `config.toml`，影响核心功能可用性。
@@ -145,5 +145,5 @@
 ## 附录：修复记录
 
 - **修复轮次：** Tasks 1–4 修复轮次（含 Task 4 Fix Round 2）
-- **修复提交范围：** `ae83a7d` ... `4c352c6`
+- **修复提交范围：** `ae83a7d` ... `59c202c`
 - **记录日期：** 2026-07-11

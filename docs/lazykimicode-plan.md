@@ -1,9 +1,10 @@
 # lazykimicode Design & Implementation Plan
 
-> **Status:** Partially implemented. The following gaps remain as of the latest audit:
-> - `codegraph` `PostToolUse` failure guidance is a stub.
-> - Version numbers are hard-coded in several places and not yet derived from `package.json`.
+> **Status:** Tasks 1–4 are complete. The following gaps remain as of the latest audit:
 > - Remote MCP defaults (`grep_app`, `context7`) are not provided.
+> - `bootstrap` full verification is pending (bin links, agent profile seeding, `sg` installation, config re-stamping).
+> - Release workflow `dist/` inclusion is pending confirmation.
+> - PostHog release-key injection is pending confirmation.
 > See `docs/audit-report.md` for the full list.
 >
 > **Verification:** `pnpm run lint && pnpm run typecheck && pnpm test && pnpm run build` passes (25 test files, 236 tests).
@@ -139,7 +140,7 @@ timeout = 30
 ```json
 {
   "name": "@lazykimicode/lazykimicode",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "description": "OmO agent harness for Kimi Code CLI",
   "keywords": ["omo", "agent-harness", "lsp", "rules", "ultrawork"],
   "skills": "./skills",
@@ -1811,7 +1812,7 @@ console.log('Hooks synced to', OUT);
 ```json
 {
   "name": "@lazykimicode/lazykimicode",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "description": "OmO agent harness for Kimi Code CLI",
   "keywords": ["omo", "agent-harness", "lsp", "rules", "ultrawork"],
   "skills": "./skills",
