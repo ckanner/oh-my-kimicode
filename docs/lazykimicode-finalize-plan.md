@@ -173,8 +173,8 @@ Expected: green; test count should be 41 files / 269 tests (current baseline).
 
 ## 3. Acceptance Criteria
 
-- [ ] `grep` for `OMO_KIMI_`, `OMO_`, `\bOmO\b` in tracked source/docs is clean (except `vendor/`).
-- [ ] `pnpm run lint && pnpm run typecheck && pnpm test && pnpm run build` passes locally.
-- [ ] `git status` is clean after build.
-- [ ] Changes pushed to `origin/main`.
-- [ ] GitHub Actions run is green on ubuntu-latest, macos-latest, windows-latest.
+- [x] `grep` for `OMO_KIMI_`, `OMO_`, `\bOmO\b` in tracked source/docs is clean (except `vendor/`).
+- [x] `pnpm run lint && pnpm run typecheck && pnpm test && pnpm run build` passes locally.
+- [x] `git status` is clean after build.
+- [x] Changes pushed to `origin/main`.
+- [x] GitHub Actions run `29200996585` green on ubuntu-latest, macos-latest, windows-latest.
