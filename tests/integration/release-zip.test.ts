@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { execSync, execFileSync } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
@@ -29,11 +29,11 @@ describe('release zip', () => {
       });
 
       const extractDir = path.join(tmpDir, 'extracted');
-      const zipPath = path.join(tmpDir, 'lazykimicode.zip');
+      const archivePath = path.join(tmpDir, 'lazykimicode.tar.gz');
       fs.mkdirSync(extractDir, { recursive: true });
-      execSync(`zip -r "${zipPath}" plugin scripts bin dist package.json`, { cwd: tmpDir, stdio: 'ignore' });
-      execSync(`unzip -q ${zipPath} -d ${extractDir}`);
-      const help = execSync('node ' + path.join(extractDir, 'bin', 'lazykimicode.mjs') + ' --help', { encoding: 'utf-8' });
+      execFileSync('tar', ['-czf', archivePath, 'plugin', 'scripts', 'bin', 'dist', 'package.json'], { cwd: tmpDir, stdio: 'ignore' });
+      execFileSync('tar', ['-xzf', archivePath, '-C', extractDir], { cwd: tmpDir, stdio: 'ignore' });
+      const help = execFileSync('node', [path.join(extractDir, 'bin', 'lazykimicode.mjs'), '--help'], { encoding: 'utf-8' });
       expect(help).toContain('lazykimicode');
     } finally {
       fs.rmSync(tmpDir, { recursive: true, force: true });
