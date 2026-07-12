@@ -21,3 +21,4 @@ scripts/install_local.mjs
 
 .worktrees/
 .superpowers/
+docs/superpowers/
