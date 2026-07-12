@@ -11,10 +11,12 @@ export function runBootstrap(_payload: HookPayload): HookOutput {
       // ignore indexing failures at bootstrap; will retry on tool use
     }
   }
+  const message = 'CodeGraph initialized in background. Use codegraph MCP tools for structural queries.';
   return {
+    message,
     hookSpecificOutput: {
       hookEventName: 'SessionStart',
-      additionalContext: 'CodeGraph initialized in background. Use codegraph MCP tools for structural queries.',
+      message,
     },
   };
 }
@@ -36,11 +38,12 @@ export function runPostToolUse(payload: HookPayload): HookOutput {
     /^(codegraph[._].*|mcp__codegraph__.*)$/.test(payload.toolName);
 
   if (isCodegraphTool && isToolFailure(payload.toolOutput)) {
+    const message = 'CodeGraph tool failed. Try running `codegraph_reindex` to rebuild the index, then retry the query.';
     return {
+      message,
       hookSpecificOutput: {
         hookEventName: 'PostToolUse',
-        additionalContext:
-          'CodeGraph tool failed. Try running `codegraph_reindex` to rebuild the index, then retry the query.',
+        message,
       },
     };
   }
@@ -48,7 +51,6 @@ export function runPostToolUse(payload: HookPayload): HookOutput {
   return {
     hookSpecificOutput: {
       hookEventName: 'PostToolUse',
-      additionalContext: '',
     },
   };
 }

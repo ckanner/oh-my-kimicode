@@ -37,12 +37,12 @@ describe('git-bash', () => {
   describe('recommend hook', () => {
     it('returns empty context on non-Windows', () => {
       const out = recommendGitBash({ hookEventName: 'PreToolUse' }, 'darwin');
-      expect(out.hookSpecificOutput?.additionalContext).toBe('');
+      expect(out.message).toBeUndefined();
     });
 
     it('recommends git bash on Windows', () => {
       const out = recommendGitBash({ hookEventName: 'PreToolUse' }, 'win32');
-      expect(out.hookSpecificOutput?.additionalContext).toContain('git_bash MCP');
+      expect(out.message).toContain('git_bash MCP');
     });
   });
 

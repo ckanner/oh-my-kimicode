@@ -160,14 +160,14 @@ describe('start-work-continuation resume guidance', () => {
   it('Stop returns block decision and resume guidance', () => {
     const out = runStop({ hookEventName: 'Stop' });
     expect(out.decision).toBe('block');
-    expect(out.hookSpecificOutput?.additionalContext).toContain('Session handling');
-    expect(out.hookSpecificOutput?.additionalContext).toContain('continue');
+    expect(out.message).toContain('Session handling');
+    expect(out.message).toContain('continue');
   });
 
-  it('SubagentStop returns block decision and resume guidance', () => {
+  it('SubagentStop returns advisory resume guidance without blocking', () => {
     const out = runSubagentStop({ hookEventName: 'SubagentStop', subagentType: 'coder' });
-    expect(out.decision).toBe('block');
-    expect(out.hookSpecificOutput?.additionalContext).toContain('Session handling');
+    expect(out.decision).toBeUndefined();
+    expect(out.message).toContain('Session handling');
   });
 
   it('blocks Stop for the skill-documented Boulder schema (schema_version 2 with tasks)', () => {
@@ -196,8 +196,8 @@ describe('start-work-continuation resume guidance', () => {
     );
     const out = runStop({ hookEventName: 'Stop' });
     expect(out.decision).toBe('block');
-    expect(out.hookSpecificOutput?.additionalContext).toContain('Session handling');
-    expect(out.hookSpecificOutput?.additionalContext).toContain('Unchecked tasks');
-    expect(out.hookSpecificOutput?.additionalContext).toContain('Active work: Add auth');
+    expect(out.message).toContain('Session handling');
+    expect(out.message).toContain('Unchecked tasks');
+    expect(out.message).toContain('Active work: Add auth');
   });
 });

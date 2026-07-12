@@ -29,16 +29,16 @@ Hooks are fail-open advisory components. They exit `0` when they only want to ad
 | `UserPromptSubmit` | `ulw-loop` | `.*` | Parse `OMO_ULW_LOOP_STEER:` steering markers |
 | `PreToolUse` | `git-bash` | `^Bash$` | Recommend the `git_bash` MCP over raw `Bash` (advises native Bash on non-Windows) |
 | `PreToolUse` | `ulw-loop` | `^CreateGoal$` | Deny budgeted `CreateGoal` calls in ulw-loop mode |
-| `PostToolUse` | `comment-checker` | `^(Write\|Edit)$` | Block if unresolved TODO/FIXME/HACK/XXX/BUG markers are left in the file |
+| `PostToolUse` | `comment-checker` | `^(Write\|Edit)$` | Warn when unresolved TODO/FIXME/HACK/XXX/BUG markers are left in the file |
 | `PostToolUse` | `lsp` | `^(Write\|Edit)$` | Run LSP diagnostics on edited files and report results |
 | `PostToolUse` | `rules` | `^(Write\|Edit)$` | Re-evaluate project rules after edits |
 | `PostToolUse` | `codegraph` | `^(codegraph[._].*\|mcp__codegraph__.*)$` | Provide guidance when a CodeGraph tool fails |
 | `PostCompact` | `rules` | `.*` | Reset rule cache after context compaction |
 | `PostCompact` | `lsp` | `.*` | Clear LSP diagnostics cache |
 | `PostCompact` | `git-bash` | `.*` | Reset Git Bash recommendation state |
-| `Stop` | `start-work-continuation` | `.*` | Prevent session stop if `.omo/boulder.json` has incomplete work |
-| `SubagentStop` | `start-work-continuation` | `.*` | Prevent subagent stop if start-work plan is incomplete |
-| `SubagentStop` | `executor-verify` | `^coder$` | Require `EVIDENCE_RECORDED:` in subagent output before allowing stop |
+| `Stop` | `start-work-continuation` | `.*` | Block session stop if `.omo/boulder.json` has incomplete work |
+| `SubagentStop` | `start-work-continuation` | `.*` | Advise when a start-work plan has incomplete work |
+| `SubagentStop` | `executor-verify` | `^coder$` | Advise when a coder subagent stops without `EVIDENCE_RECORDED:` |
 
 ---
 
@@ -205,4 +205,4 @@ The full verification command used in CI and development:
 pnpm run lint && pnpm run typecheck && pnpm test && pnpm run build
 ```
 
-Latest result: **39 test files, 244 tests passing**.
+Latest result: **40 test files, 257 tests passing**.

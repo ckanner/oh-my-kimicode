@@ -10,7 +10,8 @@ export interface HookPayload {
   toolName?: string;
   toolInput?: unknown;
   toolOutput?: unknown;
-  prompt?: string;
+  response?: unknown;
+  prompt?: string | Array<{ type?: string; text?: string }>;
   sessionId?: string;
   subagentType?: string;
   stopHookActive?: boolean;
@@ -20,9 +21,21 @@ export interface HookPayload {
 export type HookDecision = 'block' | 'allow';
 
 export interface HookOutput {
+  /**
+   * Top-level message that Kimi Code CLI may append to context.
+   * Use this for advisory/context-injecting hooks.
+   */
+  message?: string;
   hookSpecificOutput?: {
-    hookEventName: string;
+    /**
+     * Legacy field kept for compatibility; prefer `message` at the top level.
+     */
+    hookEventName?: string;
+    /**
+     * @deprecated Use top-level `message` instead. Kimi ignores `additionalContext`.
+     */
     additionalContext?: string;
+    message?: string;
     permissionDecision?: 'deny' | 'allow';
     permissionDecisionReason?: string;
   };

@@ -254,7 +254,7 @@ try { y(); } catch (e) { y(); } finally { y(); }
     it('returns bootstrap context', () => {
       const out = runBootstrap({ hookEventName: 'SessionStart' });
       expect(out.hookSpecificOutput?.hookEventName).toBe('SessionStart');
-      expect(out.hookSpecificOutput?.additionalContext).toContain('CodeGraph');
+      expect(out.message).toContain('CodeGraph');
     });
 
     it('builds and saves index when none exists', () => {
@@ -279,8 +279,8 @@ try { y(); } catch (e) { y(); } finally { y(); }
       };
       const out = runPostToolUse(payload);
       expect(out.hookSpecificOutput?.hookEventName).toBe('PostToolUse');
-      expect(out.hookSpecificOutput?.additionalContext).toContain('CodeGraph');
-      expect(out.hookSpecificOutput?.additionalContext).toContain('reindex');
+      expect(out.message).toContain('CodeGraph');
+      expect(out.message).toContain('reindex');
     });
 
     it('returns guidance when toolOutput string contains error', () => {
@@ -290,7 +290,7 @@ try { y(); } catch (e) { y(); } finally { y(); }
         toolOutput: 'The query failed with an ERROR',
       };
       const out = runPostToolUse(payload);
-      expect(out.hookSpecificOutput?.additionalContext).toContain('reindex');
+      expect(out.message).toContain('reindex');
     });
 
     it('returns guidance when toolOutput has isError true', () => {
@@ -300,8 +300,8 @@ try { y(); } catch (e) { y(); } finally { y(); }
         toolOutput: { isError: true, content: 'search failed' },
       };
       const out = runPostToolUse(payload);
-      expect(out.hookSpecificOutput?.additionalContext).toContain('CodeGraph');
-      expect(out.hookSpecificOutput?.additionalContext).toContain('reindex');
+      expect(out.message).toContain('CodeGraph');
+      expect(out.message).toContain('reindex');
     });
 
     it('returns guidance when toolOutput has a truthy error property', () => {
@@ -311,7 +311,7 @@ try { y(); } catch (e) { y(); } finally { y(); }
         toolOutput: { error: 'index missing' },
       };
       const out = runPostToolUse(payload);
-      expect(out.hookSpecificOutput?.additionalContext).toContain('reindex');
+      expect(out.message).toContain('reindex');
     });
 
     it('returns empty context on success', () => {
@@ -321,7 +321,7 @@ try { y(); } catch (e) { y(); } finally { y(); }
         toolOutput: { result: 'ok' },
       };
       const out = runPostToolUse(payload);
-      expect(out.hookSpecificOutput?.additionalContext).toBe('');
+      expect(out.message).toBeUndefined();
     });
   });
 });

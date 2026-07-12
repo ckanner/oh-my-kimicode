@@ -74,14 +74,14 @@ describe('component CLI wrappers', () => {
     const { output, exitCode } = runCli('bootstrap', 'session-start', { hookEventName: 'SessionStart' });
     expect(exitCode).toBe(0);
     expect(output.hookSpecificOutput?.hookEventName).toBe('SessionStart');
-    expect(output.hookSpecificOutput?.additionalContext).toContain('OmO');
+    expect(output.message).toContain('OmO');
   });
 
   it('rules session-start emits context', () => {
     const { output, exitCode } = runCli('rules', 'session-start', { hookEventName: 'SessionStart' });
     expect(exitCode).toBe(0);
     expect(output.hookSpecificOutput?.hookEventName).toBe('SessionStart');
-    expect(output.hookSpecificOutput?.additionalContext).toBeTruthy();
+    expect(output.message).toBeTruthy();
   });
 
   it('ultrawork detects keyword', () => {
@@ -91,7 +91,7 @@ describe('component CLI wrappers', () => {
     });
     expect(exitCode).toBe(0);
     expect(output.hookSpecificOutput?.hookEventName).toBe('UserPromptSubmit');
-    expect(output.hookSpecificOutput?.additionalContext?.toLowerCase()).toContain('ultrawork');
+    expect(output.message?.toLowerCase()).toContain('ultrawork');
   });
 
   it('ulw-loop parses steering prompt', () => {
@@ -101,16 +101,16 @@ describe('component CLI wrappers', () => {
     });
     expect(exitCode).toBe(0);
     expect(output.hookSpecificOutput?.hookEventName).toBe('UserPromptSubmit');
-    expect(output.hookSpecificOutput?.additionalContext).toContain('STEERING');
+    expect(output.message).toContain('STEERING');
   });
 
-  it('ulw-loop denies budgeted CreateGoal and exits 2', () => {
+  it('ulw-loop denies budgeted CreateGoal and exits 0', () => {
     const { output, exitCode } = runCli('ulw-loop', 'pre-tool-use', {
       hookEventName: 'PreToolUse',
       toolName: 'CreateGoal',
       toolInput: { budget: 10 },
     });
-    expect(exitCode).toBe(2);
+    expect(exitCode).toBe(0);
     expect(output.hookSpecificOutput?.permissionDecision).toBe('deny');
   });
 
@@ -125,13 +125,14 @@ describe('component CLI wrappers', () => {
     expect(output.decision).toBeUndefined();
   });
 
-  it('executor-verify blocks when evidence is missing', () => {
+  it('executor-verify warns when evidence is missing', () => {
     const { output, exitCode } = runCli('executor-verify', 'subagent-stop', {
       hookEventName: 'SubagentStop',
       toolOutput: 'done',
     });
-    expect(exitCode).toBe(2);
-    expect(output.decision).toBe('block');
+    expect(exitCode).toBe(0);
+    expect(output.decision).toBeUndefined();
+    expect(output.message).toContain('EVIDENCE_RECORDED');
     expect(output.hookSpecificOutput?.hookEventName).toBe('SubagentStop');
   });
 
@@ -149,7 +150,7 @@ describe('component CLI wrappers', () => {
     const { output, exitCode } = runCli('telemetry', 'session-start', { hookEventName: 'SessionStart' });
     expect(exitCode).toBe(0);
     expect(output.hookSpecificOutput?.hookEventName).toBe('SessionStart');
-    expect(output.hookSpecificOutput?.additionalContext).toBe('');
+    expect(output.message).toBeUndefined();
   });
 
   it('git-bash pre-tool-use recommends git_bash on Windows', () => {
@@ -160,9 +161,9 @@ describe('component CLI wrappers', () => {
     expect(exitCode).toBe(0);
     expect(output.hookSpecificOutput?.hookEventName).toBe('PreToolUse');
     if (os.platform() === 'win32') {
-      expect(output.hookSpecificOutput?.additionalContext).toContain('git_bash');
+      expect(output.message).toContain('git_bash');
     } else {
-      expect(output.hookSpecificOutput?.additionalContext).toBe('');
+      expect(output.message).toBeUndefined();
     }
   });
 
@@ -175,7 +176,7 @@ describe('component CLI wrappers', () => {
     const { output, exitCode } = runCli('lsp', 'post-compact', { hookEventName: 'PostCompact' }, tmp);
     expect(exitCode).toBe(0);
     expect(output.hookSpecificOutput?.hookEventName).toBe('PostCompact');
-    expect(output.hookSpecificOutput?.additionalContext).toBe('');
+    expect(output.message).toBeUndefined();
     expect(JSON.parse(fs.readFileSync(cacheFile, 'utf-8'))).toEqual([]);
   });
 });

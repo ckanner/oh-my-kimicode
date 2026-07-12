@@ -60,38 +60,47 @@ describe('hook execution integration', () => {
   it('bootstrap session-start returns SessionStart context', () => {
     const { output } = runHook('bootstrap', 'session-start', { hookEventName: 'SessionStart' });
     expect(output.hookSpecificOutput?.hookEventName).toBe('SessionStart');
-    expect(output.hookSpecificOutput?.additionalContext).toContain('OmO');
+    expect(output.message).toContain('OmO');
+  });
+
+  it('normalizes snake_case Kimi payload fields', () => {
+    const { output } = runHook('ultrawork', 'user-prompt-submit', {
+      hook_event_name: 'UserPromptSubmit',
+      prompt: [{ type: 'text', text: 'ulw plan my feature' }],
+    });
+    expect(output.hookSpecificOutput?.hookEventName).toBe('UserPromptSubmit');
+    expect(output.message?.toLowerCase()).toContain('ultrawork');
   });
 
   it('git-bash pre-tool-use recommends git_bash on Windows', () => {
     const { output } = runHook('git-bash', 'pre-tool-use', { hookEventName: 'PreToolUse', toolName: 'Bash' });
     if (os.platform() === 'win32') {
-      expect(output.hookSpecificOutput?.additionalContext).toContain('git_bash');
+      expect(output.message).toContain('git_bash');
     } else {
-      expect(output.hookSpecificOutput?.additionalContext).toBe('');
+      expect(output.message).toBeUndefined();
     }
   });
 
   it('telemetry session-start returns empty context when disabled', () => {
     const { output } = runHook('telemetry', 'session-start', { hookEventName: 'SessionStart' });
     expect(output.hookSpecificOutput?.hookEventName).toBe('SessionStart');
-    expect(output.hookSpecificOutput?.additionalContext).toBe('');
+    expect(output.message).toBeUndefined();
   });
 
   it('ultrawork detects ultrawork keyword', () => {
     const { output } = runHook('ultrawork', 'user-prompt-submit', { hookEventName: 'UserPromptSubmit', prompt: 'ultrawork plan my feature' });
-    expect(output.hookSpecificOutput?.additionalContext?.toLowerCase()).toContain('ultrawork');
+    expect(output.message?.toLowerCase()).toContain('ultrawork');
   });
 
   it('rules discovers rules files', () => {
     const { output } = runHook('rules', 'session-start', { hookEventName: 'SessionStart' });
     expect(output.hookSpecificOutput?.hookEventName).toBe('SessionStart');
-    const context = output.hookSpecificOutput?.additionalContext ?? '';
+    const context = output.message ?? '';
     expect(context).toContain('# AGENTS.md');
     expect(context).toContain('Architecture');
   });
 
-  it('comment-checker blocks on TODO and exits 2', () => {
+  it('comment-checker warns on TODO and exits 0', () => {
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'omo-cc-'));
     const file = path.join(tmp, 'x.ts');
     fs.writeFileSync(file, '// TODO fix this\n');
@@ -100,19 +109,20 @@ describe('hook execution integration', () => {
       toolName: 'Write',
       toolInput: { path: file },
     });
-    expect(output.decision).toBe('block');
-    expect(exitCode).toBe(2);
+    expect(output.decision).toBeUndefined();
+    expect(output.message).toContain('TODO');
+    expect(exitCode).toBe(0);
     fs.rmSync(tmp, { recursive: true, force: true });
   });
 
-  it('ulw-loop denies budgeted CreateGoal and exits 2', () => {
+  it('ulw-loop denies budgeted CreateGoal and exits 0', () => {
     const { output, exitCode } = runHook('ulw-loop', 'pre-tool-use', {
       hookEventName: 'PreToolUse',
       toolName: 'CreateGoal',
       toolInput: { budget: 10 },
     });
     expect(output.hookSpecificOutput?.permissionDecision).toBe('deny');
-    expect(exitCode).toBe(2);
+    expect(exitCode).toBe(0);
   });
 
   it('start-work-continuation stop returns resume guidance with task titles', () => {
@@ -138,8 +148,8 @@ describe('hook execution integration', () => {
       hookEventName: 'Stop',
     }, tmp);
     expect(output.decision).toBe('block');
-    expect(output.hookSpecificOutput?.additionalContext).toContain('Add auth');
-    expect(output.hookSpecificOutput?.additionalContext).toContain('Session handling');
+    expect(output.message).toContain('Add auth');
+    expect(output.message).toContain('Session handling');
     expect(exitCode).toBe(2);
     fs.rmSync(tmp, { recursive: true, force: true });
   });

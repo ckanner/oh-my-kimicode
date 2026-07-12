@@ -5,18 +5,19 @@ describe('executor-verify', () => {
   it('allows stop with evidence in toolOutput', () => {
     const out = verifyEvidence({ hookEventName: 'SubagentStop', toolOutput: { result: 'EVIDENCE_RECORDED: /tmp/x' } });
     expect(out.decision).toBeUndefined();
-    expect(out.hookSpecificOutput?.additionalContext).toBe('');
+    expect(out.message).toBeUndefined();
   });
 
-  it('blocks stop without evidence', () => {
+  it('warns when stop has no evidence', () => {
     const out = verifyEvidence({ hookEventName: 'SubagentStop', toolOutput: { result: 'done' } });
-    expect(out.decision).toBe('block');
-    expect(out.reason).toContain('without recording evidence');
+    expect(out.decision).toBeUndefined();
+    expect(out.message).toContain('EVIDENCE_RECORDED');
   });
 
-  it('blocks stop when toolOutput is missing', () => {
+  it('warns when toolOutput is missing', () => {
     const out = verifyEvidence({ hookEventName: 'SubagentStop' });
-    expect(out.decision).toBe('block');
+    expect(out.decision).toBeUndefined();
+    expect(out.message).toContain('EVIDENCE_RECORDED');
   });
 
   it('detects evidence anywhere in output', () => {

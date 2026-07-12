@@ -19,7 +19,7 @@ describe('bootstrap', () => {
   it('returns session-start context', () => {
     const out = runSessionStart({ hookEventName: 'SessionStart' });
     expect(out.hookSpecificOutput?.hookEventName).toBe('SessionStart');
-    expect(out.hookSpecificOutput?.additionalContext).toContain('Bootstrap');
+    expect(out.message).toContain('Bootstrap');
   });
 
   it('returns provisioning details when env vars are set', () => {
@@ -40,9 +40,9 @@ describe('bootstrap', () => {
 
     try {
       const out = runSessionStart({ hookEventName: 'SessionStart' });
-      expect(out.hookSpecificOutput?.additionalContext).toContain('bins=');
-      expect(out.hookSpecificOutput?.additionalContext).toContain('agents=');
-      expect(out.hookSpecificOutput?.additionalContext).toContain('sg=');
+      expect(out.message).toContain('bins=');
+      expect(out.message).toContain('agents=');
+      expect(out.message).toContain('sg=');
     } finally {
       delete process.env.OMO_KIMI_PLUGIN_CACHE;
       delete process.env.OMO_KIMI_BIN_DIR;
@@ -73,9 +73,9 @@ describe('bootstrap', () => {
     process.env.OMO_KIMI_PROJECT = tmpDir;
     try {
       const out = runSessionStart({ hookEventName: 'SessionStart' });
-      expect(out.hookSpecificOutput?.additionalContext).toContain('Active work: Add auth');
-      expect(out.hookSpecificOutput?.additionalContext).toContain('Session handling');
-      expect(out.hookSpecificOutput?.additionalContext).toContain('Unchecked tasks');
+      expect(out.message).toContain('Active work: Add auth');
+      expect(out.message).toContain('Session handling');
+      expect(out.message).toContain('Unchecked tasks');
     } finally {
       delete process.env.OMO_KIMI_PROJECT;
     }
@@ -100,7 +100,7 @@ describe('bootstrap', () => {
     process.env.OMO_KIMI_PROJECT = tmpDir;
     try {
       const out = runSessionStart({ hookEventName: 'SessionStart' });
-      expect(out.hookSpecificOutput?.additionalContext).not.toContain('Active work: Add auth');
+      expect(out.message).not.toContain('Active work: Add auth');
     } finally {
       delete process.env.OMO_KIMI_PROJECT;
     }
@@ -112,7 +112,7 @@ describe('bootstrap', () => {
     process.env.OMO_KIMI_PROJECT = tmpDir;
     try {
       const out = runSessionStart({ hookEventName: 'SessionStart' });
-      expect(out.hookSpecificOutput?.additionalContext).toContain('Boulder resume check failed');
+      expect(out.message).toContain('Boulder resume check failed');
     } finally {
       delete process.env.OMO_KIMI_PROJECT;
     }

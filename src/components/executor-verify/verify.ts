@@ -1,16 +1,16 @@
 import type { HookPayload, HookOutput } from '../../shared/types.js';
 
 export function verifyEvidence(payload: HookPayload): HookOutput {
-  const output = JSON.stringify(payload.toolOutput ?? '');
+  const output = JSON.stringify(payload.toolOutput ?? payload.response ?? '');
   if (output.includes('EVIDENCE_RECORDED:')) {
-    return { hookSpecificOutput: { hookEventName: 'SubagentStop', additionalContext: '' } };
+    return { hookSpecificOutput: { hookEventName: 'SubagentStop' } };
   }
+  const message = 'The executor must output EVIDENCE_RECORDED: <path> before stopping.';
   return {
-    decision: 'block',
-    reason: 'Executor subagent stopped without recording evidence',
+    message,
     hookSpecificOutput: {
       hookEventName: 'SubagentStop',
-      additionalContext: 'The executor must output EVIDENCE_RECORDED: <path> before stopping.',
+      message,
     },
   };
 }

@@ -12,7 +12,7 @@ async function main() {
       process.stderr.write(`telemetry: capture skipped: ${result.reason}\n`);
     }
   }
-  writeHookOutput({ hookSpecificOutput: { hookEventName: 'SessionStart', additionalContext: '' } });
+  writeHookOutput({ hookSpecificOutput: { hookEventName: 'SessionStart' } });
 }
 
 main().catch((e) => { console.error(e); process.exit(0); });

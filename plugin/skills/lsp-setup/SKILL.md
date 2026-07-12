@@ -55,14 +55,7 @@ reference before installing or configuring anything**.
 Scan the project to see which languages are present and whether each server is
 installed and configured.
 
-If `scripts/detect-lsp.ts` exists in this skill, run it:
-
-```bash
-bun scripts/detect-lsp.ts <projectDir>      # human report (default: cwd)
-bun scripts/detect-lsp.ts <projectDir> --json
-```
-
-Otherwise, inspect manually:
+Inspect manually:
 
 ```bash
 # List language files in the project
@@ -131,14 +124,7 @@ Each language reference gives a ready-to-paste snippet.
 Run a real diagnostics roundtrip against a source file. This spawns the server,
 opens the file, requests diagnostics, and reports `OK`/`FAIL`.
 
-If `scripts/verify-lsp.ts` exists in this skill, run it:
-
-```bash
-bun scripts/verify-lsp.ts <path/to/file.ext>
-bun scripts/verify-lsp.ts <file> --timeout=90000
-```
-
-Otherwise, verify through the lazykimicode LSP MCP tools directly:
+Verify through the lazykimicode LSP MCP tools directly:
 
 - Call `lsp_status` to check harness status.
 - Call `lsp_diagnostics` with `{"file": "<path/to/file.ext>"}` to request diagnostics for a file.
@@ -150,19 +136,10 @@ is set and the binary is on `PATH`, then call the LSP tool again.
 
 ---
 
-## Scripts
+## Notes
 
-| Script | Purpose |
-|---|---|
-| `scripts/detect-lsp.ts` | Scan a directory; per detected language report server id, install status, install hint, config status. `--json` for machine output. |
-| `scripts/verify-lsp.ts` | Real LSP diagnostics roundtrip for one file; `OK`/`FAIL`/`SKIP` + exit code 0/1/3. |
-| `scripts/lsp-server-table.ts` | Embedded snapshot of the primary builtin server per language. |
-
-Run with [Bun](https://bun.sh): `curl -fsSL https://bun.sh/install | bash`.
-
-> These helper scripts are part of the LazyCodex original. The Kimi Code CLI
-> build of lazykimicode does **not** ship them; use the equivalent `Bash` and
-> LSP MCP tool commands shown above.
+This skill does not ship helper scripts. Use the `Bash`, `Read`, and LSP MCP
+commands shown in each phase above.
 
 ---
 

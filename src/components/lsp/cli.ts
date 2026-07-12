@@ -2,6 +2,7 @@ import { readCache, writeCache, runDiagnostics, createTransport } from './diagno
 import { writeHookOutput } from '../../shared/serialize.js';
 import { pathToFileURL } from 'node:url';
 import { parseLspArgs } from './args.js';
+import { normalizeHookPayload } from '../../shared/payload.js';
 
 async function main() {
   const event = process.argv[3];
@@ -9,13 +10,14 @@ async function main() {
   const rootUri = pathToFileURL(projectDir).href + '/';
   if (event === 'post-compact') {
     writeCache(projectDir, []);
-    writeHookOutput({ hookSpecificOutput: { hookEventName: 'PostCompact', additionalContext: '' } });
+    writeHookOutput({ hookSpecificOutput: { hookEventName: 'PostCompact' } });
     return;
   }
   let raw = '';
   for await (const chunk of process.stdin) raw += chunk;
-  const payload = raw ? JSON.parse(raw) : {};
-  const filePath = payload.toolInput?.path ?? payload.toolInput?.file_path;
+  const payload = normalizeHookPayload(raw ? JSON.parse(raw) : {});
+  const toolInput = payload.toolInput as Record<string, unknown> | undefined;
+  const filePath = toolInput?.path ?? toolInput?.file_path;
   const files = filePath && typeof filePath === 'string' ? [filePath] : [];
   const cached = new Set(readCache(projectDir));
   for (const f of files) cached.add(f);
@@ -37,12 +39,18 @@ async function main() {
     transport?.close();
   }
 
-  writeHookOutput({
-    hookSpecificOutput: {
-      hookEventName: 'PostToolUse',
-      additionalContext: all.length ? `LSP diagnostics:\n${all.join('\n')}` : '',
-    },
-  });
+  const message = all.length ? `LSP diagnostics:\n${all.join('\n')}` : '';
+  writeHookOutput(
+    message
+      ? {
+          message,
+          hookSpecificOutput: {
+            hookEventName: 'PostToolUse',
+            message,
+          },
+        }
+      : { hookSpecificOutput: { hookEventName: 'PostToolUse' } },
+  );
 }
 
 main().catch((e) => { console.error(e); process.exit(0); });

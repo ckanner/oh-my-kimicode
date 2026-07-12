@@ -68,7 +68,8 @@ Once installed, `lazykimicode` hooks run on Kimi events without any manual setup
 | `PreToolUse` | `git-bash`, `ulw-loop` | Recommend `git_bash` on Windows; deny budgeted `CreateGoal` |
 | `PostToolUse` | `comment-checker`, `lsp`, `rules`, `codegraph` | Check for stale TODO/FIXME after Write/Edit; run LSP diagnostics; reload rules; guide codegraph usage |
 | `PostCompact` | `rules`, `lsp`, `git-bash` | Reset caches after context compaction |
-| `Stop` / `SubagentStop` | `start-work-continuation`, `executor-verify` | Block stop when work is incomplete; require `EVIDENCE_RECORDED:` |
+| `Stop` | `start-work-continuation` | Block stop when work is incomplete |
+| `SubagentStop` | `start-work-continuation`, `executor-verify` | Advise on incomplete work and missing `EVIDENCE_RECORDED:` |
 
 ### MCP servers
 
@@ -179,7 +180,7 @@ pnpm run sync:skills
 pnpm run sync:hooks
 ```
 
-Latest full-suite result: **39 test files, 244 tests passing**.
+Latest full-suite result: **40 test files, 257 tests passing**.
 
 ---
 

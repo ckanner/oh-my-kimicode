@@ -49,9 +49,10 @@ export function runSessionStart(_payload: HookPayload): HookOutput {
   }
 
   return {
+    message: details,
     hookSpecificOutput: {
       hookEventName: 'SessionStart',
-      additionalContext: details,
+      message: details,
     },
   };
 }
