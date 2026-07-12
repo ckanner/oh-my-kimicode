@@ -6,13 +6,13 @@
 
 **Architecture:** Fix the four Windows CI failures first (they are the only red tests). Then run a whole-repo audit for drift between plan, code, docs, and skills; implement or harden any incomplete feature; finally verify everything green on local macOS/Linux and push to re-run CI on all platforms.
 
-**Tech Stack:** TypeScript 5.x, Node.js ESM (>=22), pnpm, vitest, esbuild, smol-toml, GitHub Actions.
+**Tech Stack:** TypeScript 6.x, Node.js ESM (>=22), pnpm, vitest, esbuild, smol-toml, GitHub Actions.
 
 ---
 
 ## Global Constraints
 
-- Every change must keep `pnpm run lint && pnpm run typecheck && pnpm test && pnpm run build` green (currently green on macOS, red on Windows CI).
+- Every change must keep `pnpm run lint && pnpm run typecheck && pnpm test && pnpm run build` green (green on macOS, Linux, and Windows CI).
 - No new runtime dependencies; use Node built-ins only.
 - Tests must be hermetic and cross-platform (Windows `windows-latest`, Ubuntu/macOS in CI).
 - Hook commands remain fail-open: components exit `0` for advisory context, `2` only to block.
@@ -23,8 +23,8 @@
 
 ## Current State Snapshot
 
-- **Local (macOS):** `39 test files / 243 tests` passing; lint, typecheck, build passing.
-- **CI:** Run `29187724411` is green on ubuntu-latest, macos-latest, and windows-latest.
+- **Local (macOS):** `39 test files / 244 tests` passing; lint, typecheck, build passing.
+- **CI:** Run `29194088560` is green on ubuntu-latest, macos-latest, and windows-latest.
 - **Windows-specific fixes delivered in this plan:** doctor cross-platform checks, release-zip via `tar`, bootstrap test tolerance for npm/sg warnings, skill frontmatter CRLF normalization, teammode `integrate` `--no-edit`, installer `OMO_KIMI_SKIP_BOOTSTRAP` for hermetic integration tests.
 - **Previously declared gaps** (teammode subcommands, lsp-daemon split, skill MCP tool-name alignment, `create-pr-body.mjs`) are implemented and tested.
 
@@ -464,7 +464,7 @@ After all tasks above are verified, change the status block to:
 
 ```markdown
 > **Status:** Implemented. Windows CI failures resolved; all plan tasks complete.
-> **Verification:** `pnpm run lint && pnpm run typecheck && pnpm test && pnpm run build` passes (39 test files / 243 tests) on macOS/Linux/Windows.
+> **Verification:** `pnpm run lint && pnpm run typecheck && pnpm test && pnpm run build` passes (39 test files / 244 tests) on macOS/Linux/Windows.
 ```
 
 - [x] **Step 2: Update `audit-report.md`**
@@ -506,7 +506,7 @@ git commit -m "docs: reconcile plan, audit report, and AGENTS.md with current im
 pnpm run lint && pnpm run typecheck && pnpm test && pnpm run build
 ```
 
-Expected: PASS (39 files / 243 tests)
+Expected: PASS (39 files / 244 tests)
 
 - [x] **Step 2: Review git status and diff**
 
@@ -568,8 +568,8 @@ Summarize to the user: what was fixed, what was verified, CI status, and any rem
 **Plan complete and saved to `docs/superpowers/plans/2026-07-12-final-audit-and-remediation.md`.**
 
 - Execution mode: inline in the active goal session.
-- Final commit: `84980e8`.
-- Final CI run: `29187724411` green on all three platforms.
+- Final commit: `bca4563`.
+- Final CI run: `29194088560` green on all three platforms.
 - Additional fixes discovered during execution:
   - `teammode` `integrate` now uses `git merge --no-edit --no-ff` to avoid editor hang on Windows.
   - Installer integration tests set `OMO_KIMI_SKIP_BOOTSTRAP=1` to skip the non-hermetic ast-grep npm install step.

@@ -2,7 +2,7 @@
 
 > **Status:** Implemented. CI is green on `origin/main` for ubuntu-latest, macos-latest, and windows-latest.
 >
-> **Verification:** `pnpm run lint && pnpm run typecheck && pnpm test && pnpm run build` passes (39 test files / 243 tests) on macOS, Linux, and Windows. Cross-platform fixes cover `doctor`, `release-zip`, `bootstrap`, skill frontmatter parsing, teammode `integrate`, and installer bootstrap behavior.
+> **Verification:** `pnpm run lint && pnpm run typecheck && pnpm test && pnpm run build` passes (39 test files / 244 tests) on macOS, Linux, and Windows. Cross-platform fixes cover `doctor`, `release-zip`, `bootstrap`, skill frontmatter parsing, teammode `integrate`, and installer bootstrap behavior.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:subagent-driven-development` (recommended) or `superpowers:executing-plans` to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
@@ -350,7 +350,7 @@ Current suite covers:
 - `tests/integration/install.test.ts` — run installer with `KIMI_CODE_HOME=<temp>`, assert plugin cache exists, hooks written, no duplicate hooks on second run.
 - `tests/integration/hooks.test.ts` — pipe synthetic Kimi hook payloads to component CLIs and assert JSON stdout.
 
-**Latest result:** 39 test files, 243 tests passing.
+**Latest result:** 39 test files, 244 tests passing.
 
 ### 8.3 Manual validation checklist
 

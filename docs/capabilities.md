@@ -52,7 +52,7 @@ Indexed languages: TypeScript, JavaScript, Python, Go, Rust.
 
 | Tool | Input | Output | Purpose |
 |---|---|---|---|
-| `codegraph_search` | `query?: string`, `kind?: string`, `file?: string` | `{ results: Symbol[] }` | Structural symbol search |
+| `codegraph_search` | `query: string`, `kind?: string`, `file?: string` | `{ results: Symbol[] }` | Structural symbol search |
 | `codegraph_relate` | `symbol: string` | `{ results: Symbol[] }` | Symbols in files related to the given symbol |
 | `codegraph_reindex` | — | `{ symbolCount: number }` | Rebuild the CodeGraph index |
 | `codegraph_status` | — | `{ status, symbolCount }` | CodeGraph index status |
@@ -205,4 +205,4 @@ The full verification command used in CI and development:
 pnpm run lint && pnpm run typecheck && pnpm test && pnpm run build
 ```
 
-Latest result: **39 test files, 243 tests passing**.
+Latest result: **39 test files, 244 tests passing**.

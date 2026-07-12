@@ -8,7 +8,7 @@
 
 ## 1. 摘要
 
-本仓库定位为 **Kimi Code CLI 版的 OmO 分发版**，目标是把 LazyCodex（Codex CLI 插件）的能力移植到 Kimi Code CLI。当前代码已经搭起整体骨架，核心组件 CLI、MCP、Skill、安装器均已存在，测试（39 个测试文件 / 243 个测试）与构建均能通过，CI 在 ubuntu-latest / macos-latest / windows-latest 上全部绿色。
+本仓库定位为 **Kimi Code CLI 版的 OmO 分发版**，目标是把 LazyCodex（Codex CLI 插件）的能力移植到 Kimi Code CLI。当前代码已经搭起整体骨架，核心组件 CLI、MCP、Skill、安装器均已存在，测试（39 个测试文件 / 244 个测试）与构建均能通过，CI 在 ubuntu-latest / macos-latest / windows-latest 上全部绿色。
 
 - **早期关键缺口已修复**：`codegraph` hooks 注册、`codegraph` `PostToolUse` 失败引导、版本号硬编码、Plan/AGENTS.md 状态同步、release workflow `dist/` 打包、根目录 `.mcp.json` 远程 MCP 占位配置均已落实。
 - **跨平台问题已修复**：`doctor` 跨平台命令解析、`release-zip` 改用 `tar`、skill frontmatter CRLF 归一化、`teammode` `integrate` 避免 git 编辑器挂起、installer 测试跳过耗时的 bootstrap ast-grep 安装。
@@ -74,10 +74,10 @@
 | `codex_app.*` 线程 | 无线程，改用 AgentSwarm | ✅ 设计如此 |
 | `apply_patch` / `write` / `edit` | `Write` / `Edit` | ✅ matcher 使用 `^(Write\|Edit)$` |
 | `create_goal` | `CreateGoal` | ✅ ulw-loop PreToolUse 拦截 |
-| 5 个 MCP server（codegraph、git_bash、lsp、grep_app、context7） | 3 个本地 + 2 个远程指引 | ⚠️ 本地 3 个存在；远程 2 个未默认配置 |
+| 5 个 MCP server（codegraph、git_bash、lsp、grep_app、context7） | 3 个本地 + 2 个远程占位 | ✅ 本地 3 个存在；远程 2 个在根目录 `.mcp.json` 中以 `enabled: false` 占位，用户填入 API key 后启用 |
 | 工程规则注入（`.omo/rules/`、`AGENTS.md`） | `rules` 组件 | ✅ |
 | TODO/FIXME 拦截 | `comment-checker` | ✅ |
-| LSP 诊断 | `lsp` 组件 | ⚠️ daemon 拆分需确认 |
+| LSP 诊断 | `lsp` 组件 | ✅ `lsp-daemon` 与 `lsp-tools-mcp` 拆分已实现并测试 |
 | Ultrawork / ulw-loop | 同名组件 | ✅ |
 | 团队模式（teammode） | `plugin/skills/teammode/` + `src/components/teammode/scripts/team.ts` | ✅ Skill 与脚本均存在 |
 
@@ -160,6 +160,6 @@
 - **修复轮次：** Tasks 1–4 修复轮次（含 Task 4 Fix Round 2）
 - **修复提交范围：** `ae83a7d` ... `59c202c`
 - **Windows CI 修复轮次：** `834836d` ... `b293140`（doctor 跨平台、release-zip 改用 tar、bootstrap 测试允许 npm/sg 环境警告、skill frontmatter CRLF 归一化）
-- **最终修复轮次：** `84980e8`（teammode `integrate` 加 `--no-edit`、installer 测试加 `OMO_KIMI_SKIP_BOOTSTRAP`、移除 `team.mjs` Git 跟踪）
-- **CI 全绿：** run `29187724411`（ubuntu-latest / macos-latest / windows-latest 全部通过）
+- **最终修复轮次：** `bca4563`（teammode 测试 cwd 处理、skill fallback 文档、跨平台 sg 查找、空 config 分支测试、CI 工作流加固）
+- **CI 全绿：** run `29194088560`（ubuntu-latest / macos-latest / windows-latest 全部通过）
 - **记录日期：** 2026-07-12
