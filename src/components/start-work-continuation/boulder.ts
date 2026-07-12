@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { getProjectDir } from '../../shared/env.js';
 
 export interface Task {
   id: string;
@@ -20,7 +21,7 @@ export interface Boulder {
 }
 
 export function readBoulder(projectDir?: string): Boulder | null {
-  const dir = projectDir ?? process.env.OMO_KIMI_PROJECT ?? process.cwd();
+  const dir = projectDir ?? getProjectDir();
   const p = path.join(dir, '.omo', 'boulder.json');
   return fs.existsSync(p) ? JSON.parse(fs.readFileSync(p, 'utf-8')) as Boulder : null;
 }

@@ -1,5 +1,6 @@
 import type { HookPayload, HookOutput } from '../../shared/types.js';
 import { VERSION } from '../../shared/version.js';
+import { getEnv } from '../../shared/env.js';
 import { runBootstrapProvisioning } from './provision.js';
 import { readBoulder, hasUncheckedTasks, formatResumeContext } from '../start-work-continuation/boulder.js';
 
@@ -11,15 +12,15 @@ export interface BootstrapContext {
 
 export function getBootstrapContext(): BootstrapContext {
   return {
-    version: process.env.OMO_KIMI_VERSION ?? VERSION,
-    cacheDir: process.env.OMO_KIMI_PLUGIN_CACHE ?? '',
-    binDir: process.env.OMO_KIMI_BIN_DIR ?? '',
+    version: getEnv('VERSION') ?? VERSION,
+    cacheDir: getEnv('PLUGIN_CACHE') ?? '',
+    binDir: getEnv('BIN_DIR') ?? '',
   };
 }
 
 export function runSessionStart(_payload: HookPayload): HookOutput {
   const ctx = getBootstrapContext();
-  let details = `(OmO ${ctx.version}) Bootstrap provisioning complete`;
+  let details = `(LazyKimiCode ${ctx.version}) Bootstrap provisioning complete`;
 
   if (ctx.cacheDir && ctx.binDir) {
     try {
@@ -38,7 +39,7 @@ export function runSessionStart(_payload: HookPayload): HookOutput {
     }
   }
 
-  const projectDir = process.env.OMO_KIMI_PROJECT ?? process.cwd();
+  const projectDir = getEnv('PROJECT') ?? process.cwd();
   try {
     const boulder = readBoulder(projectDir);
     if (boulder && hasUncheckedTasks(boulder)) {

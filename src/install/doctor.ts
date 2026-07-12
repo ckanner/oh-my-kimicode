@@ -5,6 +5,7 @@ import { resolveKimiEnv, pluginCacheDir } from '../shared/paths.js';
 import { MANAGED_BINS } from './bin-links.js';
 import { VERSION } from '../shared/version.js';
 import { findOnPath, runVersion } from '../shared/cross-platform.js';
+import { getEnv } from '../shared/env.js';
 
 export interface DoctorOptions {
   kimiCodeHome?: string;
@@ -20,7 +21,7 @@ export interface HealthCheck {
 
 export function runDoctor(options: DoctorOptions = {}): HealthCheck[] {
   const env = resolveKimiEnv(options);
-  const version = process.env.OMO_KIMI_VERSION ?? VERSION;
+  const version = getEnv('VERSION') ?? VERSION;
   const cache = pluginCacheDir(env.kimiCodeHome, version);
   const results: HealthCheck[] = [];
 

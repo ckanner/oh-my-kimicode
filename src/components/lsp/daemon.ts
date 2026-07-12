@@ -9,10 +9,11 @@ import { VERSION } from '../../shared/version.js';
 import { StdioLspTransport, type LspTransport } from './transport.js';
 import { languageIdFromExtension } from './language-id.js';
 import { parseLspArgs } from './args.js';
+import { getEnv, getProjectDir } from '../../shared/env.js';
 
-const projectDir = process.env.OMO_KIMI_PROJECT ?? process.cwd();
-const lspCommand = process.env.OMO_KIMI_LSP_COMMAND;
-const lspArgs = process.env.OMO_KIMI_LSP_ARGS ? parseLspArgs(process.env.OMO_KIMI_LSP_ARGS) : [];
+const projectDir = getProjectDir();
+const lspCommand = getEnv('LSP_COMMAND');
+const lspArgs = getEnv('LSP_ARGS') ? parseLspArgs(getEnv('LSP_ARGS')!) : [];
 
 interface LspDaemonOptions {
   command?: string;

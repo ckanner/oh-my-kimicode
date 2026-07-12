@@ -3,10 +3,11 @@ import { writeHookOutput } from '../../shared/serialize.js';
 import { pathToFileURL } from 'node:url';
 import { parseLspArgs } from './args.js';
 import { normalizeHookPayload } from '../../shared/payload.js';
+import { getEnv, getProjectDir } from '../../shared/env.js';
 
 async function main() {
   const event = process.argv[3];
-  const projectDir = process.env.OMO_KIMI_PROJECT ?? process.cwd();
+  const projectDir = getProjectDir();
   const rootUri = pathToFileURL(projectDir).href + '/';
   if (event === 'post-compact') {
     writeCache(projectDir, []);
@@ -23,8 +24,8 @@ async function main() {
   for (const f of files) cached.add(f);
   writeCache(projectDir, [...cached]);
 
-  const lspCommand = process.env.OMO_KIMI_LSP_COMMAND;
-  const lspArgs = process.env.OMO_KIMI_LSP_ARGS ? parseLspArgs(process.env.OMO_KIMI_LSP_ARGS) : [];
+  const lspCommand = getEnv('LSP_COMMAND');
+  const lspArgs = getEnv('LSP_ARGS') ? parseLspArgs(getEnv('LSP_ARGS')!) : [];
   const transport = lspCommand ? createTransport(lspCommand, lspArgs, projectDir) : undefined;
 
   const all: string[] = [];

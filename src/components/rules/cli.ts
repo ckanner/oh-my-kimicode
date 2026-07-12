@@ -1,9 +1,10 @@
 import { discoverRules, formatRulesContext } from './discover.js';
 import { writeHookOutput } from '../../shared/serialize.js';
+import { getProjectDir } from '../../shared/env.js';
 
 async function main() {
   const event = process.argv[3];
-  const projectDir = process.env.OMO_KIMI_PROJECT ?? process.cwd();
+  const projectDir = getProjectDir();
   const rules = discoverRules(projectDir);
   const message = formatRulesContext(rules) || 'No project rules found';
   const hookEventName =

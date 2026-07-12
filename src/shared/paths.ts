@@ -1,6 +1,6 @@
 import path from 'node:path';
-import os from 'node:os';
 import { VERSION } from './version.js';
+import { getEnv, getProjectDir, getBinDir, getKimiCodeHome, getConfigDir } from './env.js';
 
 export interface PathOptions {
   kimiCodeHome?: string;
@@ -15,22 +15,10 @@ export function resolveKimiEnv(options: PathOptions = {}): {
   binDir: string;
   version: string;
 } {
-  const kimiCodeHome = options.kimiCodeHome
-    ?? process.env.KIMI_CODE_HOME
-    ?? path.join(os.homedir(), '.kimi-code');
-
-  const projectDirectory = options.projectDirectory
-    ?? process.env.OMO_KIMI_PROJECT
-    ?? process.cwd();
-
-  const defaultHome = path.join(os.homedir(), '.kimi-code');
-  const binDir = options.binDir
-    ?? process.env.KIMI_LOCAL_BIN_DIR
-    ?? (kimiCodeHome === defaultHome ? path.join(os.homedir(), '.local', 'bin') : path.join(kimiCodeHome, 'bin'));
-
-  const version = options.version
-    ?? process.env.OMO_KIMI_VERSION
-    ?? VERSION;
+  const kimiCodeHome = options.kimiCodeHome ?? getKimiCodeHome();
+  const projectDirectory = options.projectDirectory ?? getProjectDir();
+  const binDir = options.binDir ?? getBinDir();
+  const version = options.version ?? getEnv('VERSION') ?? VERSION;
 
   return { kimiCodeHome, projectDirectory, binDir, version };
 }
@@ -39,6 +27,4 @@ export function pluginCacheDir(kimiCodeHome: string, version: string): string {
   return path.join(kimiCodeHome, 'plugins', 'cache', 'lazykimicode', version);
 }
 
-export function omoConfigDir(): string {
-  return process.env.OMO_KIMI_CONFIG_DIR ?? path.join(os.homedir(), '.omo');
-}
+export { getConfigDir };

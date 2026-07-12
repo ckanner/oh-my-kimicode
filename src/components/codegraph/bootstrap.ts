@@ -1,8 +1,9 @@
 import type { HookPayload, HookOutput } from '../../shared/types.js';
+import { getProjectDir } from '../../shared/env.js';
 import { buildIndex, loadIndex, saveIndex } from './indexer.js';
 
 export function runBootstrap(_payload: HookPayload): HookOutput {
-  const projectDir = process.env.OMO_KIMI_PROJECT ?? process.cwd();
+  const projectDir = getProjectDir();
   if (!loadIndex(projectDir)) {
     try {
       const index = buildIndex(projectDir);

@@ -9,6 +9,7 @@ import { parseLspArgs } from './args.js';
 import { languageIdFromExtension } from './language-id.js';
 import { LspClient } from './lsp-client.js';
 import { VERSION } from '../../shared/version.js';
+import { getEnv, getProjectDir } from '../../shared/env.js';
 
 export interface ToolRequest {
   params: {
@@ -17,9 +18,7 @@ export interface ToolRequest {
   };
 }
 
-export function getProjectDir(): string {
-  return process.env.OMO_KIMI_PROJECT ?? process.cwd();
-}
+export { getProjectDir };
 
 export function getRootUri(): string {
   return pathToFileURL(getProjectDir()).href + '/';
@@ -31,8 +30,8 @@ export async function handleToolRequest(
   options: { createTransport?: typeof createTransport } = {},
 ): Promise<{ content: Array<{ type: string; text: string }>; isError?: boolean }> {
   const createTransportImpl = options.createTransport ?? createTransport;
-  const lspCommand = process.env.OMO_KIMI_LSP_COMMAND;
-  const lspArgs = process.env.OMO_KIMI_LSP_ARGS ? parseLspArgs(process.env.OMO_KIMI_LSP_ARGS) : [];
+  const lspCommand = getEnv('LSP_COMMAND');
+  const lspArgs = getEnv('LSP_ARGS') ? parseLspArgs(getEnv('LSP_ARGS')!) : [];
 
   switch (req.params.name) {
     case 'lsp_status': {

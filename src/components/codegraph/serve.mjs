@@ -4,8 +4,9 @@ import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprot
 import { buildIndex, loadIndex, saveIndex } from './indexer.js';
 import { search, relate, explore, files, callers, callees, impact } from './search.js';
 import { VERSION } from '../../shared/version.js';
+import { getProjectDir } from '../../shared/env.js';
 
-const projectDir = process.env.OMO_KIMI_PROJECT ?? process.cwd();
+const projectDir = getProjectDir();
 
 function ensureIndex() {
   let index = loadIndex(projectDir);

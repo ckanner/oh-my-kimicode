@@ -4,7 +4,8 @@ import os from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
 import * as toml from 'smol-toml';
-import { resolveKimiEnv, pluginCacheDir, omoConfigDir } from '../shared/paths.js';
+import { resolveKimiEnv, pluginCacheDir } from '../shared/paths.js';
+import { getEnv, getEnvBool, getConfigDir, isTelemetryDisabled } from '../shared/env.js';
 import { getHookDefs } from './hook-defs.js';
 import { patchConfigToml } from './config-patcher.js';
 import { linkManagedBins, unlinkManagedBins } from './bin-links.js';
@@ -27,13 +28,13 @@ function getPluginRoot(): string {
 
 function seedOmoConfig(options: InstallOptions): void {
   if (options.dryRun) return;
-  const dir = omoConfigDir();
+  const dir = getConfigDir();
   fs.mkdirSync(dir, { recursive: true });
   const configPath = path.join(dir, 'config.jsonc');
   if (fs.existsSync(configPath)) return;
   const config = {
-    '//': 'Oh My KimiCode user configuration',
-    telemetry: { enabled: process.env.OMO_KIMI_DISABLE_POSTHOG !== '1' },
+    '//': 'LazyKimiCode user configuration',
+    telemetry: { enabled: !isTelemetryDisabled() },
     ultrawork: { autoCreateGoal: true },
   };
   fs.writeFileSync(configPath, JSON.stringify(config, null, 2), 'utf-8');
@@ -92,7 +93,7 @@ function ensureGitBashMcp(kimiCodeHome: string, cache: string, dryRun = false): 
 
 function recordMigrationState(version: string, dryRun = false): void {
   if (dryRun) return;
-  const stateDir = process.env.OMO_KIMI_MIGRATION_STATE_DIR
+  const stateDir = getEnv('MIGRATION_STATE_DIR')
     ?? path.join(os.homedir(), '.local', 'share', 'lazykimicode');
   fs.mkdirSync(stateDir, { recursive: true });
   fs.writeFileSync(
@@ -104,7 +105,7 @@ function recordMigrationState(version: string, dryRun = false): void {
 
 async function recordInstallTelemetry(dryRun = false): Promise<void> {
   if (dryRun) return;
-  if (process.env.OMO_KIMI_DISABLE_POSTHOG === '1') return;
+  if (isTelemetryDisabled()) return;
   try {
     const { getDistinctId } = await import('../shared/telemetry.js');
     const result = await captureEvent(getDistinctId(), 'install');
@@ -118,15 +119,15 @@ async function recordInstallTelemetry(dryRun = false): Promise<void> {
 
 function runFirstBootstrap(cache: string, binDir: string, kimiCodeHome: string, dryRun = false): void {
   if (dryRun) return;
-  if (process.env.OMO_KIMI_SKIP_BOOTSTRAP === '1') return;
+  if (getEnvBool('SKIP_BOOTSTRAP')) return;
   const bootstrapCli = path.join(cache, 'components', 'bootstrap', 'dist', 'cli.mjs');
   if (!fs.existsSync(bootstrapCli)) return;
   try {
     execFileSync('node', [bootstrapCli, 'hook', 'session-start'], {
       env: {
         ...process.env,
-        OMO_KIMI_PLUGIN_CACHE: cache,
-        OMO_KIMI_BIN_DIR: binDir,
+        LAZYKIMICODE_PLUGIN_CACHE: cache,
+        LAZYKIMICODE_BIN_DIR: binDir,
         KIMI_CODE_HOME: kimiCodeHome,
       },
       stdio: 'pipe',
@@ -193,7 +194,7 @@ export interface UninstallOptions {
 
 export async function runKimiUninstaller(options: UninstallOptions = {}): Promise<void> {
   const env = resolveKimiEnv(options);
-  const version = process.env.OMO_KIMI_VERSION ?? VERSION;
+  const version = getEnv('VERSION') ?? VERSION;
   const cache = pluginCacheDir(env.kimiCodeHome, version);
   const configPath = path.join(env.kimiCodeHome, 'config.toml');
 
@@ -233,7 +234,7 @@ export async function runKimiUninstaller(options: UninstallOptions = {}): Promis
   console.log(`Removed managed binaries from ${env.binDir}`);
 
   if (!options.preserveRules) {
-    const omoDir = omoConfigDir();
+    const omoDir = getConfigDir();
     if (fs.existsSync(omoDir)) {
       fs.rmSync(omoDir, { recursive: true, force: true });
       console.log(`Removed user rules/config ${omoDir}`);

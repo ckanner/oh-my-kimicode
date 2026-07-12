@@ -1,7 +1,7 @@
 import type { HookPayload, HookOutput } from '../../shared/types.js';
 import { extractPromptText } from '../../shared/payload.js';
 
-const STEER_PATTERN = /OMO_ULW_LOOP_STEER:\s*(.+)/i;
+const STEER_PATTERN = /(?:LAZYKIMICODE|OMO)_ULW_LOOP_STEER:\s*(.+)/i;
 
 export function parseSteer(payload: HookPayload): HookOutput {
   const prompt = extractPromptText(payload);

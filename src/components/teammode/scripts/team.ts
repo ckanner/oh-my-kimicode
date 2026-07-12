@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import path from 'node:path';
-import os from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { execSync, spawnSync } from 'node:child_process';
+import { getTeamsDir } from '../../../shared/env.js';
 
 export interface TeamMember {
   id: string;
@@ -52,9 +52,7 @@ export interface AddMemberOptions {
   branch?: string;
 }
 
-export function getTeamsDir(): string {
-  return process.env.OMO_TEAMS_DIR ?? path.join(os.homedir(), '.omo', 'teams');
-}
+export { getTeamsDir };
 
 function teamDir(sessionId: string): string {
   return path.join(getTeamsDir(), sessionId);

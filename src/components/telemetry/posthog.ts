@@ -1,9 +1,10 @@
 import { VERSION } from '../../shared/version.js';
+import { getEnv, isTelemetryDisabled } from '../../shared/env.js';
 
 export const DEFAULT_POSTHOG_HOST = 'https://us.i.posthog.com';
 
 // Public project API key; safe to ship in client-side code.
-// Override via OMO_KIMI_POSTHOG_API_KEY env var.
+// Override via LAZYKIMICODE_POSTHOG_API_KEY env var (OMO_KIMI_POSTHOG_API_KEY fallback).
 export const DEFAULT_POSTHOG_API_KEY = 'phc_placeholder_replace_in_build';
 
 export interface CaptureOptions {
@@ -28,15 +29,12 @@ export async function captureEvent(
   event: string,
   options: CaptureOptions = {},
 ): Promise<CaptureResult> {
-  if (
-    process.env.OMO_KIMI_DISABLE_POSTHOG === '1' ||
-    process.env.OMO_DISABLE_POSTHOG === '1'
-  ) {
-    return { ok: false, reason: 'telemetry disabled by OMO_KIMI_DISABLE_POSTHOG' };
+  if (isTelemetryDisabled()) {
+    return { ok: false, reason: 'telemetry disabled by LAZYKIMICODE_DISABLE_POSTHOG' };
   }
 
-  const apiKey = options.apiKey ?? process.env.OMO_KIMI_POSTHOG_API_KEY ?? DEFAULT_POSTHOG_API_KEY;
-  const host = (options.host ?? process.env.OMO_KIMI_POSTHOG_HOST ?? DEFAULT_POSTHOG_HOST).replace(/\/$/, '');
+  const apiKey = options.apiKey ?? getEnv('POSTHOG_API_KEY') ?? DEFAULT_POSTHOG_API_KEY;
+  const host = (options.host ?? getEnv('POSTHOG_HOST') ?? DEFAULT_POSTHOG_HOST).replace(/\/$/, '');
 
   if (apiKey === DEFAULT_POSTHOG_API_KEY) {
     return { ok: false, reason: 'PostHog API key is the placeholder; telemetry skipped' };
@@ -48,7 +46,7 @@ export async function captureEvent(
     distinct_id: distinctId,
     properties: {
       source: 'lazykimicode',
-      version: process.env.OMO_KIMI_VERSION ?? process.env.npm_package_version ?? VERSION,
+      version: getEnv('VERSION') ?? process.env.npm_package_version ?? VERSION,
     },
   };
 

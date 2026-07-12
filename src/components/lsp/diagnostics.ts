@@ -4,6 +4,7 @@ import { pathToFileURL } from 'node:url';
 import { languageIdFromExtension } from './language-id.js';
 import { LspClient } from './lsp-client.js';
 import { StdioLspTransport, type LspTransport } from './transport.js';
+import { getProjectDir } from '../../shared/env.js';
 
 export interface Diagnostic {
   file: string;
@@ -35,7 +36,7 @@ export function createTransport(command?: string, args?: string[], cwd?: string)
 }
 
 export async function runDiagnostics(file: string, transport?: LspTransport, rootUri?: string): Promise<Diagnostic[]> {
-  const projectDir = process.env.OMO_KIMI_PROJECT ?? process.cwd();
+  const projectDir = getProjectDir();
   const filePath = path.resolve(projectDir, file);
   const content = fs.readFileSync(filePath, 'utf-8');
   const uri = pathToFileURL(filePath).href;
