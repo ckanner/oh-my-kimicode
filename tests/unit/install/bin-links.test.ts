@@ -28,8 +28,12 @@ describe('bin-links', () => {
     const linked = linkManagedBins(cacheDir, binDir);
     expect(linked.sort()).toEqual([...MANAGED_BINS].sort());
     for (const name of MANAGED_BINS) {
-      expect(fs.existsSync(path.join(binDir, name))).toBe(true);
-      expect(fs.lstatSync(path.join(binDir, name)).isSymbolicLink()).toBe(true);
+      if (process.platform === 'win32') {
+        expect(fs.existsSync(path.join(binDir, `${name}.cmd`))).toBe(true);
+      } else {
+        expect(fs.existsSync(path.join(binDir, name))).toBe(true);
+        expect(fs.lstatSync(path.join(binDir, name)).isSymbolicLink()).toBe(true);
+      }
     }
   });
 
@@ -45,14 +49,22 @@ describe('bin-links', () => {
     expect(removed.sort()).toEqual([...MANAGED_BINS].sort());
     for (const name of MANAGED_BINS) {
       expect(fs.existsSync(path.join(binDir, name))).toBe(false);
+      expect(fs.existsSync(path.join(binDir, `${name}.cmd`))).toBe(false);
     }
   });
 
   it('is idempotent on re-link', () => {
     linkManagedBins(cacheDir, binDir);
-    const first = fs.readlinkSync(path.join(binDir, 'codegraph-server'));
-    linkManagedBins(cacheDir, binDir);
-    const second = fs.readlinkSync(path.join(binDir, 'codegraph-server'));
-    expect(second).toBe(first);
+    if (process.platform === 'win32') {
+      const first = fs.readFileSync(path.join(binDir, 'codegraph-server.cmd'), 'utf-8');
+      linkManagedBins(cacheDir, binDir);
+      const second = fs.readFileSync(path.join(binDir, 'codegraph-server.cmd'), 'utf-8');
+      expect(second).toBe(first);
+    } else {
+      const first = fs.readlinkSync(path.join(binDir, 'codegraph-server'));
+      linkManagedBins(cacheDir, binDir);
+      const second = fs.readlinkSync(path.join(binDir, 'codegraph-server'));
+      expect(second).toBe(first);
+    }
   });
 });

@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { execFileSync } from 'node:child_process';
+import { execFileSync, execSync } from 'node:child_process';
 import { resolveKimiEnv, pluginCacheDir } from '../shared/paths.js';
 import { MANAGED_BINS } from './bin-links.js';
 import { VERSION } from '../shared/version.js';
@@ -31,6 +31,9 @@ function runVersion(command: string, fallbackPath?: string): string {
   const candidates = fallbackPath ? [fallbackPath, command] : [command];
   for (const candidate of candidates) {
     try {
+      if (process.platform === 'win32' && /\.(cmd|bat)$/i.test(candidate)) {
+        return execSync(`"${candidate}" --version`, { encoding: 'utf-8', timeout: 5000 }).trim();
+      }
       return execFileSync(candidate, ['--version'], { encoding: 'utf-8', timeout: 5000 }).trim();
     } catch {
       // try next candidate
@@ -65,8 +68,13 @@ export function runDoctor(options: DoctorOptions = {}): HealthCheck[] {
     results.push({ name: 'plugin-cache', ok: false, message: `Plugin cache missing: ${cache}` });
   }
 
-  // Managed bins
-  const missingBins = MANAGED_BINS.filter((name) => !fs.existsSync(path.join(env.binDir, name)));
+  // Managed bins (POSIX symlinks or Windows .cmd wrappers)
+  const missingBins = MANAGED_BINS.filter((name) => {
+    const base = path.join(env.binDir, name);
+    if (fs.existsSync(base)) return false;
+    if (process.platform === 'win32' && fs.existsSync(`${base}.cmd`)) return false;
+    return true;
+  });
   if (missingBins.length === 0) {
     results.push({ name: 'managed-bins', ok: true, message: `All managed bins linked in ${env.binDir}` });
   } else {

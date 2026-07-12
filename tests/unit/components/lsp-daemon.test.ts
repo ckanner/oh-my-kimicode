@@ -108,15 +108,19 @@ describe('lsp daemon entry', () => {
     delete process.env.OMO_KIMI_LSP_ARGS;
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     if (proc && !proc.killed) {
       try {
         proc.kill();
       } catch {
         // ignore
       }
+      await new Promise<void>((resolve) => {
+        proc.on('exit', resolve);
+        setTimeout(resolve, 1000);
+      });
     }
-    fs.rmSync(tmp, { recursive: true, force: true });
+    fs.rmSync(tmp, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
   });
 
   it('lists all lsp tools', async () => {
