@@ -95,7 +95,7 @@ node plugin/components/teammode/scripts/team.mjs add-member  --team <session_id>
 node plugin/components/teammode/scripts/team.mjs member-prompt --team <session_id> --id A
 node plugin/components/teammode/scripts/team.mjs set-status   --team <session_id> --id A --status reported|blocked|active|archived [--note "<...>"]
 node plugin/components/teammode/scripts/team.mjs worktree-add    --team <session_id> --id A [--base-branch <branch>]
-node plugin/components/teammode/scripts/team.mjs worktree-remove --team <session_id> --id A [--force]
+node plugin/components/teammode/scripts/team.mjs worktree-remove --team <session_id> --id A [--force] [--delete-branch]
 node plugin/components/teammode/scripts/team.mjs integrate       --team <session_id> [--id A]
 node plugin/components/teammode/scripts/team.mjs archive      --team <session_id> [--id A] [--note "<...>"]
 node plugin/components/teammode/scripts/team.mjs delete       --team <session_id> [--force]
@@ -133,9 +133,8 @@ treat the intended mutation as complete; retry after the named command finishes,
    instance.
 
 **Sequential / pipelined Agent teams:**
-1. Create a durable worktree per colliding member with `worktree-add` (or via `git worktree add`
-   if the script has not yet implemented it). Always pass the worktree path in that member's
-   prompt if `Agent` has no cwd argument.
+1. Create a durable worktree per colliding member with `worktree-add`. Always pass the worktree
+   path in that member's prompt if `Agent` has no cwd argument.
 2. Launch each member with `Agent(prompt=..., subagent_type="coder"|"explore"|"plan")` in
    dependency order. The prompt must be self-contained: it carries the member's `focus`,
    `lens`, `deliverable`, worktree path, and a pointer to `guide.md` / `team.json`.
@@ -196,7 +195,9 @@ it creates the worktree off the base branch on a derived branch, flips the team 
 mode, records it in `team.json`, and prints the `cd` path to hand that member. The member works
 and commits only inside its own worktree. To land the work, `integrate --team <id>` merges every
 member branch into your current branch with a merge commit (never a squash or rebase); resolve
-any conflict it reports, then `worktree-remove` each worktree at cleanup.
+any conflict it reports, then `worktree-remove` each worktree at cleanup. `worktree-remove` also
+archives the member (status becomes `archived`) because cleanup follows delivery; pass
+`--delete-branch` to also delete the member's branch after the worktree is removed.
 
 Delivering the path differs by shape: on `AgentSwarm`, create the worktree BEFORE launching the
 swarm so each item carries its own `cd` path; on sequential `Agent`, include the worktree path in

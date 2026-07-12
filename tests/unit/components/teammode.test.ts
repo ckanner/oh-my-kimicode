@@ -15,8 +15,6 @@ import {
   worktreeAdd,
   worktreeRemove,
   integrate,
-  archiveTeam,
-  deleteTeamSafe,
   status,
   getTeamsDir,
 } from '../../../src/components/teammode/scripts/team.js';
@@ -214,17 +212,9 @@ describe('teammode', () => {
     });
   });
 
-  it('archives a team', () => {
-    init(sessionId);
-    archive(sessionId);
-    expect(fs.existsSync(path.join(tmpDir, sessionId))).toBe(false);
-    const archived = fs.readdirSync(path.join(tmpDir, 'archive'));
-    expect(archived.length).toBe(1);
-  });
-
-  it('archive with note sets archived and copies team dir', () => {
+  it('archives a team and preserves live state', () => {
     initTeam({ sessionName: sessionId, name: 'My Team', shape: 'swarm' });
-    archiveTeam(sessionId, undefined, 'completed sprint');
+    archive(sessionId, undefined, 'completed sprint');
     const team = JSON.parse(fs.readFileSync(path.join(tmpDir, sessionId, 'team.json'), 'utf-8'));
     expect(team.archived).toBe(true);
     expect(team.archiveNote).toBe('completed sprint');
@@ -250,7 +240,7 @@ describe('teammode', () => {
       lens: 'area',
       deliverable: 'Build UI',
     });
-    archiveTeam(sessionId, 'A', 'done');
+    archive(sessionId, 'A', 'done');
     const team = JSON.parse(fs.readFileSync(path.join(tmpDir, sessionId, 'team.json'), 'utf-8'));
     expect(team.members[0].status).toBe('archived');
     expect(team.members[0].statusNote).toBe('done');
@@ -258,20 +248,21 @@ describe('teammode', () => {
     expect(team.archived).toBe(false);
   });
 
-  it('deletes a team', () => {
-    init(sessionId);
+  it('delete refuses unarchived team without force', () => {
+    initTeam({ sessionName: sessionId, name: 'My Team', shape: 'swarm' });
+    expect(() => deleteTeam(sessionId)).toThrow('not archived');
+  });
+
+  it('delete allows archived team without force', () => {
+    initTeam({ sessionName: sessionId, name: 'My Team', shape: 'swarm' });
+    archive(sessionId);
     deleteTeam(sessionId);
     expect(fs.existsSync(path.join(tmpDir, sessionId))).toBe(false);
   });
 
-  it('delete refuses unarchived team without force', () => {
-    initTeam({ sessionName: sessionId, name: 'My Team', shape: 'swarm' });
-    expect(() => deleteTeamSafe(sessionId)).toThrow('not archived');
-  });
-
   it('delete allows unarchived team with force', () => {
     initTeam({ sessionName: sessionId, name: 'My Team', shape: 'swarm' });
-    deleteTeamSafe(sessionId, true);
+    deleteTeam(sessionId, true);
     expect(fs.existsSync(path.join(tmpDir, sessionId))).toBe(false);
   });
 

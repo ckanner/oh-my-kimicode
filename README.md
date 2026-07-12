@@ -28,7 +28,7 @@ The installer will:
 
 - Copy the Kimi plugin to `~/.kimi-code/plugins/cache/lazykimicode/<version>/`
 - Add `[[hooks]]` entries to `~/.kimi-code/config.toml`
-- Link managed binaries (`git-bash-mcp`, `lsp-tools-mcp`, `lsp-daemon`, `codegraph-server`) to `~/.local/bin/`
+- Link managed binaries (`git-bash-mcp`, `lsp-tools-mcp`, `lsp-daemon`, `codegraph-server`) to `~/.local/bin/` and register the LSP stateless fallback as the `lsp_tools_mcp` MCP
 - Seed `~/.omo/config.jsonc`
 - Back up your original `config.toml` to `config.toml.bak.<timestamp>`
 
@@ -86,7 +86,7 @@ The plugin exposes three built-in MCP servers:
   - `codegraph_callees`
   - `codegraph_impact`
 
-- **`lsp`** — Language Server Protocol client, backed by a persistent `lsp-daemon`
+- **`lsp`** — Language Server Protocol client, backed by a persistent `lsp-daemon` with a stateless `lsp_tools_mcp` fallback
   - `lsp_status`
   - `lsp_diagnostics`
   - `lsp_goto_definition`

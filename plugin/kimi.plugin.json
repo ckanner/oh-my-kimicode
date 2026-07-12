@@ -29,6 +29,13 @@
       ],
       "cwd": "./"
     },
+    "lsp_tools_mcp": {
+      "command": "node",
+      "args": [
+        "./components/lsp/dist/mcp-server.mjs"
+      ],
+      "cwd": "./"
+    },
     "git_bash": {
       "command": "node",
       "args": [

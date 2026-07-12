@@ -81,7 +81,7 @@ export OMO_KIMI_LSP_ARGS="--stdio"
 | `lsp_prepare_rename` | `file`, `line`, `character` | `{ result }` | Validate a symbol rename |
 | `lsp_rename` | `file`, `line`, `character`, `newName` | `{ result }` | Execute a symbol rename |
 
-A stateless fallback binary `lsp-tools-mcp` is also linked for environments that do not use the daemon.
+A stateless fallback binary is also registered as the `lsp_tools_mcp` MCP in `plugin/kimi.plugin.json` for environments that do not use the daemon.
 
 ### `git_bash`
 

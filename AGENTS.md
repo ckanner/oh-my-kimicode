@@ -29,7 +29,7 @@ pnpm run build
 | `comment-checker` | `PostToolUse` | Warn on commits/edits that leave unresolved `TODO/FIXME/HACK/XXX/BUG` markers |
 | `executor-verify` | `SubagentStop` | Require `EVIDENCE_RECORDED:` before a coder subagent can stop |
 | `git-bash` | `PreToolUse`, `PostCompact` | Recommend Git Bash on Windows; `git_bash` MCP is declared globally in `plugin/kimi.plugin.json` and handles non-Windows platforms by advising the native Bash tool |
-| `lsp` | `PostToolUse`, `PostCompact` | Real LSP client MCP (`lsp_status`, `lsp_diagnostics`, `lsp_goto_definition`, `lsp_find_references`, `lsp_symbols`, `lsp_prepare_rename`, `lsp_rename`). The plugin MCP uses a persistent `lsp-daemon` binary to avoid cold-starting the LSP server; a stateless `lsp-tools-mcp` fallback is also linked |
+| `lsp` | `PostToolUse`, `PostCompact` | Real LSP client MCP (`lsp_status`, `lsp_diagnostics`, `lsp_goto_definition`, `lsp_find_references`, `lsp_symbols`, `lsp_prepare_rename`, `lsp_rename`). The plugin MCP uses a persistent `lsp-daemon` binary to avoid cold-starting the LSP server; a stateless `lsp_tools_mcp` fallback is also declared in `plugin/kimi.plugin.json` |
 | `rules` | `SessionStart`, `UserPromptSubmit`, `PostToolUse`, `PostCompact` | Load `AGENTS.md` and `.omo/rules/*.md` into context |
 | `start-work-continuation` | `Stop`, `SubagentStop` | Block stop and provide resume guidance while `.omo/boulder.json` has unchecked tasks |
 | `teammode` | Skill-driven | Parallel multi-agent state script (`init`, `add-member`, `member-prompt`, `set-status`, `worktree-add`, `worktree-remove`, `integrate`, `archive`, `delete`, `status`) |

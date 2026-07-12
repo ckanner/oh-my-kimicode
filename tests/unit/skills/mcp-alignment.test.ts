@@ -11,8 +11,12 @@ const SOURCE_PATHS = [
   path.join(ROOT, 'src/components/git-bash/mcp-server.ts'),
 ];
 
-const TOOL_NAME_RE = /\{\s*name:\s*'([^']+)',/g;
-const SKILL_TOOL_RE = /\b(?:(?:codegraph|lsp)_[a-z_]+|git_bash)\b/g;
+// Tool declarations in source files look like:
+//   { name: 'lsp_status', description: '...', inputSchema: { ... } }
+// This intentionally does NOT match Server constructor names such as
+// { name: 'lsp-daemon', version: VERSION }.
+const TOOL_NAME_RE = /\{\s*name:\s*'([^']+)',\s*description:/g;
+const SKILL_TOOL_RE = /\b(?:mcp__)?(?:(?:codegraph|lsp)_[a-z_]+|git_bash)\b/g;
 const OUTDATED_CLI_RE = /lsp-tools-mcp/;
 
 function declaredToolNames(): Set<string> {
@@ -54,13 +58,26 @@ describe('MCP tool / skill alignment', () => {
     expect(manifest.mcpServers.git_bash.cwd).toBe('./');
   });
 
+  it('declares lsp_tools_mcp stateless fallback in plugin manifest', () => {
+    const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, 'plugin/kimi.plugin.json'), 'utf-8'));
+    expect(manifest.mcpServers).toHaveProperty('lsp_tools_mcp');
+    expect(manifest.mcpServers.lsp_tools_mcp.command).toBe('node');
+    expect(manifest.mcpServers.lsp_tools_mcp.args).toContain('./components/lsp/dist/mcp-server.mjs');
+    expect(manifest.mcpServers.lsp_tools_mcp.cwd).toBe('./');
+  });
+
+  function normalizeToolName(name: string): string {
+    // Kimi may expose MCP tools as mcp__<server>__<tool>; map that to the canonical tool id.
+    return name.replace(/^mcp__(codegraph|lsp)__/, '$1_');
+  }
+
   it('does not reference unknown MCP tools in skills', () => {
     const missing: string[] = [];
     for (const filePath of skillFiles()) {
       const text = fs.readFileSync(filePath, 'utf-8');
       let match: RegExpExecArray | null;
       while ((match = SKILL_TOOL_RE.exec(text)) !== null) {
-        const name = match[0];
+        const name = normalizeToolName(match[0]);
         if (!declared.has(name)) missing.push(`${name} in ${path.relative(ROOT, filePath)}`);
       }
     }

@@ -471,7 +471,7 @@ export function integrate(sessionId: string, memberId?: string): void {
   }
 }
 
-export function archiveTeam(sessionId: string, memberId?: string, note?: string): void {
+export function archive(sessionId: string, memberId?: string, note?: string): void {
   if (memberId) {
     withTeamWrite(sessionId, (team) => {
       const member = team.members.find((m) => m.id === memberId);
@@ -500,23 +500,7 @@ export function archiveTeam(sessionId: string, memberId?: string, note?: string)
   });
 }
 
-export function archive(sessionId: string): void {
-  withLock(sessionId, () => {
-    const dir = teamDir(sessionId);
-    if (!fs.existsSync(dir)) {
-      console.log('Team not found');
-      return;
-    }
-    const archiveDir = path.join(getTeamsDir(), 'archive');
-    fs.mkdirSync(archiveDir, { recursive: true });
-    const target = path.join(archiveDir, `${sessionId}-${Date.now()}`);
-    fs.cpSync(dir, target, { recursive: true });
-    fs.rmSync(dir, { recursive: true, force: true });
-    console.log(`Team archived to ${target}`);
-  });
-}
-
-export function deleteTeamSafe(sessionId: string, force = false): void {
+export function deleteTeam(sessionId: string, force = false): void {
   withLock(sessionId, () => {
     const team = readTeamUnlocked(sessionId);
     if (!team) {
@@ -527,18 +511,6 @@ export function deleteTeamSafe(sessionId: string, force = false): void {
       throw new Error(`Team ${sessionId} is not archived. Use --force to delete anyway.`);
     }
     const dir = teamDir(sessionId);
-    fs.rmSync(dir, { recursive: true, force: true });
-    console.log(`Team ${sessionId} deleted`);
-  });
-}
-
-export function deleteTeam(sessionId: string): void {
-  withLock(sessionId, () => {
-    const dir = teamDir(sessionId);
-    if (!fs.existsSync(dir)) {
-      console.log('Team not found');
-      return;
-    }
     fs.rmSync(dir, { recursive: true, force: true });
     console.log(`Team ${sessionId} deleted`);
   });
@@ -613,14 +585,14 @@ function main(): void {
         integrate(args.team as string, args.id as string | undefined);
         break;
       case 'archive':
-        archiveTeam(
+        archive(
           args.team as string,
           args.id as string | undefined,
           args.note as string | undefined,
         );
         break;
       case 'delete':
-        deleteTeamSafe(args.team as string, args.force === true);
+        deleteTeam(args.team as string, args.force === true);
         break;
       case 'status':
         status(args.team as string);
