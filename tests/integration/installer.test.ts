@@ -14,7 +14,7 @@ describe('installer integration', () => {
   beforeEach(() => {
     tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'omo-installer-'));
     originalConfigDir = process.env.LAZYKIMICODE_CONFIG_DIR;
-    process.env.LAZYKIMICODE_CONFIG_DIR = path.join(tmpDir, '.omo');
+    process.env.LAZYKIMICODE_CONFIG_DIR = path.join(tmpDir, '.lazykimicode');
     originalSkipBootstrap = process.env.LAZYKIMICODE_SKIP_BOOTSTRAP;
     process.env.LAZYKIMICODE_SKIP_BOOTSTRAP = '1';
     originalMigrationStateDir = process.env.LAZYKIMICODE_MIGRATION_STATE_DIR;
@@ -120,9 +120,9 @@ describe('installer integration', () => {
 
   it('uninstall preserves rules with --preserve-rules', async () => {
     await runKimiInstaller({ kimiCodeHome: tmpDir });
-    expect(fs.existsSync(path.join(tmpDir, '.omo'))).toBe(true);
+    expect(fs.existsSync(path.join(tmpDir, '.lazykimicode'))).toBe(true);
     await runKimiUninstaller({ kimiCodeHome: tmpDir, preserveRules: true });
-    expect(fs.existsSync(path.join(tmpDir, '.omo'))).toBe(true);
+    expect(fs.existsSync(path.join(tmpDir, '.lazykimicode'))).toBe(true);
   });
 });
 

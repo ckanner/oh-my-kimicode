@@ -8,7 +8,7 @@ export interface DiscoveredRules {
 
 export function discoverRules(projectDir: string): DiscoveredRules {
   const ruleFiles: Array<{ path: string; content: string }> = [];
-  const rulesDir = path.join(projectDir, '.omo', 'rules');
+  const rulesDir = path.join(projectDir, '.lazykimicode', 'rules');
   if (fs.existsSync(rulesDir)) {
     for (const entry of fs.readdirSync(rulesDir)) {
       const full = path.join(rulesDir, entry);

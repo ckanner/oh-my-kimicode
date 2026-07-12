@@ -22,7 +22,7 @@ export interface Boulder {
 
 export function readBoulder(projectDir?: string): Boulder | null {
   const dir = projectDir ?? getProjectDir();
-  const p = path.join(dir, '.omo', 'boulder.json');
+  const p = path.join(dir, '.lazykimicode', 'boulder.json');
   return fs.existsSync(p) ? JSON.parse(fs.readFileSync(p, 'utf-8')) as Boulder : null;
 }
 
@@ -39,7 +39,7 @@ export function hasUncheckedTasks(boulder: Boulder | null): boolean {
 
 export function formatResumeContext(boulder: Boulder): string {
   const work = boulder.works[boulder.active_work_id];
-  if (!work) return 'Active work not found. Please check .omo/boulder.json.';
+  if (!work) return 'Active work not found. Please check .lazykimicode/boulder.json.';
   const tasks = Array.isArray(work.tasks) ? work.tasks : [];
   const unchecked = tasks.filter((t) => t.status === 'unchecked');
 

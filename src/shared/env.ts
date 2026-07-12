@@ -42,9 +42,9 @@ export function getKimiCodeHome(): string {
 }
 
 /** Managed binary directory override. */
-export function getBinDir(): string {
+export function getBinDir(kimiCodeHomeOverride?: string): string {
   const defaultHome = path.join(os.homedir(), '.kimi-code');
-  const kimiCodeHome = getKimiCodeHome();
+  const kimiCodeHome = kimiCodeHomeOverride ?? getKimiCodeHome();
   return (
     getEnv('BIN_DIR') ??
     process.env.KIMI_LOCAL_BIN_DIR ??
@@ -56,12 +56,12 @@ export function getBinDir(): string {
 
 /** Team-mode state directory. */
 export function getTeamsDir(): string {
-  return process.env.LAZYKIMICODE_TEAMS_DIR ?? path.join(os.homedir(), '.omo', 'teams');
+  return process.env.LAZYKIMICODE_TEAMS_DIR ?? path.join(os.homedir(), '.lazykimicode', 'teams');
 }
 
-/** User configuration directory. `.omo` is kept as the shared harness convention. */
+/** User configuration directory. `.lazykimicode` is the LazyKimiCode harness convention. */
 export function getConfigDir(): string {
-  return process.env.LAZYKIMICODE_CONFIG_DIR ?? path.join(os.homedir(), '.omo');
+  return process.env.LAZYKIMICODE_CONFIG_DIR ?? path.join(os.homedir(), '.lazykimicode');
 }
 
 /** Telemetry state file override. */

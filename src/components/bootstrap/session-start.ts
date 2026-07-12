@@ -1,6 +1,6 @@
 import type { HookPayload, HookOutput } from '../../shared/types.js';
 import { VERSION } from '../../shared/version.js';
-import { getEnv } from '../../shared/env.js';
+import { getEnv, getKimiCodeHome, getProjectDir } from '../../shared/env.js';
 import { runBootstrapProvisioning } from './provision.js';
 import { readBoulder, hasUncheckedTasks, formatResumeContext } from '../start-work-continuation/boulder.js';
 
@@ -24,8 +24,8 @@ export function runSessionStart(_payload: HookPayload): HookOutput {
 
   if (ctx.cacheDir && ctx.binDir) {
     try {
-      const kimiCodeHome = process.env.KIMI_CODE_HOME ?? '';
-      const result = runBootstrapProvisioning(ctx.cacheDir, ctx.binDir, kimiCodeHome || process.cwd());
+      const kimiCodeHome = getKimiCodeHome();
+      const result = runBootstrapProvisioning(ctx.cacheDir, ctx.binDir, kimiCodeHome);
       const parts = [
         `bins=${result.binLinksOk ? 'ok' : 'failed'}`,
         `agents=${result.agentCacheDir}`,
@@ -39,7 +39,7 @@ export function runSessionStart(_payload: HookPayload): HookOutput {
     }
   }
 
-  const projectDir = getEnv('PROJECT') ?? process.cwd();
+  const projectDir = getProjectDir();
   try {
     const boulder = readBoulder(projectDir);
     if (boulder && hasUncheckedTasks(boulder)) {

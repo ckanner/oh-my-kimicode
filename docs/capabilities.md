@@ -6,7 +6,7 @@ This document is the complete capability reference for `lazykimicode`. For insta
 
 ## Overview
 
-`lazykimicode` is a Kimi Code CLI plugin plus a Node installer. It layers LazyCodex-style engineering discipline on top of Kimi Code using three mechanisms:
+`lazykimicode` is a Kimi Code CLI plugin plus a Node installer. It layers engineering discipline on top of Kimi Code using three mechanisms:
 
 1. **Hooks** — installed into `~/.kimi-code/config.toml`, invoked automatically by Kimi events.
 2. **MCP servers** — declared in `plugin/kimi.plugin.json`, providing tools the model can call.
@@ -21,7 +21,7 @@ Hooks are fail-open advisory components. They exit `0` when they only want to ad
 | Event | Component | Matcher | Purpose |
 |---|---|---|---|
 | `SessionStart` | `bootstrap` | `^startup$` | Link managed binaries, seed agent profile cache, install `sg` (ast-grep) if missing |
-| `SessionStart` | `rules` | `.*` | Inject `AGENTS.md` and `.omo/rules/*.md` into context |
+| `SessionStart` | `rules` | `.*` | Inject `AGENTS.md` and `.lazykimicode/rules/*.md` into context |
 | `SessionStart` | `telemetry` | `.*` | Daily-active telemetry (opt-out via `LAZYKIMICODE_DISABLE_POSTHOG=1`) |
 | `SessionStart` | `codegraph` | `.*` | Ensure a CodeGraph index exists for the project |
 | `UserPromptSubmit` | `rules` | `.*` | Re-inject project rules for the current prompt |
@@ -36,7 +36,7 @@ Hooks are fail-open advisory components. They exit `0` when they only want to ad
 | `PostCompact` | `rules` | `.*` | Reset rule cache after context compaction |
 | `PostCompact` | `lsp` | `.*` | Clear LSP diagnostics cache |
 | `PostCompact` | `git-bash` | `.*` | Reset Git Bash recommendation state |
-| `Stop` | `start-work-continuation` | `.*` | Block session stop if `.omo/boulder.json` has incomplete work |
+| `Stop` | `start-work-continuation` | `.*` | Block session stop if `.lazykimicode/boulder.json` has incomplete work |
 | `SubagentStop` | `start-work-continuation` | `.*` | Advise when a start-work plan has incomplete work |
 | `SubagentStop` | `executor-verify` | `^coder$` | Advise when a coder subagent stops without `EVIDENCE_RECORDED:` |
 
@@ -137,8 +137,8 @@ Invoke with `/skill:lazykimicode:<name>` (or `/skill:<name>` if unique).
 | `LAZYKIMICODE_LSP_COMMAND` | unset | LSP server executable |
 | `LAZYKIMICODE_LSP_ARGS` | unset | Space-separated args for the LSP server |
 | `LAZYKIMICODE_PROJECT` | `process.cwd()` | Project directory |
-| `LAZYKIMICODE_TEAMS_DIR` | `~/.omo/teams` | Team mode state directory |
-| `LAZYKIMICODE_CONFIG_DIR` | `~/.omo` | User configuration directory |
+| `LAZYKIMICODE_TEAMS_DIR` | `~/.lazykimicode/teams` | Team mode state directory |
+| `LAZYKIMICODE_CONFIG_DIR` | `~/.lazykimicode` | User configuration directory |
 | `LAZYKIMICODE_STATE_DIR` | `~/.local/share/lazykimicode` | Telemetry state directory |
 | `LAZYKIMICODE_STATE_FILE` | unset | Explicit telemetry state file |
 | `LAZYKIMICODE_PLUGIN_CACHE` | unset | Override plugin cache path used by bootstrap |
@@ -215,4 +215,4 @@ The full verification command used in CI and development:
 pnpm run lint && pnpm run typecheck && pnpm test && pnpm run build
 ```
 
-Latest result: **41 test files, 268 tests passing**.
+Latest result: **41 test files, 267 tests passing**.

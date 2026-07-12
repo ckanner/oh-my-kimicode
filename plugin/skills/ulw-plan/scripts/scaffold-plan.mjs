@@ -25,8 +25,8 @@ if (isClear && isUnclear) {
   process.exit(1);
 }
 
-const draftsDir = join(cwd, '.omo', 'drafts');
-const plansDir = join(cwd, '.omo', 'plans');
+const draftsDir = join(cwd, '.lazykimicode', 'drafts');
+const plansDir = join(cwd, '.lazykimicode', 'plans');
 mkdirSync(draftsDir, { recursive: true });
 mkdirSync(plansDir, { recursive: true });
 
@@ -65,7 +65,7 @@ status: exploring
 
 ## Approval gate
 - status: exploring
-- pending action: write .omo/plans/${slug}.md
+- pending action: write .lazykimicode/plans/${slug}.md
 - approach: TBD
 `;
 

@@ -54,7 +54,7 @@ export function buildIndex(projectDir: string): CodeGraphIndex {
 }
 
 export function indexPath(projectDir: string): string {
-  return path.join(projectDir, '.omo', 'codegraph-index.json');
+  return path.join(projectDir, '.lazykimicode', 'codegraph-index.json');
 }
 
 export function loadIndex(projectDir: string): CodeGraphIndex | null {

@@ -1,6 +1,6 @@
 ---
 name: teammode
-description: "Kimi Code team orchestration: run a named team of cooperating Kimi workers with durable, script-managed state. MUST USE when the user asks Kimi to create, run, coordinate, inspect, archive, or delete a team of agents/sessions/subagents, or to work on something as a team in parallel. FIRST decides the orchestration shape: AgentSwarm for independent parallel members, or sequential/pipelined Agent calls when dependencies exist. The main session is always the leader; members are defined by a concrete part, ownership area, or perspective - never a vague job role; a bundled cross-platform script writes the .omo/teams state plus an auto-generated member field manual. Use a team when the work is not perfectly isolated but parallelizing helps; use plain subagents when scope is perfectly isolated or the goal is ambiguous. Triggers: team mode, teammode, make a team, run as a team, team of agents, coordinate agents, parallel Kimi agents, archive the team."
+description: "Kimi Code team orchestration: run a named team of cooperating Kimi workers with durable, script-managed state. MUST USE when the user asks Kimi to create, run, coordinate, inspect, archive, or delete a team of agents/sessions/subagents, or to work on something as a team in parallel. FIRST decides the orchestration shape: AgentSwarm for independent parallel members, or sequential/pipelined Agent calls when dependencies exist. The main session is always the leader; members are defined by a concrete part, ownership area, or perspective - never a vague job role; a bundled cross-platform script writes the .lazykimicode/teams state plus an auto-generated member field manual. Use a team when the work is not perfectly isolated but parallelizing helps; use plain subagents when scope is perfectly isolated or the goal is ambiguous. Triggers: team mode, teammode, make a team, run as a team, team of agents, coordinate agents, parallel Kimi agents, archive the team."
 type: prompt
 whenToUse: When the user asks for a team of agents to work in parallel.
 ---
@@ -102,7 +102,7 @@ node plugin/components/teammode/scripts/team.mjs delete       --team <session_id
 node plugin/components/teammode/scripts/team.mjs status       --team <session_id>
 ```
 
-`init` creates `.omo/teams/{session_id}/` containing `team.json` (the single durable state file:
+`init` creates `.lazykimicode/teams/{session_id}/` containing `team.json` (the single durable state file:
 team id, shape, the main-session leader, the member roster, status, worktree config, and a
 lifecycle log), `guide.md` (the auto-generated member field manual), and `artifacts/` (a shared
 exchange space). Re-running `init` is a safe no-op. Every mutating subcommand rewrites
@@ -113,7 +113,7 @@ safe to run independent `add-member`, `set-status`, `archive`, `delete`, `guide`
 mutation commands concurrently against the same team: they serialize and each command reads the
 latest committed state before writing. If a command reports that team state is locked, do not
 treat the intended mutation as complete; retry after the named command finishes, or inspect
-`.omo/teams/{session_id}/.team.lock/owner.json` if the previous command crashed.
+`.lazykimicode/teams/.locks/{session_id}/owner.json` if the previous command crashed.
 
 ## Create the team and its members
 
@@ -133,9 +133,8 @@ treat the intended mutation as complete; retry after the named command finishes,
    instance.
 
 **Sequential / pipelined Agent teams:**
-1. Create a durable worktree per colliding member with `worktree-add` (or via `git worktree add`
-   if the script has not yet implemented it). Always pass the worktree path in that member's
-   prompt if `Agent` has no cwd argument.
+1. Create a durable worktree per colliding member with `worktree-add`. Always pass the worktree
+   path in that member's prompt if `Agent` has no cwd argument.
 2. Launch each member with `Agent(prompt=..., subagent_type="coder"|"explore"|"plan")` in
    dependency order. The prompt must be self-contained: it carries the member's `focus`,
    `lens`, `deliverable`, worktree path, and a pointer to `guide.md` / `team.json`.
@@ -210,7 +209,7 @@ waits instead of editing a parent checkout or an empty directory.
 
 ## Run a ulw-plan in parallel
 
-When a decision-complete plan already exists at `.omo/plans/<slug>.md` (from ulw-plan), execute its
+When a decision-complete plan already exists at `.lazykimicode/plans/<slug>.md` (from ulw-plan), execute its
 parallel waves as a team instead of one todo at a time. Map it directly:
 - one wave's independent todos -> one swarm item / one Agent each; the todo's scope/files become
   that member's `focus`, and its acceptance criteria + QA become the member's `deliverable`.
@@ -235,7 +234,7 @@ is never disbanded is a leak.
   never claim a member process itself was archived. Do not delete the team state after an archive
   blocker unless the evidence has been copied elsewhere or the user explicitly accepts that
   evidence loss.
-- `delete` removes `.omo/teams/{session_id}` and refuses while the team is unarchived or any member
+- `delete` removes `.lazykimicode/teams/{session_id}` and refuses while the team is unarchived or any member
   is still active unless `--force`.
 - When the work wraps up, land it the way the user asked: `integrate --team <id>` for a direct merge
   commit, or push each member branch and open a PR. Then `worktree-remove` each worktree, archive,

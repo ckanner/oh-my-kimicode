@@ -1,8 +1,10 @@
 # lazykimicode Audit Report
 
-> **Scope:** Final verification that the `OMO`/`OmO` legacy brand has been fully removed from code, docs, configuration, and CI, and that the implementation is consistent with the LazyKimiCode product plan.
+> **Scope:** Verification that the `OMO`/`OmO` legacy brand has been fully removed from code, docs, configuration, and CI, and that the implementation is consistent with the LazyKimiCode product plan.
 >
 > **Date:** 2026-07-13
+>
+> **Status:** Remediation in progress — see [`docs/lazykimicode-audit-remediation-plan.md`](lazykimicode-audit-remediation-plan.md) for the complete task list.
 >
 > **Verification baseline:** `pnpm run lint && pnpm run typecheck && pnpm test && pnpm run build` — green.
 
@@ -30,32 +32,17 @@ Reference: [Hooks | Kimi Code CLI Docs](https://moonshotai.github.io/kimi-code/e
 
 ## 2. Environment variables and branding
 
-All harness configuration uses the `LAZYKIMICODE_*` namespace. Legacy `OMO_KIMI_*` and `OMO_*` fallbacks have been removed.
+All harness configuration uses the `LAZYKIMICODE_*` namespace. Legacy `OMO_KIMI_*` and `OMO_*` env var fallbacks have been removed from production code.
 
 - `src/shared/env.ts` is the single source of truth for env var reads.
 - No production code reads `process.env.OMO_*` or `process.env.OMO_KIMI_*` directly.
 - `src/components/ulw-loop/steer.ts` only recognizes the `LAZYKIMICODE_ULW_LOOP_STEER:` steering marker.
 - `scripts/sync-hooks.mjs` generates `(LazyKimiCode ${VERSION})` status messages.
 - `scripts/build.mjs` and `.github/workflows/release.yml` use only `LAZYKIMICODE_POSTHOG_API_KEY`.
-- `plugin/skills/` is clean of `OMO`/`OmO`/`OMO_` references; `scripts/sync-skills.mjs` still transforms upstream `vendor/shared-skills/` copies during sync.
 
 ---
 
-## 3. Docs ↔ code consistency
-
-Verified items:
-
-- Component list and hook events in `README.md`, `AGENTS.md`, `docs/capabilities.md` match `src/install/hook-defs.ts`.
-- MCP tool names match between `plugin/kimi.plugin.json`, source servers, and `docs/capabilities.md`.
-- Skills list in `docs/capabilities.md` matches `plugin/skills/`.
-- Test count claims are updated to the current baseline.
-- Version numbers are consistent (`0.1.3` in `package.json`, `src/shared/version.ts`, `plugin/kimi.plugin.json`).
-
----
-
-## 4. Missing features from the plan
-
-The four gaps called out by earlier audits are implemented and tested:
+## 3. Previously flagged gaps (all implemented)
 
 | Gap | Evidence |
 |---|---|
@@ -64,22 +51,18 @@ The four gaps called out by earlier audits are implemented and tested:
 | Skill / MCP tool name alignment | `tests/unit/skills/mcp-alignment.test.ts` |
 | `create-pr-body.mjs` | `plugin/skills/lcx-contribute-bug-fix/scripts/create-pr-body.mjs`, `tests/unit/skills/create-pr-body.test.ts` |
 
-No missing features remain in these four areas.
-
 ---
 
-## 5. Known limitations
-
-All three previously listed limitations are resolved in code:
+## 4. Known limitations (all resolved in code)
 
 1. **teammode file locking** — `archive()` and `deleteTeam()` use `withLock()`.
 2. **comment-checker multi-line/template-literal detection** — `findStringRanges()` handles multi-line template literals, `${...}` interpolation, escaped backticks, and nested strings.
 3. **LSP quoted-space args** — `parseLspArgs()` respects single/double quotes and backslash escapes.
 
-No stale limitation notes remain in code or docs.
-
 ---
 
-## 6. Remaining work
+## 5. Remaining work: remove the `.omo` directory name
 
-None. The rebrand is complete, the wire protocol is aligned, all audited features are implemented and tested, and CI is green.
+The only `OMO` footprint that remains is the **`.omo` directory name** used for configuration and state. The user has directed that the project use its own brand everywhere, including configuration, so `.omo` must become `.lazykimicode`.
+
+Remaining `.omo` references are tracked and remediated in [`docs/lazykimicode-audit-remediation-plan.md`](lazykimicode-audit-remediation-plan.md). After that plan is complete, this audit report should be re-run and updated to "complete".

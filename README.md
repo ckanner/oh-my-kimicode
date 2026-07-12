@@ -2,9 +2,7 @@
 
 LazyKimiCode agent harness for [Kimi Code CLI](https://moonshotai.github.io/kimi-code/).
 
-This is the Kimi Code CLI edition of [oh-my-openagent](https://github.com/code-yeongyu/oh-my-openagent), analogous to how [LazyCodex](https://github.com/code-yeongyu/lazycodex) is the OpenAI Codex CLI edition.
-
-It brings LazyCodex's engineering discipline — rules injection, comment checking, LSP diagnostics, structural code search, autonomous execution modes, telemetry, and team orchestration — into Kimi Code CLI using Kimi-native hooks, MCP servers, Skills, and `Agent` / `AgentSwarm`.
+LazyKimiCode brings engineering discipline — rules injection, comment checking, LSP diagnostics, structural code search, autonomous execution modes, telemetry, and team orchestration — into Kimi Code CLI using Kimi-native hooks, MCP servers, Skills, and `Agent` / `AgentSwarm`.
 
 For the full capability reference, see [`docs/capabilities.md`](docs/capabilities.md).
 
@@ -29,7 +27,7 @@ The installer will:
 - Copy the Kimi plugin to `~/.kimi-code/plugins/cache/lazykimicode/<version>/`
 - Add `[[hooks]]` entries to `~/.kimi-code/config.toml`
 - Link managed binaries (`git-bash-mcp`, `lsp-tools-mcp`, `lsp-daemon`, `codegraph-server`) to `~/.local/bin/` and register the LSP stateless fallback as the `lsp_tools_mcp` MCP
-- Seed `~/.omo/config.jsonc`
+- Seed `~/.lazykimicode/config.jsonc`
 - Back up your original `config.toml` to `config.toml.bak.<timestamp>`
 
 ### 2. Enable the plugin
@@ -142,8 +140,8 @@ If the skill name is unique, `/skill:<skill-name>` also works.
 | `LAZYKIMICODE_LSP_COMMAND` | LSP server executable |
 | `LAZYKIMICODE_LSP_ARGS` | Space-separated args for the LSP server |
 | `LAZYKIMICODE_PROJECT` | Override project directory |
-| `LAZYKIMICODE_TEAMS_DIR` | Override team-mode state directory (default `~/.omo/teams`) |
-| `LAZYKIMICODE_CONFIG_DIR` | User configuration directory (default `~/.omo`) |
+| `LAZYKIMICODE_TEAMS_DIR` | Override team-mode state directory (default `~/.lazykimicode/teams`) |
+| `LAZYKIMICODE_CONFIG_DIR` | User configuration directory (default `~/.lazykimicode`) |
 | `LAZYKIMICODE_STATE_DIR` | Telemetry state directory |
 | `LAZYKIMICODE_BIN_DIR` | Managed binary directory |
 | `LAZYKIMICODE_VERSION` | Override reported version |
@@ -162,7 +160,7 @@ Release builds inject the PostHog API key via CI. Local/debug builds without
 npx lazykimicode uninstall
 ```
 
-To keep your `~/.omo/` rules and config:
+To keep your `~/.lazykimicode/` rules and config:
 
 ```bash
 npx lazykimicode uninstall --preserve-rules
@@ -187,7 +185,7 @@ pnpm run sync:skills
 pnpm run sync:hooks
 ```
 
-Latest full-suite result: **41 test files, 268 tests passing**.
+Latest full-suite result: **41 test files, 267 tests passing**.
 
 ---
 

@@ -9,6 +9,13 @@ const OUT = path.join(__dirname, '..', 'plugin/skills');
 
 const KIMI_COMPAT = `\n\n## Kimi Code Harness Compatibility\n\n- Use \`Agent\` tool with \`subagent_type\` \`coder\` / \`explore\` / \`plan\`.\n- Use \`AgentSwarm\` for parallel work.\n- Use \`TodoList\` for tracking.\n`;
 
+const TEXT_EXTENSIONS = new Set(['.md', '.mjs', '.js', '.json', '.yaml', '.yml', '.sh', '.txt']);
+
+function isTextFile(name) {
+  const ext = path.extname(name).toLowerCase();
+  return TEXT_EXTENSIONS.has(ext) || !ext;
+}
+
 function copyDir(src, dst) {
   fs.mkdirSync(dst, { recursive: true });
   for (const entry of fs.readdirSync(src, { withFileTypes: true })) {
@@ -16,6 +23,9 @@ function copyDir(src, dst) {
     const dstPath = path.join(dst, entry.name);
     if (entry.isDirectory()) {
       copyDir(srcPath, dstPath);
+    } else if (isTextFile(entry.name)) {
+      const content = fs.readFileSync(srcPath, 'utf-8');
+      fs.writeFileSync(dstPath, rebrandSkillContent(content), 'utf-8');
     } else {
       fs.copyFileSync(srcPath, dstPath);
     }
@@ -31,7 +41,8 @@ function rebrandSkillContent(content) {
     .replace(/OH_MY_KIMICODE_SOURCE_ROOT/g, 'LAZYKIMICODE_SOURCE_ROOT')
     .replace(/Oh My KimiCode \(OmO harness\)/g, 'LazyKimiCode')
     .replace(/Oh My KimiCode/g, 'LazyKimiCode')
-    .replace(/\bOmO\b/g, 'LazyKimiCode');
+    .replace(/\bOmO\b/g, 'LazyKimiCode')
+    .replace(/\.omo\b/g, '.lazykimicode');
 }
 
 function rewriteSkillMd(content) {
@@ -54,13 +65,16 @@ function copySkill(srcDir, outName) {
   const outDir = path.join(OUT, outName);
   fs.mkdirSync(outDir, { recursive: true });
 
-  // Copy everything except SKILL.md as-is; references/scripts/agents are preserved.
+  // Copy everything except SKILL.md; transform text files during copy.
   for (const entry of fs.readdirSync(srcDir, { withFileTypes: true })) {
     const srcPath = path.join(srcDir, entry.name);
     const dstPath = path.join(outDir, entry.name);
     if (entry.name === 'SKILL.md') continue;
     if (entry.isDirectory()) {
       copyDir(srcPath, dstPath);
+    } else if (isTextFile(entry.name)) {
+      const content = fs.readFileSync(srcPath, 'utf-8');
+      fs.writeFileSync(dstPath, rebrandSkillContent(content), 'utf-8');
     } else {
       fs.copyFileSync(srcPath, dstPath);
     }

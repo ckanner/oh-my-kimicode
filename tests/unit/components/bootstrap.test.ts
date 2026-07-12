@@ -52,9 +52,9 @@ describe('bootstrap', () => {
   });
 
   it('appends resume guidance when an interrupted Boulder work has unchecked tasks', () => {
-    fs.mkdirSync(path.join(tmpDir, '.omo'), { recursive: true });
+    fs.mkdirSync(path.join(tmpDir, '.lazykimicode'), { recursive: true });
     fs.writeFileSync(
-      path.join(tmpDir, '.omo', 'boulder.json'),
+      path.join(tmpDir, '.lazykimicode', 'boulder.json'),
       JSON.stringify({
         active_work_id: 'feat-auth',
         works: {
@@ -82,9 +82,9 @@ describe('bootstrap', () => {
   });
 
   it('does not append resume guidance when Boulder work is complete', () => {
-    fs.mkdirSync(path.join(tmpDir, '.omo'), { recursive: true });
+    fs.mkdirSync(path.join(tmpDir, '.lazykimicode'), { recursive: true });
     fs.writeFileSync(
-      path.join(tmpDir, '.omo', 'boulder.json'),
+      path.join(tmpDir, '.lazykimicode', 'boulder.json'),
       JSON.stringify({
         active_work_id: 'feat-auth',
         works: {
@@ -107,8 +107,8 @@ describe('bootstrap', () => {
   });
 
   it('does not crash when boulder.json is malformed', () => {
-    fs.mkdirSync(path.join(tmpDir, '.omo'), { recursive: true });
-    fs.writeFileSync(path.join(tmpDir, '.omo', 'boulder.json'), 'not json', 'utf-8');
+    fs.mkdirSync(path.join(tmpDir, '.lazykimicode'), { recursive: true });
+    fs.writeFileSync(path.join(tmpDir, '.lazykimicode', 'boulder.json'), 'not json', 'utf-8');
     process.env.LAZYKIMICODE_PROJECT = tmpDir;
     try {
       const out = runSessionStart({ hookEventName: 'SessionStart' });
@@ -128,7 +128,7 @@ describe('bootstrap', () => {
     });
 
     it('does not overwrite existing profiles', () => {
-      const dir = path.join(tmpDir, '.omo', 'kimi-agents');
+      const dir = path.join(tmpDir, '.lazykimicode', 'kimi-agents');
       fs.mkdirSync(dir, { recursive: true });
       fs.writeFileSync(path.join(dir, 'coder.md'), 'custom', 'utf-8');
       ensureAgentCache(tmpDir);

@@ -13,7 +13,7 @@ export interface Diagnostic {
   severity: 'error' | 'warning' | 'info';
 }
 
-const CACHE_FILE = '.omo/lsp-cache.json';
+const CACHE_FILE = '.lazykimicode/lsp-cache.json';
 
 export function readCache(projectDir: string): string[] {
   const p = path.join(projectDir, CACHE_FILE);

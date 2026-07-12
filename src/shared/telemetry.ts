@@ -16,10 +16,6 @@ export function getStateFile(stateDir?: string): string {
 
 export { getStateDir, isTelemetryDisabled };
 
-// Re-exported from ./env.ts so callers can import them from either module
-// during the transition. The implementation in env.ts owns the namespace
-// fallbacks.
-
 export function shouldEmitDailyActive(stateDir?: string): boolean {
   if (isTelemetryDisabled()) return false;
   const today = new Date().toISOString().slice(0, 10);
@@ -32,5 +28,5 @@ export function shouldEmitDailyActive(stateDir?: string): boolean {
 }
 
 export function getDistinctId(): string {
-  return crypto.createHash('sha256').update(`omo-kimicode:${os.hostname()}`).digest('hex');
+  return crypto.createHash('sha256').update(`lazykimicode:${os.hostname()}`).digest('hex');
 }

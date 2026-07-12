@@ -11,8 +11,8 @@ describe('start-work-continuation', () => {
   afterEach(() => { fs.rmSync(tmp, { recursive: true, force: true }); });
 
   it('detects unchecked tasks', () => {
-    fs.mkdirSync(path.join(tmp, '.omo'), { recursive: true });
-    fs.writeFileSync(path.join(tmp, '.omo', 'boulder.json'), JSON.stringify({
+    fs.mkdirSync(path.join(tmp, '.lazykimicode'), { recursive: true });
+    fs.writeFileSync(path.join(tmp, '.lazykimicode', 'boulder.json'), JSON.stringify({
       active_work_id: 'x',
       works: {
         x: {
@@ -29,8 +29,8 @@ describe('start-work-continuation', () => {
   });
 
   it('passes when all tasks are done', () => {
-    fs.mkdirSync(path.join(tmp, '.omo'), { recursive: true });
-    fs.writeFileSync(path.join(tmp, '.omo', 'boulder.json'), JSON.stringify({
+    fs.mkdirSync(path.join(tmp, '.lazykimicode'), { recursive: true });
+    fs.writeFileSync(path.join(tmp, '.lazykimicode', 'boulder.json'), JSON.stringify({
       active_work_id: 'x',
       works: {
         x: {
@@ -50,8 +50,8 @@ describe('start-work-continuation', () => {
   });
 
   it('detects legacy boulder schema without tasks (completed=false)', () => {
-    fs.mkdirSync(path.join(tmp, '.omo'), { recursive: true });
-    fs.writeFileSync(path.join(tmp, '.omo', 'boulder.json'), JSON.stringify({
+    fs.mkdirSync(path.join(tmp, '.lazykimicode'), { recursive: true });
+    fs.writeFileSync(path.join(tmp, '.lazykimicode', 'boulder.json'), JSON.stringify({
       active_work_id: 'x',
       works: {
         x: {
@@ -65,8 +65,8 @@ describe('start-work-continuation', () => {
   });
 
   it('passes legacy boulder schema when work is completed', () => {
-    fs.mkdirSync(path.join(tmp, '.omo'), { recursive: true });
-    fs.writeFileSync(path.join(tmp, '.omo', 'boulder.json'), JSON.stringify({
+    fs.mkdirSync(path.join(tmp, '.lazykimicode'), { recursive: true });
+    fs.writeFileSync(path.join(tmp, '.lazykimicode', 'boulder.json'), JSON.stringify({
       active_work_id: 'x',
       works: {
         x: {
@@ -80,8 +80,8 @@ describe('start-work-continuation', () => {
   });
 
   it('passes when file is malformed', () => {
-    fs.mkdirSync(path.join(tmp, '.omo'), { recursive: true });
-    fs.writeFileSync(path.join(tmp, '.omo', 'boulder.json'), 'not json');
+    fs.mkdirSync(path.join(tmp, '.lazykimicode'), { recursive: true });
+    fs.writeFileSync(path.join(tmp, '.lazykimicode', 'boulder.json'), 'not json');
     expect(() => readBoulder(tmp)).toThrow();
   });
 
@@ -131,9 +131,9 @@ describe('start-work-continuation resume guidance', () => {
     originalCwd = process.cwd();
     tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'boulder-'));
     process.env.LAZYKIMICODE_PROJECT = tmpDir;
-    fs.mkdirSync(path.join(tmpDir, '.omo'), { recursive: true });
+    fs.mkdirSync(path.join(tmpDir, '.lazykimicode'), { recursive: true });
     fs.writeFileSync(
-      path.join(tmpDir, '.omo', 'boulder.json'),
+      path.join(tmpDir, '.lazykimicode', 'boulder.json'),
       JSON.stringify({
         active_work_id: 'feat-auth',
         works: {
@@ -172,7 +172,7 @@ describe('start-work-continuation resume guidance', () => {
 
   it('blocks Stop for the skill-documented Boulder schema (schema_version 2 with tasks)', () => {
     fs.writeFileSync(
-      path.join(tmpDir, '.omo', 'boulder.json'),
+      path.join(tmpDir, '.lazykimicode', 'boulder.json'),
       JSON.stringify({
         schema_version: 2,
         active_work_id: 'feat-auth',
@@ -180,7 +180,7 @@ describe('start-work-continuation resume guidance', () => {
           'feat-auth': {
             work_id: 'feat-auth',
             title: 'Add auth',
-            active_plan: '.omo/plans/auth.md',
+            active_plan: '.lazykimicode/plans/auth.md',
             plan_name: 'auth',
             session_ids: ['kimi:session-1'],
             status: 'active',

@@ -87,13 +87,13 @@ export function runDoctor(options: DoctorOptions = {}): HealthCheck[] {
     results.push({ name: 'config-hooks', ok: false, message: `config.toml not found: ${configPath}` });
   }
 
-  // AGENTS.md / .omo/rules
+  // AGENTS.md / .lazykimicode/rules
   const agentsMd = path.join(env.projectDirectory, 'AGENTS.md');
-  const rulesDir = path.join(env.projectDirectory, '.omo', 'rules');
+  const rulesDir = path.join(env.projectDirectory, '.lazykimicode', 'rules');
   if (fs.existsSync(agentsMd) || fs.existsSync(rulesDir)) {
     results.push({ name: 'project-rules', ok: true, message: 'Project rules found' });
   } else {
-    results.push({ name: 'project-rules', ok: false, message: 'No AGENTS.md or .omo/rules found in project directory' });
+    results.push({ name: 'project-rules', ok: false, message: 'No AGENTS.md or .lazykimicode/rules found in project directory' });
   }
 
   // ast-grep

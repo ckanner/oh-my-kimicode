@@ -13,7 +13,7 @@
   "sessionStart": {
     "skill": "rules"
   },
-  "skillInstructions": "You are running with lazykimicode. Prefer the lazykimicode MCP tools for structural search (codegraph) and LSP. Respect project rules from .omo/rules/ and AGENTS.md. On Windows, prefer the git_bash MCP for shell operations when available.",
+  "skillInstructions": "You are running with lazykimicode. Prefer the lazykimicode MCP tools for structural search (codegraph) and LSP. Respect project rules from .lazykimicode/rules/ and AGENTS.md. On Windows, prefer the git_bash MCP for shell operations when available.",
   "mcpServers": {
     "codegraph": {
       "command": "node",

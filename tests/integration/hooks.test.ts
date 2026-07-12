@@ -127,9 +127,9 @@ describe('hook execution integration', () => {
 
   it('start-work-continuation stop returns resume guidance with task titles', () => {
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'omo-boulder-'));
-    fs.mkdirSync(path.join(tmp, '.omo'), { recursive: true });
+    fs.mkdirSync(path.join(tmp, '.lazykimicode'), { recursive: true });
     fs.writeFileSync(
-      path.join(tmp, '.omo', 'boulder.json'),
+      path.join(tmp, '.lazykimicode', 'boulder.json'),
       JSON.stringify({
         active_work_id: 'feat-auth',
         works: {

@@ -15,7 +15,7 @@ export interface ProvisionResult {
 }
 
 export function ensureAgentCache(kimiCodeHome: string): string {
-  const dir = path.join(kimiCodeHome, '.omo', 'kimi-agents');
+  const dir = path.join(kimiCodeHome, '.lazykimicode', 'kimi-agents');
   fs.mkdirSync(dir, { recursive: true });
 
   const profiles: Record<string, string> = {
@@ -66,7 +66,7 @@ export function installAstGrep(binDir: string): { installed: boolean; path?: str
     return { installed: true, path: binPath };
   }
 
-  const installDir = path.join(os.homedir(), '.omo', 'sg-npm');
+  const installDir = path.join(os.homedir(), '.lazykimicode', 'sg-npm');
   try {
     fs.mkdirSync(installDir, { recursive: true });
     const npm = npmCommand();

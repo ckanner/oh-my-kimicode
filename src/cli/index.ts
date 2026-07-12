@@ -63,7 +63,7 @@ Install options:
   --bin-dir           Override bin directory for managed binaries
 
 Uninstall options:
-  --preserve-rules    Keep ~/.omo/ rules and config
+  --preserve-rules    Keep ~/.lazykimicode/ rules and config
   --kimi-code-home    Override Kimi Code home directory
   --bin-dir           Override bin directory
 

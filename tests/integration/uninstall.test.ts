@@ -12,7 +12,7 @@ describe('uninstall integration', () => {
   beforeEach(() => {
     tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'omo-uninstall-'));
     originalConfigDir = process.env.LAZYKIMICODE_CONFIG_DIR;
-    process.env.LAZYKIMICODE_CONFIG_DIR = path.join(tmpDir, '.omo');
+    process.env.LAZYKIMICODE_CONFIG_DIR = path.join(tmpDir, '.lazykimicode');
   });
 
   afterEach(() => {

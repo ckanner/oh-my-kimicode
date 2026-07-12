@@ -30,8 +30,8 @@ pnpm run build
 | `executor-verify` | `SubagentStop` | Require `EVIDENCE_RECORDED:` before a coder subagent can stop |
 | `git-bash` | `PreToolUse`, `PostCompact` | Recommend Git Bash on Windows; `git_bash` MCP is declared globally in `plugin/kimi.plugin.json` and handles non-Windows platforms by advising the native Bash tool |
 | `lsp` | `PostToolUse`, `PostCompact` | Real LSP client MCP (`lsp_status`, `lsp_diagnostics`, `lsp_goto_definition`, `lsp_find_references`, `lsp_symbols`, `lsp_prepare_rename`, `lsp_rename`). The plugin MCP uses a persistent `lsp-daemon` binary to avoid cold-starting the LSP server; a stateless `lsp_tools_mcp` fallback is also declared in `plugin/kimi.plugin.json` |
-| `rules` | `SessionStart`, `UserPromptSubmit`, `PostToolUse`, `PostCompact` | Load `AGENTS.md` and `.omo/rules/*.md` into context |
-| `start-work-continuation` | `Stop`, `SubagentStop` | Block stop and provide resume guidance while `.omo/boulder.json` has unchecked tasks |
+| `rules` | `SessionStart`, `UserPromptSubmit`, `PostToolUse`, `PostCompact` | Load `AGENTS.md` and `.lazykimicode/rules/*.md` into context |
+| `start-work-continuation` | `Stop`, `SubagentStop` | Block stop and provide resume guidance while `.lazykimicode/boulder.json` has unchecked tasks |
 | `teammode` | Skill-driven | Parallel multi-agent state script (`init`, `add-member`, `member-prompt`, `set-status`, `worktree-add`, `worktree-remove`, `integrate`, `archive`, `delete`, `status`) |
 | `telemetry` | `SessionStart` | Anonymous daily-active telemetry (opt-out via `LAZYKIMICODE_DISABLE_POSTHOG=1`) |
 | `ultrawork` | `UserPromptSubmit` | Detect `ultrawork`/`ulw` keywords and trigger autonomous mode |
@@ -46,7 +46,7 @@ Release builds inject the PostHog API key via CI. Local/debug builds without
 pnpm test
 ```
 
-Latest result: **41 test files, 268 tests passing**.
+Latest result: **41 test files, 267 tests passing**.
 
 ## Adding a new component
 

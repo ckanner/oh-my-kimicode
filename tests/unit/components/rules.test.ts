@@ -9,10 +9,10 @@ describe('rules', () => {
   beforeEach(() => { tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'rules-')); });
   afterEach(() => { fs.rmSync(tmp, { recursive: true, force: true }); });
 
-  it('discovers AGENTS.md and .omo/rules', () => {
-    fs.mkdirSync(path.join(tmp, '.omo', 'rules'), { recursive: true });
+  it('discovers AGENTS.md and .lazykimicode/rules', () => {
+    fs.mkdirSync(path.join(tmp, '.lazykimicode', 'rules'), { recursive: true });
     fs.writeFileSync(path.join(tmp, 'AGENTS.md'), '# Rules\nUse TypeScript.');
-    fs.writeFileSync(path.join(tmp, '.omo', 'rules', 'api.md'), '# API\nUse REST.');
+    fs.writeFileSync(path.join(tmp, '.lazykimicode', 'rules', 'api.md'), '# API\nUse REST.');
     const rules = discoverRules(tmp);
     expect(rules.agentsMd).toContain('TypeScript');
     expect(rules.ruleFiles).toHaveLength(1);
@@ -29,18 +29,18 @@ describe('rules', () => {
   });
 
   it('ignores non-markdown files in rules directory', () => {
-    fs.mkdirSync(path.join(tmp, '.omo', 'rules'), { recursive: true });
-    fs.writeFileSync(path.join(tmp, '.omo', 'rules', 'notes.txt'), 'not a rule');
-    fs.writeFileSync(path.join(tmp, '.omo', 'rules', 'valid.md'), '# Valid');
+    fs.mkdirSync(path.join(tmp, '.lazykimicode', 'rules'), { recursive: true });
+    fs.writeFileSync(path.join(tmp, '.lazykimicode', 'rules', 'notes.txt'), 'not a rule');
+    fs.writeFileSync(path.join(tmp, '.lazykimicode', 'rules', 'valid.md'), '# Valid');
     const rules = discoverRules(tmp);
     expect(rules.ruleFiles).toHaveLength(1);
     expect(rules.ruleFiles[0].path).toContain('valid.md');
   });
 
   it('reads multiple rule files', () => {
-    fs.mkdirSync(path.join(tmp, '.omo', 'rules'), { recursive: true });
-    fs.writeFileSync(path.join(tmp, '.omo', 'rules', 'b.md'), '# B');
-    fs.writeFileSync(path.join(tmp, '.omo', 'rules', 'a.md'), '# A');
+    fs.mkdirSync(path.join(tmp, '.lazykimicode', 'rules'), { recursive: true });
+    fs.writeFileSync(path.join(tmp, '.lazykimicode', 'rules', 'b.md'), '# B');
+    fs.writeFileSync(path.join(tmp, '.lazykimicode', 'rules', 'a.md'), '# A');
     const rules = discoverRules(tmp);
     const names = rules.ruleFiles.map((f) => path.basename(f.path)).sort();
     expect(names).toEqual(['a.md', 'b.md']);

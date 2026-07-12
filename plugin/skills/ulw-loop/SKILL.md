@@ -19,7 +19,7 @@ This skill is intentionally compact. The full workflow lives below. Read the sec
 
 ## Non-Negotiables
 
-- Keep a durable working directory under `.omo/ulw-loop/` for the brief, ledger, and evidence artifacts. Do not hand-edit goal state managed by the harness tools; mutate it through `CreateGoal` / `TodoList`.
+- Keep a durable working directory under `.lazykimicode/ulw-loop/` for the brief, ledger, and evidence artifacts. Do not hand-edit goal state managed by the harness tools; mutate it through `CreateGoal` / `TodoList`.
 - After any compaction or context loss, re-read `brief.md` + `ledger.jsonl` FIRST, then inspect the current `CreateGoal` objective / `TodoList`, then resume. Never re-plan from scratch or repeat completed work.
 - If the active goal aggregate is already complete, start unrelated new work with a fresh `CreateGoal` objective instead of steering or forcing the completed state.
 - Every success criterion needs observable evidence from a real surface: a channel (terminal/TUI via a real pty, HTTP, browser, computer-use) or, for CLI- or data-shaped criteria, an auxiliary surface (CLI stdout, DB diff, parsed config dump).
@@ -58,7 +58,7 @@ Use outcome-first, evidence-bound, atomic decisions, no nested branching prose.
 Deliver every goal created with `CreateGoal` end-to-end.
 Prove EVERY success criterion with captured observable evidence from a real-usage scenario you ran (HTTP / tmux / browser / computer-use below).
 TESTS ALONE NEVER PROVE DONE. A green test suite is supporting evidence, not completion proof.
-Audit each pass, fail, block, steering change, and checkpoint in `.omo/ulw-loop/ledger.jsonl`.
+Audit each pass, fail, block, steering change, and checkpoint in `.lazykimicode/ulw-loop/ledger.jsonl`.
 
 ## Manual-QA channels
 
@@ -104,12 +104,12 @@ Kimi subagent reliability:
 
 ## Artifacts
 
-- `.omo/ulw-loop/brief.md`: original brief and durable constraints.
-- `.omo/ulw-loop/ledger.jsonl`: append-only audit trail.
-- `.omo/ulw-loop/artifacts/`: captured evidence files.
+- `.lazykimicode/ulw-loop/brief.md`: original brief and durable constraints.
+- `.lazykimicode/ulw-loop/ledger.jsonl`: append-only audit trail.
+- `.lazykimicode/ulw-loop/artifacts/`: captured evidence files.
 - Read artifacts before resuming, steering, or checkpointing.
 - After compaction or context loss, re-read brief + ledger FIRST, then inspect `CreateGoal` / `TodoList`. Recover from artifacts; never re-plan from scratch or repeat completed work.
-- Never invent state outside `.omo/ulw-loop` artifacts, `CreateGoal`, and `TodoList`.
+- Never invent state outside `.lazykimicode/ulw-loop` artifacts, `CreateGoal`, and `TodoList`.
 
 ## Bootstrap
 
@@ -148,7 +148,7 @@ Revise any criterion that lacks observable `expectedEvidence` or a named channel
 
 ### 3. Inspect state
 
-Read `.omo/ulw-loop/ledger.jsonl` and the current `CreateGoal` / `TodoList` state. Read pending goals, criteria, current ledger head, blockers, and aggregate objective.
+Read `.lazykimicode/ulw-loop/ledger.jsonl` and the current `CreateGoal` / `TodoList` state. Read pending goals, criteria, current ledger head, blockers, and aggregate objective.
 
 ## Execution Loop
 
@@ -156,7 +156,7 @@ Loop per goal. Cap at 5 cycles per goal. Cap identical same-criterion failures a
 
 ### Acquire Next Goal
 
-1. Read `.omo/ulw-loop/ledger.jsonl` and the current `CreateGoal` objective to determine the active goal and its criteria.
+1. Read `.lazykimicode/ulw-loop/ledger.jsonl` and the current `CreateGoal` objective to determine the active goal and its criteria.
 2. Inspect the active `CreateGoal` objective.
 3. Apply this table exactly:
 
@@ -177,7 +177,7 @@ Loop per goal. Cap at 5 cycles per goal. Cap identical same-criterion failures a
 5. **EXECUTE-AS-SCENARIO**: ACTUALLY run the Manual-QA scenario the criterion named (channel table above). Run it yourself for the orchestrator check; for heavier flows dispatch a dedicated QA worker (`Agent(subagent_type="coder")`) whose ONLY job is to drive the channel and write the artifact to the named evidence path. If the scenario FAILS, respawn the implementing worker with the captured failure — do not hand-patch around it.
 6. **CAPTURE**: collect the observable artifact path: transcript, stdout, screenshot, assertion, status+body, diff, or parsed dump. No artifact written at the evidence path — not done; record `BLOCKED` and respawn QA.
 7. **CLEAN (PAIRED, NEVER SKIP)**: tear down every runtime artifact step 5 spawned BEFORE recording — server PIDs (`kill`, verify `kill -0` fails), `tmux` sessions (`tmux kill-session -t ulw-qa-<criterion>`; confirm `tmux ls`), browser / Playwright contexts (`.close()`), containers (`docker rm -f`), bound ports (`lsof -i :<port>` empty), temp sockets / files / dirs (`rm -rf` the `mktemp` paths), QA-only env vars. Register each teardown as its own todo the moment the QA spawns the resource (scripts, tmux assets, browsers / agent-browser sessions, PIDs, ports) so none is forgotten. Embed a one-line cleanup receipt in the evidence string, e.g. `cleanup: killed 12345; tmux kill-session ulw-qa-foo; rm -rf /tmp/ulw.aB12cD`. Missing receipt → record `BLOCKED`, not `PASS`.
-8. **RECORD** exactly one result by appending to `.omo/ulw-loop/ledger.jsonl` and emitting `EVIDENCE_RECORDED: <path>`:
+8. **RECORD** exactly one result by appending to `.lazykimicode/ulw-loop/ledger.jsonl` and emitting `EVIDENCE_RECORDED: <path>`:
    - `PASS`: `{"goalId":"<id>","criterionId":"<id>","status":"pass","evidence":"<observable> | <cleanup receipt>"}`
    - `FAIL`: `{"goalId":"<id>","criterionId":"<id>","status":"fail","evidence":"<observable> | <cleanup receipt>","notes":"<diagnosis>"}`
    - `BLOCKED`: `{"goalId":"<id>","criterionId":"<id>","status":"blocked","evidence":"<observable>","notes":"<safety/blocker/leftover-state>"}`
@@ -190,7 +190,7 @@ Loop per goal. Cap at 5 cycles per goal. Cap identical same-criterion failures a
 
 1. Non-final aggregate goal: confirm every `essential` criterion is `pass`; non-essential criteria may remain pending. Final aggregate goal: confirm every criterion across the whole plan is `pass`.
 2. Inspect `CreateGoal` for a fresh snapshot.
-3. Append a checkpoint entry to `.omo/ulw-loop/ledger.jsonl` with `--status complete`, `--evidence "<criteria evidence summary>"`, and the goal snapshot.
+3. Append a checkpoint entry to `.lazykimicode/ulw-loop/ledger.jsonl` with `--status complete`, `--evidence "<criteria evidence summary>"`, and the goal snapshot.
 4. If blocked or failed, checkpoint with `--status blocked` or `--status failed` and include diagnosis evidence.
 5. If this is the final goal, run the final quality gate first and include the quality-gate record.
 
@@ -202,14 +202,14 @@ Trigger only for the final aggregate goal after every criterion in every goal is
 2. Run Manual-QA for every criterion; confirm each artifact exists and is non-empty.
 3. Spawn final reviewers with narrow prompts: code review, QA review, gate review. Include original brief, goals, desired outcome, and diff.
 4. Treat timeout, missing deliverable, ack-only, `BLOCKED:`, or inconclusive review as a blocker. Fix, rerun affected verification/Manual-QA, and repeat review.
-5. If review remains blocked, record review blockers in `.omo/ulw-loop/ledger.jsonl` with the review findings and the goal snapshot.
-6. If clean, checkpoint final completion in `.omo/ulw-loop/ledger.jsonl` with e2e evidence + manual QA notes + the goal snapshot + a `quality-gate.json` file under `.omo/ulw-loop/artifacts/` shaped like:
+5. If review remains blocked, record review blockers in `.lazykimicode/ulw-loop/ledger.jsonl` with the review findings and the goal snapshot.
+6. If clean, checkpoint final completion in `.lazykimicode/ulw-loop/ledger.jsonl` with e2e evidence + manual QA notes + the goal snapshot + a `quality-gate.json` file under `.lazykimicode/ulw-loop/artifacts/` shaped like:
 
 ```json
 {
-  "codeReview":{"by":"ulw-loop-code-reviewer","recommendation":"APPROVE","codeQualityStatus":"CLEAR","reportPath":".omo/ulw-loop/artifacts/code-review.md","evidence":"Diff review passed.","blockers":[]},
-  "manualQa":{"by":"ulw-loop-qa-executor","status":"passed","evidence":"CLI and data surfaces passed.","surfaceEvidence":[{"id":"surface-cli-pass","criterionRef":"C1","surface":"cli","invocation":"<exact command>","verdict":"passed","artifactRefs":["artifact-cli-pass"]}],"adversarialCases":[{"id":"adv-malformed-input","criterionRef":"C3","scenario":"malformed gate input omits manual QA evidence","expectedBehavior":"validator rejects input","verdict":"passed","artifactRefs":["artifact-cli-reject"]}],"artifactRefs":[{"id":"artifact-cli-pass","kind":"cli-transcript","description":"CLI pass artifact.","path":".omo/ulw-loop/artifacts/cli-pass.txt"}]},
-  "gateReview":{"by":"ulw-loop-gate-reviewer","recommendation":"APPROVE","reportPath":".omo/ulw-loop/artifacts/gate-review.md","evidence":"Gate review passed.","blockers":[]},
+  "codeReview":{"by":"ulw-loop-code-reviewer","recommendation":"APPROVE","codeQualityStatus":"CLEAR","reportPath":".lazykimicode/ulw-loop/artifacts/code-review.md","evidence":"Diff review passed.","blockers":[]},
+  "manualQa":{"by":"ulw-loop-qa-executor","status":"passed","evidence":"CLI and data surfaces passed.","surfaceEvidence":[{"id":"surface-cli-pass","criterionRef":"C1","surface":"cli","invocation":"<exact command>","verdict":"passed","artifactRefs":["artifact-cli-pass"]}],"adversarialCases":[{"id":"adv-malformed-input","criterionRef":"C3","scenario":"malformed gate input omits manual QA evidence","expectedBehavior":"validator rejects input","verdict":"passed","artifactRefs":["artifact-cli-reject"]}],"artifactRefs":[{"id":"artifact-cli-pass","kind":"cli-transcript","description":"CLI pass artifact.","path":".lazykimicode/ulw-loop/artifacts/cli-pass.txt"}]},
+  "gateReview":{"by":"ulw-loop-gate-reviewer","recommendation":"APPROVE","reportPath":".lazykimicode/ulw-loop/artifacts/gate-review.md","evidence":"Gate review passed.","blockers":[]},
   "iteration":{"fullRerun":true,"status":"passed","rerunCommands":["<exact rerun command>"],"evidence":"Focused rerun passed."},
   "criteriaCoverage":{"totalCriteria":3,"passCount":3,"originalIntent":"User wanted artifact-backed completion.","desiredOutcome":"Behavior ships with review and QA evidence.","userOutcomeReview":"Result matches brief and goals.","adversarialClassesCovered":["malformed_input","stale_state"]}
 }
@@ -221,7 +221,7 @@ Artifacts must be non-empty; counts alone fail. `LIGHT` without adversarial clas
 
 Use steering only for structured evidence-backed mutation. Reject natural-language steering requests.
 
-The harness may inject a steering directive from the prompt hook as `ULW-LOOP STEERING: <json>`. Treat it as a structured mutation request. Validate the directive and apply it to `CreateGoal` / `TodoList` / notepad; normal prose does not steer.
+The harness injects a steering directive when the user prompt contains `LAZYKIMICODE_ULW_LOOP_STEER: <directive>`. The resulting context message appears as `ULW-LOOP STEERING: <directive>`. Treat the directive as a structured mutation request. Validate it and apply it to `CreateGoal` / `TodoList` / notepad; normal prose does not steer.
 
 | Kind | When to use | Required fields |
 |------|-------------|-----------------|
@@ -233,7 +233,7 @@ The harness may inject a steering directive from the prompt hook as `ULW-LOOP ST
 | annotate_ledger | Audit-only note | `evidence`, `rationale` |
 | mark_blocked_superseded | Old story replaced by new evidence | `goalId`, `replacements?`, `evidence`, `rationale` |
 
-Record the steering action in `.omo/ulw-loop/ledger.jsonl`.
+Record the steering action in `.lazykimicode/ulw-loop/ledger.jsonl`.
 
 ## Constraints
 
@@ -242,7 +242,7 @@ Record the steering action in `.omo/ulw-loop/ledger.jsonl`.
 3. NEVER mark a criterion `pass` without captured observable evidence in the ledger.
 4. NEVER bypass the criteria gate: non-final aggregate completion requires all essential criteria; final aggregate completion requires all criteria across the whole plan.
 5. Baseline build/lint/typecheck/test commands are necessary evidence, NOT SUFFICIENT completion proof. Criteria coverage with observable evidence is the gate.
-6. Treat `.omo/ulw-loop/ledger.jsonl` as the durable audit trail; checkpoint after every success or failure.
+6. Treat `.lazykimicode/ulw-loop/ledger.jsonl` as the durable audit trail; checkpoint after every success or failure.
 7. Per-story goal mode is opt-in only; default is aggregate.
 8. Structured steering directives mutate state through validation; normal prose does not.
 9. Evidence MUST be observable from the real surface: tmux transcript, curl status+body, Browser plugin action result or browser/Playwright assertion, CLI stdout, DB state diff, parsed config dump.
@@ -270,4 +270,4 @@ Record the steering action in `.omo/ulw-loop/ledger.jsonl`.
 - Use `AgentSwarm` with a prompt template containing `{{item}}` for parallel independent subtasks.
 - Use `Write` / `Edit` for file changes; use `Read` / `Grep` / `Glob` / `Bash` for inspection.
 - Use `FetchURL`, the `kimi-webbridge` skill, a real browser, or ask the user for browser-facing QA.
-- Keep durable state in `.omo/ulw-loop/` (brief, ledger, artifacts) and emit `EVIDENCE_RECORDED: <path>` after each cycle.
+- Keep durable state in `.lazykimicode/ulw-loop/` (brief, ledger, artifacts) and emit `EVIDENCE_RECORDED: <path>` after each cycle.

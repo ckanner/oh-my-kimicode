@@ -2,6 +2,8 @@
 
 > **Date:** 2026-07-13  
 > **Goal:** Remove the legacy `OMO`/`OmO` brand entirely from code, docs, configuration, and CI; verify the Kimi Code CLI wire-protocol implementation is complete; clean any remaining stale limitation notes; and deliver a green CI on `main`.
+>
+> **Status:** The env-var namespace and hook/build branding tasks below are complete. The remaining `.omo` directory rename is being executed in [`docs/lazykimicode-audit-remediation-plan.md`](lazykimicode-audit-remediation-plan.md).
 
 ## 1. Current State Summary
 
@@ -52,16 +54,9 @@ All three previously listed limitations are already hardened in code; only stale
 
 ### 1.4 What is still wrong
 
-`OMO`/`OmO` references still exist as backward-compatible fallbacks and stale strings:
+The env-var namespace, hook/build branding, and limitation hardening tasks described in the original plan are complete. The only remaining `OMO` footprint is the **`.omo` directory name** used for configuration and state. The user has directed that the project use its own brand everywhere, including configuration, so `.omo` must become `.lazykimicode`.
 
-- `src/shared/env.ts` falls back to `OMO_KIMI_*` / `OMO_*`.
-- `src/components/ulw-loop/steer.ts` regex matches both `LAZYKIMICODE_` and `OMO_` markers.
-- `scripts/sync-hooks.mjs` generates `(OmO ${VERSION})` status messages.
-- `scripts/build.mjs` and `.github/workflows/release.yml` fall back to `OMO_KIMI_POSTHOG_API_KEY`.
-- `scripts/sync-skills.mjs` still carries OMO→LazyKimiCode transforms (necessary because `vendor/shared-skills/` is upstream, but the generated output must remain clean).
-- `tests/unit/shared/env.test.ts` and `tests/unit/scripts/build.test.ts` exercise/mention OMO fallbacks.
-- `docs/lazykimicode-rebrand-plan.md`, `docs/audit-report.md`, `docs/capabilities.md`, `README.md`, `AGENTS.md` still document OMO fallbacks.
-- `src/components/lsp/args.ts` comment still says "pass via OMO_KIMI_LSP_ARGS".
+Remaining `.omo` references are tracked and remediated in [`docs/lazykimicode-audit-remediation-plan.md`](lazykimicode-audit-remediation-plan.md).
 
 ## 2. Plan
 
@@ -157,7 +152,7 @@ Run the full matrix:
 pnpm run lint && pnpm run typecheck && pnpm test && pnpm run build
 ```
 
-Expected: green; test count should be 41 files / 269 tests (current baseline).
+Expected: green; test count should be 41 files / 267 tests (current baseline).
 
 ### Task 7: Commit, push, and monitor CI
 

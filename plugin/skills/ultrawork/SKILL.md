@@ -1,6 +1,6 @@
 ---
 name: ultrawork
-description: "Binding ultrawork mode directive for lazykimicode on Kimi Code CLI. When a prompt contains ultrawork or ulw, the omo UserPromptSubmit hook injects a short bootstrap that points at this file. Read the whole file and follow every rule in it for the rest of the task."
+description: "Binding ultrawork mode directive for lazykimicode on Kimi Code CLI. When a prompt contains ultrawork or ulw, the lazykimicode UserPromptSubmit hook injects a short bootstrap that points at this file. Read the whole file and follow every rule in it for the rest of the task."
 type: prompt
 whenToUse: When the user wants the agent to complete a task end-to-end without asking for confirmation, or when the prompt contains ultrawork or ulw.
 ---
@@ -322,7 +322,7 @@ is not approval, and respawn smaller only if the deliverable is still
 required.
 
 # Run a ulw-plan in parallel
-When a decision-complete plan already exists at `.omo/plans/<slug>.md`
+When a decision-complete plan already exists at `.lazykimicode/plans/<slug>.md`
 (from ulw-plan), execute its parallel waves as a set of focused
 subagents instead of one todo at a time. Map it directly:
 - one wave's independent todos -> one `Agent` each (or an `AgentSwarm`
@@ -373,7 +373,7 @@ Atomic, Conventional Commits (`<type>(<scope>): <imperative>` — feat /
 fix / refactor / test / docs / chore / build / ci / perf). One logical
 change per commit; each commit builds + tests green on its own. No WIP
 on the final branch. If a plan file exists, final commit footer:
-`Plan: .omo/plans/<slug>.md`. Do NOT auto-`git commit` unless the user
+`Plan: .lazykimicode/plans/<slug>.md`. Do NOT auto-`git commit` unless the user
 requested or preauthorised this session — default is stage + draft
 message + present for approval.
 

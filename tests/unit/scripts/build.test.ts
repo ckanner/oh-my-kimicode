@@ -25,7 +25,6 @@ describe('build script', () => {
 
       const env = { ...process.env };
       delete env.LAZYKIMICODE_POSTHOG_API_KEY;
-      delete env.OMO_KIMI_POSTHOG_API_KEY;
 
       const result = spawnSync(
         process.execPath,

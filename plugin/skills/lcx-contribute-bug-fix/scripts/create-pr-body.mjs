@@ -45,7 +45,7 @@ function renderPrBody(input) {
     ],
     [
       '---',
-      `This PR was debugged, implemented, and created with [Oh My KimiCode](https://github.com/ckanner/lazykimicode).\nTag: lazykimicode-generated`,
+      `This PR was debugged, implemented, and created with [LazyKimiCode](https://github.com/ckanner/lazykimicode).\nTag: lazykimicode-generated`,
     ],
   ];
 

@@ -120,7 +120,7 @@ export LAZYKIMICODE_LSP_COMMAND=gopls
 export LAZYKIMICODE_LSP_COMMAND=rust-analyzer
 ```
 
-If the project uses a per-project config file (`.omo/lsp.json` or
+If the project uses a per-project config file (`.lazykimicode/lsp.json` or
 `.kimi-code/mcp.json`), prefer project-local wiring over exported env vars.
 Project entries win over user entries; explicit env vars win over defaults.
 
@@ -172,7 +172,7 @@ Run with [Bun](https://bun.sh): `curl -fsSL https://bun.sh/install | bash`.
 - Use `Read` to inspect `references/<language>/README.md`, project config files,
   and source files before diagnosing.
 - Use `Write` / `Edit` to create or update project config files
-  (`.omo/lsp.json`, `.kimi-code/mcp.json`, shell profile exports, etc.).
+  (`.lazykimicode/lsp.json`, `.kimi-code/mcp.json`, shell profile exports, etc.).
 - Use `Agent(prompt=..., subagent_type="coder"|"explore"|"plan")` when you need a
   subordinate reasoning pass for a language-specific install or troubleshooting
   investigation.
