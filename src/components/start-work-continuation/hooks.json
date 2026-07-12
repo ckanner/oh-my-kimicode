@@ -3,12 +3,12 @@
     "event": "Stop",
     "matcher": ".*",
     "timeout": 10,
-    "statusMessage": "(OmO) Checking Start-Work Continuation"
+    "statusMessage": "(LazyKimiCode) Checking Start-Work Continuation"
   },
   {
     "event": "SubagentStop",
     "matcher": ".*",
     "timeout": 10,
-    "statusMessage": "(OmO) Checking Start-Work Continuation"
+    "statusMessage": "(LazyKimiCode) Checking Start-Work Continuation"
   }
 ]

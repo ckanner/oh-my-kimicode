@@ -3,6 +3,6 @@
     "event": "SubagentStop",
     "matcher": "^coder$",
     "timeout": 10,
-    "statusMessage": "(OmO) Verifying Executor Evidence"
+    "statusMessage": "(LazyKimiCode) Verifying Executor Evidence"
   }
 ]

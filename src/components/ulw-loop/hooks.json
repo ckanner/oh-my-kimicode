@@ -3,12 +3,12 @@
     "event": "UserPromptSubmit",
     "matcher": ".*",
     "timeout": 10,
-    "statusMessage": "(OmO) Checking Ulw-Loop Steering"
+    "statusMessage": "(LazyKimiCode) Checking Ulw-Loop Steering"
   },
   {
     "event": "PreToolUse",
     "matcher": "^CreateGoal$",
     "timeout": 10,
-    "statusMessage": "(OmO) Enforcing Unlimited Goal Budget"
+    "statusMessage": "(LazyKimiCode) Enforcing Unlimited Goal Budget"
   }
 ]

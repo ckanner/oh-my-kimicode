@@ -3,6 +3,6 @@
     "event": "UserPromptSubmit",
     "matcher": ".*",
     "timeout": 10,
-    "statusMessage": "(OmO) Checking Ultrawork Trigger"
+    "statusMessage": "(LazyKimiCode) Checking Ultrawork Trigger"
   }
 ]

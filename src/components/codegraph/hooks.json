@@ -3,12 +3,12 @@
     "event": "SessionStart",
     "matcher": ".*",
     "timeout": 30,
-    "statusMessage": "(OmO) Checking CodeGraph Bootstrap"
+    "statusMessage": "(LazyKimiCode) Checking CodeGraph Bootstrap"
   },
   {
     "event": "PostToolUse",
     "matcher": "^(codegraph[._].*|mcp__codegraph__.*)$",
     "timeout": 10,
-    "statusMessage": "(OmO) Checking CodeGraph Init Guidance"
+    "statusMessage": "(LazyKimiCode) Checking CodeGraph Init Guidance"
   }
 ]

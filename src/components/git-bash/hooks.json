@@ -3,12 +3,12 @@
     "event": "PreToolUse",
     "matcher": "^Bash$",
     "timeout": 10,
-    "statusMessage": "(OmO) Recommending Git Bash MCP"
+    "statusMessage": "(LazyKimiCode) Recommending Git Bash MCP"
   },
   {
     "event": "PostCompact",
     "matcher": ".*",
     "timeout": 10,
-    "statusMessage": "(OmO) Resetting Git Bash MCP Reminder"
+    "statusMessage": "(LazyKimiCode) Resetting Git Bash MCP Reminder"
   }
 ]

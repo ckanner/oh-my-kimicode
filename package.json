@@ -1,7 +1,7 @@
 {
   "name": "lazykimicode",
   "version": "0.1.3",
-  "description": "OmO agent harness for Kimi Code CLI",
+  "description": "LazyKimiCode agent harness for Kimi Code CLI",
   "type": "module",
   "bin": {
     "lazykimicode": "./bin/lazykimicode.mjs"
@@ -17,7 +17,7 @@
     "multi-agent",
     "swarm",
     "ultrawork",
-    "omo",
+    "lazykimicode",
     "lazykimi"
   ],
   "repository": {

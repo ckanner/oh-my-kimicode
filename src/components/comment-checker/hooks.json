@@ -3,6 +3,6 @@
     "event": "PostToolUse",
     "matcher": "^(Write|Edit)$",
     "timeout": 30,
-    "statusMessage": "(OmO) Checking Comments"
+    "statusMessage": "(LazyKimiCode) Checking Comments"
   }
 ]

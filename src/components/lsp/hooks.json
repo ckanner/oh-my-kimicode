@@ -3,12 +3,12 @@
     "event": "PostToolUse",
     "matcher": "^(Write|Edit)$",
     "timeout": 60,
-    "statusMessage": "(OmO) Checking LSP Diagnostics"
+    "statusMessage": "(LazyKimiCode) Checking LSP Diagnostics"
   },
   {
     "event": "PostCompact",
     "matcher": ".*",
     "timeout": 10,
-    "statusMessage": "(OmO) Resetting LSP Diagnostics Cache"
+    "statusMessage": "(LazyKimiCode) Resetting LSP Diagnostics Cache"
   }
 ]

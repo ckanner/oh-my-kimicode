@@ -3,6 +3,6 @@
     "event": "SessionStart",
     "matcher": "^startup$",
     "timeout": 60,
-    "statusMessage": "(OmO) Bootstrap provisioning"
+    "statusMessage": "(LazyKimiCode) Bootstrap provisioning"
   }
 ]

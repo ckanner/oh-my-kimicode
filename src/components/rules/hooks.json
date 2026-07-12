@@ -3,24 +3,24 @@
     "event": "SessionStart",
     "matcher": ".*",
     "timeout": 30,
-    "statusMessage": "(OmO) Loading project rules"
+    "statusMessage": "(LazyKimiCode) Loading project rules"
   },
   {
     "event": "UserPromptSubmit",
     "matcher": ".*",
     "timeout": 30,
-    "statusMessage": "(OmO) Loading project rules"
+    "statusMessage": "(LazyKimiCode) Loading project rules"
   },
   {
     "event": "PostToolUse",
     "matcher": "^(Write|Edit)$",
     "timeout": 30,
-    "statusMessage": "(OmO) Matching project rules"
+    "statusMessage": "(LazyKimiCode) Matching project rules"
   },
   {
     "event": "PostCompact",
     "matcher": ".*",
     "timeout": 10,
-    "statusMessage": "(OmO) Resetting project rule cache"
+    "statusMessage": "(LazyKimiCode) Resetting project rule cache"
   }
 ]
