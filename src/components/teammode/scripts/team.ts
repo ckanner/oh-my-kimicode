@@ -437,7 +437,7 @@ export function integrate(sessionId: string, memberId?: string): void {
 
     for (const member of members) {
       try {
-        runGit(['merge', '--no-ff', member.branch], repoRoot);
+        runGit(['merge', '--no-edit', '--no-ff', member.branch], repoRoot);
         console.log(`Integrated ${member.id} from ${member.branch}`);
 
         try {

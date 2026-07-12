@@ -8,11 +8,14 @@ import pkg from '../../package.json' with { type: 'json' };
 describe('installer integration', () => {
   let tmpDir: string;
   let originalConfigDir: string | undefined;
+  let originalSkipBootstrap: string | undefined;
 
   beforeEach(() => {
     tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'omo-installer-'));
     originalConfigDir = process.env.OMO_KIMI_CONFIG_DIR;
     process.env.OMO_KIMI_CONFIG_DIR = path.join(tmpDir, '.omo');
+    originalSkipBootstrap = process.env.OMO_KIMI_SKIP_BOOTSTRAP;
+    process.env.OMO_KIMI_SKIP_BOOTSTRAP = '1';
   });
 
   afterEach(() => {
@@ -20,6 +23,11 @@ describe('installer integration', () => {
       delete process.env.OMO_KIMI_CONFIG_DIR;
     } else {
       process.env.OMO_KIMI_CONFIG_DIR = originalConfigDir;
+    }
+    if (originalSkipBootstrap === undefined) {
+      delete process.env.OMO_KIMI_SKIP_BOOTSTRAP;
+    } else {
+      process.env.OMO_KIMI_SKIP_BOOTSTRAP = originalSkipBootstrap;
     }
     fs.rmSync(tmpDir, { recursive: true, force: true });
   });
@@ -39,9 +47,9 @@ describe('installer integration', () => {
     expect(fs.readFileSync(configPath, 'utf-8')).toBe('default_model = "kimi"\n');
   });
 
-  it('installs plugin cache and patches config.toml', () => {
+  it('installs plugin cache and patches config.toml', async () => {
     const configPath = path.join(tmpDir, 'config.toml');
-    runKimiInstaller({ kimiCodeHome: tmpDir });
+    await runKimiInstaller({ kimiCodeHome: tmpDir });
 
     const cacheDir = path.join(tmpDir, 'plugins', 'cache', 'lazykimicode', pkg.version);
     expect(fs.existsSync(cacheDir)).toBe(true);
@@ -55,34 +63,34 @@ describe('installer integration', () => {
     expect(config).toContain('PostToolUse');
   });
 
-  it('is idempotent on repeated installs', () => {
-    runKimiInstaller({ kimiCodeHome: tmpDir });
+  it('is idempotent on repeated installs', async () => {
+    await runKimiInstaller({ kimiCodeHome: tmpDir });
     const firstConfig = fs.readFileSync(path.join(tmpDir, 'config.toml'), 'utf-8');
-    runKimiInstaller({ kimiCodeHome: tmpDir });
+    await runKimiInstaller({ kimiCodeHome: tmpDir });
     const secondConfig = fs.readFileSync(path.join(tmpDir, 'config.toml'), 'utf-8');
     expect(secondConfig).toBe(firstConfig);
   });
 
-  it('backs up existing config before patching', () => {
+  it('backs up existing config before patching', async () => {
     const configPath = path.join(tmpDir, 'config.toml');
     fs.writeFileSync(configPath, 'default_model = "kimi"\n');
-    runKimiInstaller({ kimiCodeHome: tmpDir });
+    await runKimiInstaller({ kimiCodeHome: tmpDir });
     const backups = fs.readdirSync(tmpDir).filter((f) => f.startsWith('config.toml.bak'));
     expect(backups.length).toBe(1);
   });
 
-  it('autonomous mode sets default_permission_mode to auto', () => {
+  it('autonomous mode sets default_permission_mode to auto', async () => {
     const configPath = path.join(tmpDir, 'config.toml');
     fs.writeFileSync(configPath, 'default_model = "kimi"\n');
-    runKimiInstaller({ kimiCodeHome: tmpDir, autonomous: true });
+    await runKimiInstaller({ kimiCodeHome: tmpDir, autonomous: true });
     const config = fs.readFileSync(configPath, 'utf-8');
     expect(config).toContain('default_permission_mode = "auto"');
   });
 
-  it('writes migration state and remote MCP placeholders', () => {
+  it('writes migration state and remote MCP placeholders', async () => {
     const stateDir = path.join(tmpDir, 'migration-state');
     process.env.OMO_KIMI_MIGRATION_STATE_DIR = stateDir;
-    runKimiInstaller({ kimiCodeHome: tmpDir });
+    await runKimiInstaller({ kimiCodeHome: tmpDir });
     const statePath = path.join(stateDir, 'config-migration-state.json');
     expect(fs.existsSync(statePath)).toBe(true);
     const state = JSON.parse(fs.readFileSync(statePath, 'utf-8'));

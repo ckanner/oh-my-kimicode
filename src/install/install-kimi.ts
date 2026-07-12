@@ -111,6 +111,7 @@ async function recordInstallTelemetry(dryRun = false): Promise<void> {
 
 function runFirstBootstrap(cache: string, binDir: string, kimiCodeHome: string, dryRun = false): void {
   if (dryRun) return;
+  if (process.env.OMO_KIMI_SKIP_BOOTSTRAP === '1') return;
   const bootstrapCli = path.join(cache, 'components', 'bootstrap', 'dist', 'cli.mjs');
   if (!fs.existsSync(bootstrapCli)) return;
   try {

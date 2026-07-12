@@ -22,6 +22,7 @@ describe('doctor integration', () => {
   let binDir: string;
   let originalPath: string;
   let originalDisablePosthog: string | undefined;
+  let originalSkipBootstrap: string | undefined;
 
   beforeAll(() => {
     if (!fs.existsSync(path.join(PROJECT_ROOT, 'dist', 'cli', 'index.mjs'))) {
@@ -47,6 +48,9 @@ describe('doctor integration', () => {
 
     originalDisablePosthog = process.env.OMO_KIMI_DISABLE_POSTHOG;
     process.env.OMO_KIMI_DISABLE_POSTHOG = '1';
+
+    originalSkipBootstrap = process.env.OMO_KIMI_SKIP_BOOTSTRAP;
+    process.env.OMO_KIMI_SKIP_BOOTSTRAP = '1';
   });
 
   afterEach(() => {
@@ -55,6 +59,11 @@ describe('doctor integration', () => {
       delete process.env.OMO_KIMI_DISABLE_POSTHOG;
     } else {
       process.env.OMO_KIMI_DISABLE_POSTHOG = originalDisablePosthog;
+    }
+    if (originalSkipBootstrap === undefined) {
+      delete process.env.OMO_KIMI_SKIP_BOOTSTRAP;
+    } else {
+      process.env.OMO_KIMI_SKIP_BOOTSTRAP = originalSkipBootstrap;
     }
     fs.rmSync(tmpDir, { recursive: true, force: true });
     fs.rmSync(projectDir, { recursive: true, force: true });
