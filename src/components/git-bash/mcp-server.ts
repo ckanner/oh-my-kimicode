@@ -31,6 +31,15 @@ export interface ServerOptions {
   loginShell?: boolean;
 }
 
+export function getDefaultTimeoutMs(toolName: string): number {
+  const envFallback = process.env.LAZYKIMICODE_GIT_BASH_TIMEOUT_MS ?? process.env.LAZYKIMICODE_EXEC_COMMAND_TIMEOUT_MS;
+  if (envFallback) {
+    const parsed = Number(envFallback);
+    if (Number.isFinite(parsed) && parsed > 0) return parsed;
+  }
+  return toolName === 'run' ? 120000 : 0;
+}
+
 const GIT_BASH_CANDIDATES = [
   'C:\\Program Files\\Git\\bin\\bash.exe',
   'C:\\Program Files (x86)\\Git\\bin\\bash.exe',
@@ -344,7 +353,7 @@ export async function handleRequest(request: McpRequest, options: ServerOptions 
       const timeoutArg = args.timeout ?? args.timeout_ms;
       const timeoutMs = typeof timeoutArg === 'number' && timeoutArg > 0
         ? Math.min(timeoutArg, 1800000)
-        : (toolName === 'run' ? 120000 : 0);
+        : getDefaultTimeoutMs(toolName);
 
       if (!command) {
         return {

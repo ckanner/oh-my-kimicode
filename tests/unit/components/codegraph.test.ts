@@ -4,7 +4,7 @@ import path from 'node:path';
 import os from 'node:os';
 import { parseFile, inferLanguageId } from '../../../src/components/codegraph/symbols.js';
 import { buildIndex, loadIndex, saveIndex, indexPath, listProjectFiles } from '../../../src/components/codegraph/indexer.js';
-import { search, relate, explore, files, callers, callees, impact } from '../../../src/components/codegraph/search.js';
+import { search, relate, explore, files, callers, callees, impact, node } from '../../../src/components/codegraph/search.js';
 import { runBootstrap, runPostToolUse } from '../../../src/components/codegraph/bootstrap.js';
 import type { HookPayload } from '../../../src/shared/types.js';
 
@@ -247,6 +247,28 @@ try { y(); } catch (e) { y(); } finally { y(); }
       const result = impact(index, tmpDir, 'helper');
       expect(result).toContain('lib.ts');
       expect(result).toContain('main.ts');
+    });
+
+    it('inspects a symbol node without code', () => {
+      const index = {
+        version: '1',
+        symbols: [
+          { name: 'alpha', kind: 'function' as const, file: 'a.ts', line: 5, column: 1 },
+        ],
+        byFile: {},
+      };
+      const results = node(index, tmpDir, 'alpha');
+      expect(results).toHaveLength(1);
+      expect(results[0].symbol.name).toBe('alpha');
+      expect(results[0].code).toBeUndefined();
+    });
+
+    it('includes code snippet when requested', () => {
+      fs.writeFileSync(path.join(tmpDir, 'a.ts'), 'function alpha() {\n  return 1;\n}\n');
+      const index = buildIndex(tmpDir);
+      const results = node(index, tmpDir, 'alpha', true);
+      expect(results).toHaveLength(1);
+      expect(results[0].code).toContain('function alpha()');
     });
   });
 

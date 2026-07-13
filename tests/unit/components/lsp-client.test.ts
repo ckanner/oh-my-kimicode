@@ -47,6 +47,30 @@ describe('LspClient', () => {
     client.close();
   });
 
+  it('passes includeDeclaration to find references', async () => {
+    const transport = new MockLspTransport([
+      { jsonrpc: '2.0', id: 1, result: { capabilities: {} } },
+      {
+        jsonrpc: '2.0',
+        id: 2,
+        result: [{ uri: 'file:///tmp/test.ts', range: { start: { line: 0, character: 0 }, end: { line: 0, character: 1 } } }],
+      },
+    ]);
+    let capturedIncludeDeclaration: boolean | undefined;
+    transport.onSend((msg) => {
+      if (msg.method === 'textDocument/references') {
+        capturedIncludeDeclaration = (msg.params as { context: { includeDeclaration: boolean } }).context.includeDeclaration;
+      }
+      return undefined;
+    });
+
+    const client = new LspClient(transport);
+    await client.initialize('file:///tmp/');
+    await client.findReferences('file:///tmp/test.ts', { line: 1, character: 4 }, false);
+    expect(capturedIncludeDeclaration).toBe(false);
+    client.close();
+  });
+
   it('initializes and receives diagnostics', async () => {
     const transport = new MockLspTransport([
       { jsonrpc: '2.0', id: 1, result: { capabilities: {} } },

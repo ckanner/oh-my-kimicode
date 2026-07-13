@@ -2,7 +2,7 @@ import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import { buildIndex, loadIndex, saveIndex } from './indexer.js';
-import { search, relate, explore, files, callers, callees, impact } from './search.js';
+import { search, relate, explore, files, callers, callees, impact, node } from './search.js';
 import { VERSION } from '../../shared/version.js';
 import { getProjectDir } from '../../shared/env.js';
 
@@ -23,6 +23,7 @@ function startCodegraphServer() {
   server.setRequestHandler(ListToolsRequestSchema, async () => ({
     tools: [
       { name: 'codegraph_search', description: 'Structural code search', inputSchema: { type: 'object', properties: { query: { type: 'string' }, kind: { type: 'string' }, file: { type: 'string' } }, required: ['query'] } },
+      { name: 'codegraph_node', description: 'Inspect a symbol node, optionally including its source code', inputSchema: { type: 'object', properties: { symbol: { type: 'string' }, includeCode: { type: 'boolean' } }, required: ['symbol'] } },
       { name: 'codegraph_relate', description: 'Find symbols in files related to a symbol', inputSchema: { type: 'object', properties: { symbol: { type: 'string' } }, required: ['symbol'] } },
       { name: 'codegraph_reindex', description: 'Rebuild the CodeGraph index', inputSchema: { type: 'object', properties: {}, required: [] } },
       { name: 'codegraph_status', description: 'CodeGraph index status', inputSchema: { type: 'object', properties: {}, required: [] } },
@@ -40,6 +41,10 @@ function startCodegraphServer() {
       switch (req.params.name) {
         case 'codegraph_search': {
           const results = search(ensureIndex(), { query: args.query, kind: args.kind, file: args.file });
+          return { content: [{ type: 'text', text: JSON.stringify({ results }) }] };
+        }
+        case 'codegraph_node': {
+          const results = node(ensureIndex(), projectDir, args.symbol, args.includeCode);
           return { content: [{ type: 'text', text: JSON.stringify({ results }) }] };
         }
         case 'codegraph_relate': {

@@ -10,6 +10,7 @@ async function main() {
   const hookEventName =
     event === 'post-tool-use' ? 'PostToolUse' :
     event === 'post-compact' ? 'PostCompact' :
+    event === 'pre-compact' ? 'PreCompact' :
     event === 'user-prompt-submit' ? 'UserPromptSubmit' :
     'SessionStart';
   writeHookOutput({

@@ -1,9 +1,15 @@
 [
   {
     "event": "PostToolUse",
-    "matcher": "^(Write|Edit)$",
+    "matcher": "^(Write|Edit|apply_patch|multi_edit)$",
     "timeout": 60,
     "statusMessage": "(LazyKimiCode) Checking LSP Diagnostics"
+  },
+  {
+    "event": "PreCompact",
+    "matcher": ".*",
+    "timeout": 5,
+    "statusMessage": "(LazyKimiCode) Preparing LSP Diagnostics Cache"
   },
   {
     "event": "PostCompact",

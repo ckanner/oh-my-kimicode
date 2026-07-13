@@ -26,7 +26,7 @@ function getPluginRoot(): string {
   return path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'plugin');
 }
 
-function seedOmoConfig(options: InstallOptions): void {
+function seedLazyKimiCodeConfig(options: InstallOptions): void {
   if (options.dryRun) return;
   const dir = getConfigDir();
   fs.mkdirSync(dir, { recursive: true });
@@ -103,6 +103,37 @@ function recordMigrationState(version: string, dryRun = false): void {
   );
 }
 
+function recordInstalledPlugin(kimiCodeHome: string, cache: string, dryRun = false): void {
+  if (dryRun) return;
+  const installedPath = path.join(kimiCodeHome, 'plugins', 'installed.json');
+  let installed: { version: number; plugins: Array<Record<string, unknown>> } = { version: 1, plugins: [] };
+  if (fs.existsSync(installedPath)) {
+    try {
+      installed = JSON.parse(fs.readFileSync(installedPath, 'utf-8')) as typeof installed;
+    } catch {
+      installed = { version: 1, plugins: [] };
+    }
+  }
+  const plugins = installed.plugins.filter((p) => p.id !== 'lazykimicode');
+  plugins.push({
+    id: 'lazykimicode',
+    root: cache,
+    source: 'local-path',
+    enabled: true,
+    installedAt: new Date().toISOString(),
+    capabilities: {
+      mcpServers: {
+        codegraph: { enabled: true },
+        lsp: { enabled: true },
+        lsp_tools_mcp: { enabled: true },
+        git_bash: { enabled: process.platform === 'win32' },
+      },
+    },
+  });
+  fs.mkdirSync(path.dirname(installedPath), { recursive: true });
+  fs.writeFileSync(installedPath, JSON.stringify({ version: 1, plugins }, null, 2), 'utf-8');
+}
+
 async function recordInstallTelemetry(dryRun = false): Promise<void> {
   if (dryRun) return;
   if (isTelemetryDisabled()) return;
@@ -154,7 +185,7 @@ export async function runKimiInstaller(options: InstallOptions = {}): Promise<vo
     fs.mkdirSync(cache, { recursive: true });
     fs.cpSync(getPluginRoot(), cache, { recursive: true });
     linkManagedBins(cache, env.binDir);
-    seedOmoConfig(options);
+    seedLazyKimiCodeConfig(options);
   }
 
   const configPath = path.join(env.kimiCodeHome, 'config.toml');
@@ -169,6 +200,7 @@ export async function runKimiInstaller(options: InstallOptions = {}): Promise<vo
   }
 
   recordMigrationState(env.version, options.dryRun);
+  recordInstalledPlugin(env.kimiCodeHome, cache, options.dryRun);
 
   if (options.dryRun) {
     console.log('Dry run. Proposed changes:');
@@ -229,15 +261,31 @@ export async function runKimiUninstaller(options: UninstallOptions = {}): Promis
     console.log(`Removed plugin cache ${cacheParent}`);
   }
 
+  // Remove installed.json record.
+  const installedPath = path.join(env.kimiCodeHome, 'plugins', 'installed.json');
+  if (fs.existsSync(installedPath)) {
+    try {
+      const installed = JSON.parse(fs.readFileSync(installedPath, 'utf-8')) as { version: number; plugins: Array<{ id?: string }> };
+      const before = installed.plugins.length;
+      installed.plugins = installed.plugins.filter((p) => p.id !== 'lazykimicode');
+      if (installed.plugins.length !== before) {
+        fs.writeFileSync(installedPath, JSON.stringify(installed, null, 2), 'utf-8');
+        console.log(`Removed lazykimicode from ${installedPath}`);
+      }
+    } catch {
+      // Best-effort cleanup.
+    }
+  }
+
   // Remove bin links.
   unlinkManagedBins(env.binDir, fs.existsSync(cache) ? cache : undefined);
   console.log(`Removed managed binaries from ${env.binDir}`);
 
   if (!options.preserveRules) {
-    const omoDir = getConfigDir();
-    if (fs.existsSync(omoDir)) {
-      fs.rmSync(omoDir, { recursive: true, force: true });
-      console.log(`Removed user rules/config ${omoDir}`);
+    const lazyKimiCodeDir = getConfigDir();
+    if (fs.existsSync(lazyKimiCodeDir)) {
+      fs.rmSync(lazyKimiCodeDir, { recursive: true, force: true });
+      console.log(`Removed user rules/config ${lazyKimiCodeDir}`);
     }
   }
 

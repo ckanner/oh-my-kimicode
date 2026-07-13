@@ -5,7 +5,7 @@ type: prompt
 whenToUse: When starting work on a new or unfamiliar codebase and you need a thorough project overview captured as AGENTS.md.
 ---
 
-## OMO Kimi K2.7 Orchestration Calibration
+## LazyKimiCode K2.7 Orchestration Calibration
 
 The following calibrations are inherited from Oh My OpenAgent's Kimi K2.7-native agent prompts. They govern how this skill behaves when running on Kimi K2.7 inside Kimi Code CLI. Tool names in these blocks that are not Kimi-native (`task()`, `background_output`, and other historical agent-runtime helpers) should be mapped to Kimi Code equivalents as described in the **Kimi Code Harness Compatibility** section of this skill.
 

@@ -5,7 +5,7 @@ type: prompt
 whenToUse: "Use whenever you are writing or modifying any .py, .pyi, .rs, .ts, .tsx, .mts, .cts, .go file, or any related project manifest (pyproject.toml, Cargo.toml, package.json, tsconfig.json, biome.json, go.mod, go.sum, .golangci.yml, Taskfile.yml, buf.yaml, sqlc.yaml). Also use when the user asks for new projects, servers, TUI apps, RPC services, database work, logging/observability, refactoring, TDD, or code review."
 ---
 
-## OMO Kimi K2.7 Orchestration Calibration
+## LazyKimiCode K2.7 Orchestration Calibration
 
 The following calibrations are inherited from Oh My OpenAgent's Kimi K2.7-native agent prompts. They govern how this skill behaves when running on Kimi K2.7 inside Kimi Code CLI. Tool names in these blocks that are not Kimi-native (`task()`, `background_output`, and other historical agent-runtime helpers) should be mapped to Kimi Code equivalents as described in the **Kimi Code Harness Compatibility** section of this skill.
 

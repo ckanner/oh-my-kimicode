@@ -59,6 +59,31 @@ export interface CallerInfo {
   symbols: Symbol[];
 }
 
+export interface NodeResult {
+  symbol: Symbol;
+  code?: string;
+}
+
+export function node(index: CodeGraphIndex, projectDir: string, symbolName: string, includeCode = false): NodeResult[] {
+  const targets = search(index, { query: symbolName });
+  return targets.map((symbol) => {
+    if (!includeCode) return { symbol };
+    const full = path.join(projectDir, symbol.file);
+    let code: string | undefined;
+    try {
+      const content = fs.readFileSync(full, 'utf-8');
+      const lines = content.split('\n');
+      // Extract a small window around the symbol's declared line.
+      const start = Math.max(0, (symbol.line ?? 1) - 1 - 3);
+      const end = Math.min(lines.length, (symbol.line ?? 1) + 3);
+      code = lines.slice(start, end).join('\n');
+    } catch {
+      code = undefined;
+    }
+    return { symbol, code };
+  });
+}
+
 export function callers(index: CodeGraphIndex, projectDir: string, symbolName: string): CallerInfo[] {
   const targets = search(index, { query: symbolName });
   if (!targets.length) return [];

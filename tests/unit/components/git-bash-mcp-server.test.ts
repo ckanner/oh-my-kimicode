@@ -66,6 +66,51 @@ describe('git-bash mcp-server findBashPath', () => {
   });
 });
 
+describe('git-bash timeout defaults', () => {
+  afterEach(() => {
+    delete process.env.LAZYKIMICODE_GIT_BASH_TIMEOUT_MS;
+    delete process.env.LAZYKIMICODE_EXEC_COMMAND_TIMEOUT_MS;
+  });
+
+  it('defaults run to 120000 and git_bash to 0', async () => {
+    vi.resetModules();
+    const { getDefaultTimeoutMs } = await import(modulePath);
+    expect(getDefaultTimeoutMs('run')).toBe(120000);
+    expect(getDefaultTimeoutMs('git_bash')).toBe(0);
+  });
+
+  it('reads LAZYKIMICODE_GIT_BASH_TIMEOUT_MS', async () => {
+    process.env.LAZYKIMICODE_GIT_BASH_TIMEOUT_MS = '30000';
+    vi.resetModules();
+    const { getDefaultTimeoutMs } = await import(modulePath);
+    expect(getDefaultTimeoutMs('run')).toBe(30000);
+    expect(getDefaultTimeoutMs('git_bash')).toBe(30000);
+  });
+
+  it('reads LAZYKIMICODE_EXEC_COMMAND_TIMEOUT_MS as fallback', async () => {
+    process.env.LAZYKIMICODE_EXEC_COMMAND_TIMEOUT_MS = '60000';
+    vi.resetModules();
+    const { getDefaultTimeoutMs } = await import(modulePath);
+    expect(getDefaultTimeoutMs('run')).toBe(60000);
+    expect(getDefaultTimeoutMs('git_bash')).toBe(60000);
+  });
+
+  it('prefers LAZYKIMICODE_GIT_BASH_TIMEOUT_MS over fallback', async () => {
+    process.env.LAZYKIMICODE_GIT_BASH_TIMEOUT_MS = '45000';
+    process.env.LAZYKIMICODE_EXEC_COMMAND_TIMEOUT_MS = '60000';
+    vi.resetModules();
+    const { getDefaultTimeoutMs } = await import(modulePath);
+    expect(getDefaultTimeoutMs('run')).toBe(45000);
+  });
+
+  it('ignores invalid env values', async () => {
+    process.env.LAZYKIMICODE_GIT_BASH_TIMEOUT_MS = 'not-a-number';
+    vi.resetModules();
+    const { getDefaultTimeoutMs } = await import(modulePath);
+    expect(getDefaultTimeoutMs('run')).toBe(120000);
+  });
+});
+
 describe('git-bash mcp-server entry', () => {
   it('initializes and lists git-bash tools', () => {
     const result = spawnSync('node', [SERVER], {

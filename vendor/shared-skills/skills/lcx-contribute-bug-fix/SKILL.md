@@ -1,11 +1,11 @@
 ---
 name: lcx-contribute-bug-fix
-description: "Contribute a verified bug fix for Oh My KimiCode, lazykimicode, bundled Kimi skills, hooks, MCP wiring, installer, marketplace sync, docs, packaging, or upstream Kimi Code CLI bugs. Opens a fork PR only for MoonshotAI/kimi-code; Oh My KimiCode-owned defects become a verified-fix issue on ckanner/lazykimicode (never a PR — that repo is a generated distribution mirror). Use when the user asks to fix a bug, contribute a bug fix, contribute to fix bug, open a PR for a bug, or debug and PR an Oh My KimiCode / Kimi Code CLI defect."
+description: "Contribute a verified bug fix for LazyKimiCode, lazykimicode, bundled Kimi skills, hooks, MCP wiring, installer, marketplace sync, docs, packaging, or upstream Kimi Code CLI bugs. Opens a fork PR only for MoonshotAI/kimi-code; LazyKimiCode-owned defects become a verified-fix issue on ckanner/lazykimicode (never a PR — that repo is a generated distribution mirror). Use when the user asks to fix a bug, contribute a bug fix, contribute to fix bug, open a PR for a bug, or debug and PR an LazyKimiCode / Kimi Code CLI defect."
 type: prompt
-whenToUse: When the user asks to fix a bug, contribute a bug fix, open a PR for a bug, or debug and PR an Oh My KimiCode or Kimi Code CLI defect.
+whenToUse: When the user asks to fix a bug, contribute a bug fix, open a PR for a bug, or debug and PR an LazyKimiCode or Kimi Code CLI defect.
 ---
 
-## OMO Kimi K2.7 Orchestration Calibration
+## LazyKimiCode K2.7 Orchestration Calibration
 
 The following calibrations are inherited from Oh My OpenAgent's Kimi K2.7-native agent prompts. They govern how this skill behaves when running on Kimi K2.7 inside Kimi Code CLI. Tool names in these blocks that are not Kimi-native (`task()`, `background_output`, and other historical agent-runtime helpers) should be mapped to Kimi Code equivalents as described in the **Kimi Code Harness Compatibility** section of this skill.
 
@@ -73,12 +73,12 @@ Never ask the user "should I continue", "proceed to the next task", or any appro
 
 # lcx-contribute-bug-fix
 
-Use this skill to debug a concrete Oh My KimiCode or Kimi Code CLI defect, implement the smallest correct fix in a fresh temporary workspace, and deliver it. Work in English, keep the body short, and support every claim with runtime or source evidence.
+Use this skill to debug a concrete LazyKimiCode or Kimi Code CLI defect, implement the smallest correct fix in a fresh temporary workspace, and deliver it. Work in English, keep the body short, and support every claim with runtime or source evidence.
 
 Route ownership the same way as `$lcx-report-bug`, but the deliverable differs by target:
 
-- `ckanner/lazykimicode` for Oh My KimiCode, lazykimicode, bundled skills, hooks, MCP wiring, installer behavior, marketplace sync, docs, or packaging. Deliverable: a verified-fix issue with the patch embedded. NEVER open a PR or push a branch against this repo — its contents are regenerated from the source tree on every release, so PRs there cannot be merged and will be closed.
-- `MoonshotAI/kimi-code` for upstream Kimi Code CLI bugs that reproduce without Oh My KimiCode or come from Kimi Code core behavior. Deliverable: a PR from a fork.
+- `ckanner/lazykimicode` for LazyKimiCode, lazykimicode, bundled skills, hooks, MCP wiring, installer behavior, marketplace sync, docs, or packaging. Deliverable: a verified-fix issue with the patch embedded. NEVER open a PR or push a branch against this repo — its contents are regenerated from the source tree on every release, so PRs there cannot be merged and will be closed.
+- `MoonshotAI/kimi-code` for upstream Kimi Code CLI bugs that reproduce without LazyKimiCode or come from Kimi Code core behavior. Deliverable: a PR from a fork.
 
 ## Required Outcome
 
@@ -89,7 +89,7 @@ For `MoonshotAI/kimi-code`, create a fork PR that includes:
 - the smallest implementation that fixes the defect
 - verification logs from after the fix
 - apply `lazykimicode-generated` when label management is available
-- the required Oh My KimiCode footer tag `Tag: lazykimicode-generated`
+- the required LazyKimiCode footer tag `Tag: lazykimicode-generated`
 - cleanup of temporary worktrees and clones
 
 For `ckanner/lazykimicode`, create an issue (never a PR) that includes:
@@ -105,11 +105,11 @@ For `ckanner/lazykimicode`, create an issue (never a PR) that includes:
 
 1. Read the user's bug report and identify the affected surface.
 2. Invoke the `$debugging` skill for the investigation. If the skill namespace requires qualification, invoke it as `$debugging` and state that it is the lazykimicode debugging skill.
-3. Materialize the latest sources under `OH_MY_KIMICODE_SOURCE_ROOT="${OH_MY_KIMICODE_SOURCE_ROOT:-${TMPDIR:-/tmp}/lazykimicode-sources}"`, then decide the target repository. Use `Agent(subagent_type="explore")` to compare the two checkouts when ownership is ambiguous. Sync both checkouts on every run and compare them before choosing. Validate cached checkouts before reuse so an incomplete `.git` directory cannot route the fix to the wrong repo:
+3. Materialize the latest sources under `LAZYKIMICODE_SOURCE_ROOT="${LAZYKIMICODE_SOURCE_ROOT:-${TMPDIR:-/tmp}/lazykimicode-sources}"`, then decide the target repository. Use `Agent(subagent_type="explore")` to compare the two checkouts when ownership is ambiguous. Sync both checkouts on every run and compare them before choosing. Validate cached checkouts before reuse so an incomplete `.git` directory cannot route the fix to the wrong repo:
 
 ```bash
-OH_MY_KIMICODE_SOURCE_ROOT="${OH_MY_KIMICODE_SOURCE_ROOT:-${TMPDIR:-/tmp}/lazykimicode-sources}"
-mkdir -p "$OH_MY_KIMICODE_SOURCE_ROOT"
+LAZYKIMICODE_SOURCE_ROOT="${LAZYKIMICODE_SOURCE_ROOT:-${TMPDIR:-/tmp}/lazykimicode-sources}"
+mkdir -p "$LAZYKIMICODE_SOURCE_ROOT"
 
 valid_source_checkout() {
   DEST="$1"
@@ -149,8 +149,8 @@ sync_latest_source() {
   git -C "$DEST" fetch --depth=1 origin "$DEFAULT_BRANCH"
   git -C "$DEST" checkout -B "$DEFAULT_BRANCH" FETCH_HEAD
 }
-sync_latest_source ckanner/lazykimicode "$OH_MY_KIMICODE_SOURCE_ROOT/lazykimicode-source"
-sync_latest_source MoonshotAI/kimi-code "$OH_MY_KIMICODE_SOURCE_ROOT/kimi-code-source"
+sync_latest_source ckanner/lazykimicode "$LAZYKIMICODE_SOURCE_ROOT/lazykimicode-source"
+sync_latest_source MoonshotAI/kimi-code "$LAZYKIMICODE_SOURCE_ROOT/kimi-code-source"
 ```
 
 4. Create a fresh temporary clone and branch under `${TMPDIR:-/tmp}`. Do not modify the user's current repository for the target fix unless the current repository is itself the requested target and the user explicitly asked for local edits. Use `Agent(subagent_type="coder")` to carry out the implementation inside the worktree.
@@ -195,7 +195,7 @@ git diff "origin/$BASE_BRANCH"..HEAD > "$PATCH_FILE"
 
 ```bash
 LABEL_ARGS=()
-if gh label create lazykimicode-generated --repo "$TARGET_REPO" --color "7C3AED" --description "Created by Oh My KimiCode" --force; then
+if gh label create lazykimicode-generated --repo "$TARGET_REPO" --color "7C3AED" --description "Created by LazyKimiCode" --force; then
   LABEL_ARGS=(--label lazykimicode-generated)
 else
   echo "Label management unavailable for $TARGET_REPO; keeping the footer tag only."
@@ -257,7 +257,7 @@ Write the issue body in English. Embed the patch verbatim so a maintainer can ap
 - [Manual QA command and result]
 
 ---
-This fix was debugged, implemented, and verified with [Oh My KimiCode](https://github.com/ckanner/lazykimicode).
+This fix was debugged, implemented, and verified with [LazyKimiCode](https://github.com/ckanner/lazykimicode).
 Tag: lazykimicode-generated
 ````
 
@@ -318,7 +318,7 @@ The generated body must follow this structure:
 - [Manual QA command and result]
 
 ---
-This PR was debugged, implemented, and created with [Oh My KimiCode](https://github.com/ckanner/lazykimicode).
+This PR was debugged, implemented, and created with [LazyKimiCode](https://github.com/ckanner/lazykimicode).
 Tag: lazykimicode-generated
 ```
 
@@ -348,7 +348,7 @@ When translating `load_skills=[...]`, name the skills inside the agent prompt. K
 Stop and ask one narrow question only when:
 
 - the bug cannot be reproduced from available information
-- target repository ownership remains ambiguous after comparing Oh My KimiCode and upstream Kimi Code evidence
+- target repository ownership remains ambiguous after comparing LazyKimiCode and upstream Kimi Code evidence
 - authentication is missing for creating the issue or pushing and creating the PR
 - the fix requires a product decision rather than a technical correction
 

@@ -44,6 +44,9 @@
       "cwd": "./"
     }
   },
+  "homepage": "https://github.com/ckanner/lazykimicode",
+  "license": "MIT",
+  "author": "Sisyphus Labs",
   "interface": {
     "displayName": "LazyKimiCode",
     "shortDescription": "LazyKimiCode agent harness for Kimi Code CLI",

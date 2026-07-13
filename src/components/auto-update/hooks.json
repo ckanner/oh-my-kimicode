@@ -1,0 +1,8 @@
+[
+  {
+    "event": "SessionStart",
+    "matcher": "^startup$",
+    "timeout": 10,
+    "statusMessage": "(LazyKimiCode) Checking for updates"
+  }
+]

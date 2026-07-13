@@ -1,9 +1,9 @@
 import { readCache, writeCache, runDiagnostics, createTransport } from './diagnostics.js';
 import { writeHookOutput } from '../../shared/serialize.js';
 import { pathToFileURL } from 'node:url';
-import { parseLspArgs } from './args.js';
 import { normalizeHookPayload } from '../../shared/payload.js';
-import { getEnv, getProjectDir } from '../../shared/env.js';
+import { getProjectDir } from '../../shared/env.js';
+import { resolveLspCommand, resolveLspArgs } from './config.js';
 
 async function main() {
   const event = process.argv[3];
@@ -12,6 +12,10 @@ async function main() {
   if (event === 'post-compact') {
     writeCache(projectDir, []);
     writeHookOutput({ hookSpecificOutput: { hookEventName: 'PostCompact' } });
+    return;
+  }
+  if (event === 'pre-compact') {
+    writeHookOutput({ hookSpecificOutput: { hookEventName: 'PreCompact' } });
     return;
   }
   let raw = '';
@@ -24,8 +28,8 @@ async function main() {
   for (const f of files) cached.add(f);
   writeCache(projectDir, [...cached]);
 
-  const lspCommand = getEnv('LSP_COMMAND');
-  const lspArgs = getEnv('LSP_ARGS') ? parseLspArgs(getEnv('LSP_ARGS')!) : [];
+  const lspCommand = resolveLspCommand();
+  const lspArgs = resolveLspArgs();
   const transport = lspCommand ? createTransport(lspCommand, lspArgs, projectDir) : undefined;
 
   const all: string[] = [];

@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { getProjectDir } from '../../shared/env.js';
+import { findServerById, listServerIds } from './server-catalog.js';
 
 export type InstallDecision = 'declined' | 'allowed';
 
@@ -42,6 +43,13 @@ export function recordInstallDecision(
 
 export function isInstallDecision(value: unknown): value is InstallDecision {
   return value === 'declined' || value === 'allowed';
+}
+
+export function validateInstallDecisionServerId(serverId: string): string | undefined {
+  if (findServerById(serverId)) return undefined;
+  const known = listServerIds();
+  const preview = known.slice(0, 20).join(', ');
+  return `Unknown LSP server '${serverId}'. Known servers: ${preview}${known.length > 20 ? '...' : ''}`;
 }
 
 function writeInstallDecisions(decisions: InstallDecisions): void {

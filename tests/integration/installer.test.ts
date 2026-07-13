@@ -108,7 +108,17 @@ describe('installer integration', () => {
     expect(config).toContain('context7');
   });
 
-  it('uninstall removes hooks and cache', async () => {
+  it('registers the plugin in installed.json', async () => {
+    await runKimiInstaller({ kimiCodeHome: tmpDir });
+    const installedPath = path.join(tmpDir, 'plugins', 'installed.json');
+    expect(fs.existsSync(installedPath)).toBe(true);
+    const installed = JSON.parse(fs.readFileSync(installedPath, 'utf-8')) as { version: number; plugins: Array<{ id: string; enabled: boolean }> };
+    const record = installed.plugins.find((p) => p.id === 'lazykimicode');
+    expect(record).toBeDefined();
+    expect(record!.enabled).toBe(true);
+  });
+
+  it('uninstall removes hooks, cache, and installed.json record', async () => {
     await runKimiInstaller({ kimiCodeHome: tmpDir, binDir: path.join(tmpDir, 'bin') });
 
     await runKimiUninstaller({ kimiCodeHome: tmpDir, binDir: path.join(tmpDir, 'bin') });
@@ -116,6 +126,8 @@ describe('installer integration', () => {
     const config = fs.readFileSync(path.join(tmpDir, 'config.toml'), 'utf-8');
     expect(config).not.toContain('lazykimicode');
     expect(fs.existsSync(path.join(tmpDir, 'plugins', 'cache', 'lazykimicode'))).toBe(false);
+    const installed = JSON.parse(fs.readFileSync(path.join(tmpDir, 'plugins', 'installed.json'), 'utf-8')) as { plugins: Array<{ id: string }> };
+    expect(installed.plugins.some((p) => p.id === 'lazykimicode')).toBe(false);
   });
 
   it('uninstall preserves rules with --preserve-rules', async () => {

@@ -5,7 +5,7 @@ type: prompt
 whenToUse: "When the user explicitly invokes exhaustive research: 'ulw-research', '/ulw-research', '$ulw-research', 'ultraresearch', '/ultraresearch', '$ultraresearch', any 'ulw' research wording, or an explicit request for deep / ultra-precise research, in any language."
 ---
 
-## OMO Kimi K2.7 Orchestration Calibration
+## LazyKimiCode K2.7 Orchestration Calibration
 
 The following calibrations are inherited from Oh My OpenAgent's Kimi K2.7-native agent prompts. They govern how this skill behaves when running on Kimi K2.7 inside Kimi Code CLI. Tool names in these blocks that are not Kimi-native (`task()`, `background_output`, and other historical agent-runtime helpers) should be mapped to Kimi Code equivalents as described in the **Kimi Code Harness Compatibility** section of this skill.
 
@@ -187,7 +187,7 @@ Codebase relevant: <yes/no> · External: <yes/no> · Browsing: <yes/no> · Verif
 Then create the session directory:
 
 ```bash
-mkdir -p .omo/ulw-research/$(date +%Y%m%d-%H%M%S)
+mkdir -p .lazykimicode/ulw-research/$(date +%Y%m%d-%H%M%S)
 ```
 
 This is `$SESSION_DIR`. The orchestrator owns the journal: you write every file in it; workers never do. Maintain:

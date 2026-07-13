@@ -1,0 +1,8 @@
+[
+  {
+    "event": "PostToolUse",
+    "matcher": "^(create_thread|codex_app\\.create_thread)$",
+    "timeout": 5,
+    "statusMessage": "(LazyKimiCode) Checking thread title"
+  }
+]

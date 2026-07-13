@@ -13,9 +13,15 @@
   },
   {
     "event": "PostToolUse",
-    "matcher": "^(Write|Edit)$",
+    "matcher": "^(Write|Edit|apply_patch|multi_edit)$",
     "timeout": 30,
     "statusMessage": "(LazyKimiCode) Matching project rules"
+  },
+  {
+    "event": "PreCompact",
+    "matcher": ".*",
+    "timeout": 5,
+    "statusMessage": "(LazyKimiCode) Preparing project rule cache"
   },
   {
     "event": "PostCompact",

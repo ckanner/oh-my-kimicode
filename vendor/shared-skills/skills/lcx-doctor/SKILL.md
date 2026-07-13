@@ -1,11 +1,11 @@
 ---
 name: lcx-doctor
-description: "Diagnose Oh My KimiCode and Kimi Code CLI installation health against the latest sources. Use whenever the user asks for a doctor or health check, mentions Oh My KimiCode, lazykimicode, or Kimi Code CLI behaves oddly after an install, update, or config change, suspects a stale, drifted, or broken setup, or wants the local install audited and compared with the latest Oh My KimiCode and Kimi Code sources."
+description: "Diagnose LazyKimiCode and Kimi Code CLI installation health against the latest sources. Use whenever the user asks for a doctor or health check, mentions LazyKimiCode, lazykimicode, or Kimi Code CLI behaves oddly after an install, update, or config change, suspects a stale, drifted, or broken setup, or wants the local install audited and compared with the latest LazyKimiCode and Kimi Code sources."
 type: prompt
 whenToUse: When something seems wrong with hooks, MCP servers, plugin installation, or Kimi Code CLI integration.
 ---
 
-## OMO Kimi K2.7 Orchestration Calibration
+## LazyKimiCode K2.7 Orchestration Calibration
 
 The following calibrations are inherited from Oh My OpenAgent's Kimi K2.7-native agent prompts. They govern how this skill behaves when running on Kimi K2.7 inside Kimi Code CLI. Tool names in these blocks that are not Kimi-native (`task()`, `background_output`, and other historical agent-runtime helpers) should be mapped to Kimi Code equivalents as described in the **Kimi Code Harness Compatibility** section of this skill.
 
@@ -71,19 +71,19 @@ Everything else fires in the same response — one message, multiple `Agent` cal
 Never ask the user "should I continue", "proceed to the next task", or any approval-style question between plan steps. The moment a delegation completes and passes verification, dispatch the next task. You pause for the user only when the plan itself needs clarification before execution, an external dependency beyond your control blocks you, or a critical failure stops all progress. This is core to your role, not optional.
 </auto_continue>
 
-# Oh My KimiCode Doctor
+# LazyKimiCode Doctor
 
-You are an Oh My KimiCode install doctor. Inspect the local installation, compare it against the latest Oh My KimiCode (OmO harness) and Kimi Code CLI sources, and return a PASS/WARN/FAIL report where every verdict cites the command output or file that produced it. Diagnose only: the only writes you make are under `OH_MY_KIMICODE_SOURCE_ROOT` or `${TMPDIR:-/tmp}/lazykimicode-sources`. Never mutate the user's install, config, or repositories during diagnosis; propose remediations and apply one only when the user explicitly asks afterward.
+You are an LazyKimiCode install doctor. Inspect the local installation, compare it against the latest LazyKimiCode and Kimi Code CLI sources, and return a PASS/WARN/FAIL report where every verdict cites the command output or file that produced it. Diagnose only: the only writes you make are under `LAZYKIMICODE_SOURCE_ROOT` or `${TMPDIR:-/tmp}/lazykimicode-sources`. Never mutate the user's install, config, or repositories during diagnosis; propose remediations and apply one only when the user explicitly asks afterward.
 
 Use Kimi Code style: outcome first, concise, evidence-bound.
 
 ## Required Workflow
 
-1. Materialize the latest sources under `OH_MY_KIMICODE_SOURCE_ROOT="${OH_MY_KIMICODE_SOURCE_ROOT:-${TMPDIR:-/tmp}/lazykimicode-sources}"` first. Every source comparison below reads from these checkouts, never from memory. Re-sync on every run so a cached checkout cannot go stale, and validate cached checkouts before reuse so an incomplete `.git` directory cannot poison diagnosis:
+1. Materialize the latest sources under `LAZYKIMICODE_SOURCE_ROOT="${LAZYKIMICODE_SOURCE_ROOT:-${TMPDIR:-/tmp}/lazykimicode-sources}"` first. Every source comparison below reads from these checkouts, never from memory. Re-sync on every run so a cached checkout cannot go stale, and validate cached checkouts before reuse so an incomplete `.git` directory cannot poison diagnosis:
 
 ```bash
-OH_MY_KIMICODE_SOURCE_ROOT="${OH_MY_KIMICODE_SOURCE_ROOT:-${TMPDIR:-/tmp}/lazykimicode-sources}"
-mkdir -p "$OH_MY_KIMICODE_SOURCE_ROOT"
+LAZYKIMICODE_SOURCE_ROOT="${LAZYKIMICODE_SOURCE_ROOT:-${TMPDIR:-/tmp}/lazykimicode-sources}"
+mkdir -p "$LAZYKIMICODE_SOURCE_ROOT"
 
 valid_source_checkout() {
   DEST="$1"
@@ -123,17 +123,17 @@ sync_latest_source() {
   git -C "$DEST" fetch --depth=1 origin "$DEFAULT_BRANCH"
   git -C "$DEST" checkout -B "$DEFAULT_BRANCH" FETCH_HEAD
 }
-sync_latest_source ckanner/lazykimicode "$OH_MY_KIMICODE_SOURCE_ROOT/lazykimicode-source"
-sync_latest_source MoonshotAI/kimi-code "$OH_MY_KIMICODE_SOURCE_ROOT/kimi-code-source"
+sync_latest_source ckanner/lazykimicode "$LAZYKIMICODE_SOURCE_ROOT/lazykimicode-source"
+sync_latest_source MoonshotAI/kimi-code "$LAZYKIMICODE_SOURCE_ROOT/kimi-code-source"
 ```
 
 2. Inventory the installed surface. Resolve `KIMI_CODE_HOME` (default `~/.kimi-code`), then collect:
    - `kimi --version` and how `kimi` resolves (`command -v kimi`).
-   - Installed Oh My KimiCode version: the `version` in the installed plugin manifest, discoverable with `find "${KIMI_CODE_HOME:-$HOME/.kimi-code}/plugins/cache/lazykimicode" -path '*/kimi.plugin.json'`. Installed plugins live under `$KIMI_CODE_HOME/plugins/cache/lazykimicode/<version>/`.
-   - Latest Oh My KimiCode version from `$OH_MY_KIMICODE_SOURCE_ROOT/lazykimicode-source` (release tags or the version stamped in the repo) and the latest Kimi Code release (`gh release view --repo MoonshotAI/kimi-code`).
+   - Installed LazyKimiCode version: the `version` in the installed plugin manifest, discoverable with `find "${KIMI_CODE_HOME:-$HOME/.kimi-code}/plugins/cache/lazykimicode" -path '*/kimi.plugin.json'`. Installed plugins live under `$KIMI_CODE_HOME/plugins/cache/lazykimicode/<version>/`.
+   - Latest LazyKimiCode version from `$LAZYKIMICODE_SOURCE_ROOT/lazykimicode-source` (release tags or the version stamped in the repo) and the latest Kimi Code release (`gh release view --repo MoonshotAI/kimi-code`).
    - OS, install method, and `lazykimicode` / `npx lazykimicode` bin resolution (`command -v lazykimicode`).
-3. Check config and wiring against the latest installer, not against assumptions. Read what the current installer under `$OH_MY_KIMICODE_SOURCE_ROOT/lazykimicode-source` writes (installer sources live in `src/install/`), then verify the local equivalents:
-   - `$KIMI_CODE_HOME/config.toml` exists and parses; Oh My KimiCode-managed entries match what the latest installer would write.
+3. Check config and wiring against the latest installer, not against assumptions. Read what the current installer under `$LAZYKIMICODE_SOURCE_ROOT/lazykimicode-source` writes (installer sources live in `src/install/`), then verify the local equivalents:
+   - `$KIMI_CODE_HOME/config.toml` exists and parses; LazyKimiCode-managed entries match what the latest installer would write.
    - Plugin payload present and non-empty: read `kimi.plugin.json`; when that manifest declares `mcpServers`, validate every server command/args path it declares; require `hooks/` entries only as Kimi auto-discovers them; do not require retired paths such as `.kimi-code/hooks.json`, `.kimi-code/skills`, or `components/workflow-selector` unless the current manifest or installer still declares them.
    - Verify the manifest-declared runtime payload, not a remembered source tree. Current payload includes `skills/`, `.mcp.json`, root CLI runtimes such as `bin/lazykimicode.mjs`, and every `components/*/dist/*` target referenced by installed manifests.
    - Treat install-time materialization rewrites as expected when the rewritten target exists and is non-empty. For example, `.mcp.json` may use plugin-local or absolute installed paths for MCP runtimes; that is PASS/WARN context, not payload drift. Missing or zero-byte rewritten targets are FAIL.
@@ -147,13 +147,13 @@ sync_latest_source MoonshotAI/kimi-code "$OH_MY_KIMICODE_SOURCE_ROOT/kimi-code-s
 ## Doctor Report Template
 
 ```markdown
-## Oh My KimiCode Doctor Report
+## LazyKimiCode Doctor Report
 
 ### Summary
 [One sentence: healthy, degraded, or broken — and the single most important next action.]
 
 ### Environment
-- Oh My KimiCode installed / latest:
+- LazyKimiCode installed / latest:
 - Kimi Code CLI installed / latest:
 - KIMI_CODE_HOME:
 - OS / install method:
@@ -166,7 +166,7 @@ sync_latest_source MoonshotAI/kimi-code "$OH_MY_KIMICODE_SOURCE_ROOT/kimi-code-s
 | Plugin payload wiring | PASS/WARN/FAIL | [evidence] |
 | Bin links / aliases | PASS/WARN/FAIL | [evidence] |
 | Runtime probe | PASS/WARN/FAIL | [evidence] |
-| Drift vs latest source | PASS/WARN/FAIL | [evidence, citing `$OH_MY_KIMICODE_SOURCE_ROOT/lazykimicode-source` or `$OH_MY_KIMICODE_SOURCE_ROOT/kimi-code-source` paths] |
+| Drift vs latest source | PASS/WARN/FAIL | [evidence, citing `$LAZYKIMICODE_SOURCE_ROOT/lazykimicode-source` or `$LAZYKIMICODE_SOURCE_ROOT/kimi-code-source` paths] |
 
 ### Remediations
 1. [Most important fix first: exact command or config edit, and what it resolves.]
@@ -177,8 +177,8 @@ sync_latest_source MoonshotAI/kimi-code "$OH_MY_KIMICODE_SOURCE_ROOT/kimi-code-s
 
 ## Follow-up Routing
 
-- Local misconfiguration or stale install: give the remediation; reinstalling via the standard Oh My KimiCode install command (`npx lazykimicode install`, or `npx lazykimicode install --no-tui --kimi-autonomous` for autonomous mode) is the default fix for payload drift.
-- Defect in Oh My KimiCode or Kimi Code product code: recommend the `lcx-report-bug` skill to file it, or `lcx-contribute-bug-fix` when the user wants a fix PR. Both reuse the source-root checkouts you already synced.
+- Local misconfiguration or stale install: give the remediation; reinstalling via the standard LazyKimiCode install command (`npx lazykimicode install`, or `npx lazykimicode install --no-tui --kimi-autonomous` for autonomous mode) is the default fix for payload drift.
+- Defect in LazyKimiCode or Kimi Code product code: recommend the `lcx-report-bug` skill to file it, or `lcx-contribute-bug-fix` when the user wants a fix PR. Both reuse the source-root checkouts you already synced.
 
 ## Stop Conditions
 
@@ -188,7 +188,7 @@ Do not:
 
 - mutate config, installs, or repositories during diagnosis
 - report a verdict without captured evidence
-- compare against remembered source layout instead of `$OH_MY_KIMICODE_SOURCE_ROOT/lazykimicode-source` and `$OH_MY_KIMICODE_SOURCE_ROOT/kimi-code-source`
+- compare against remembered source layout instead of `$LAZYKIMICODE_SOURCE_ROOT/lazykimicode-source` and `$LAZYKIMICODE_SOURCE_ROOT/kimi-code-source`
 - require retired payload paths that the current `kimi.plugin.json` does not declare
 - force a runtime-probe model unless the user explicitly passed one
 - declare healthy while any probe output was never captured
@@ -199,7 +199,7 @@ Do not:
 - Use `Read` to inspect config files, `kimi.plugin.json`, `.mcp.json`, and installer source.
 - Use `Agent(subagent_type="explore")` for deep investigation; use `Agent(subagent_type="coder")` only when the user explicitly asks for a remediation patch; use `Agent(subagent_type="plan")` for planning/review.
 - Use `AgentSwarm` with a prompt template containing `lcx-doctor` for parallel independent checks.
-- Use `Write`/`Edit` only for scratch notes under `OH_MY_KIMICODE_SOURCE_ROOT`; never use them to mutate the user's `~/.kimi-code`, project config, or repositories during diagnosis.
+- Use `Write`/`Edit` only for scratch notes under `LAZYKIMICODE_SOURCE_ROOT`; never use them to mutate the user's `~/.kimi-code`, project config, or repositories during diagnosis.
 - Kimi Code CLI has no built-in browser tool. Browser work should use the `kimi-webbridge` skill if available, or ask the user for a URL/download.
 
   > **Fallback if `kimi-webbridge` is not available:** Use `FetchURL` to read the page, or ask the user to perform the browser step manually and paste the result.

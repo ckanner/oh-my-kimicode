@@ -100,11 +100,11 @@ export class LspClient {
     return (msg as { result?: unknown }).result;
   }
 
-  async findReferences(uri: string, position: Position): Promise<unknown> {
+  async findReferences(uri: string, position: Position, includeDeclaration = true): Promise<unknown> {
     const msg = await this.request('textDocument/references', {
       textDocument: { uri },
       position,
-      context: { includeDeclaration: true },
+      context: { includeDeclaration },
     });
     return (msg as { result?: unknown }).result;
   }

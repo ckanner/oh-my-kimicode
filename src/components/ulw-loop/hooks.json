@@ -7,7 +7,7 @@
   },
   {
     "event": "PreToolUse",
-    "matcher": "^CreateGoal$",
+    "matcher": "^(CreateGoal|create_goal)$",
     "timeout": 10,
     "statusMessage": "(LazyKimiCode) Enforcing Unlimited Goal Budget"
   }

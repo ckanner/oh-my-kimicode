@@ -217,15 +217,67 @@ describe(
       jsonrpc: '2.0',
       id: 4,
       method: 'tools/call',
-      params: { name: 'lsp_install_decision', arguments: { server_id: 'typescript', decision: 'allowed' } },
+      params: { name: 'lsp_install_decision', arguments: { server_id: 'typescript-language-server', decision: 'allowed' } },
     });
     const messages = await pending;
     const response = messages.find((m) => m.id === 4);
     expect(response).toBeDefined();
     const text = (response!.result as { content: Array<{ text: string }> }).content[0].text;
     const parsed = JSON.parse(text);
-    expect(parsed.serverId).toBe('typescript');
+    expect(parsed.serverId).toBe('typescript-language-server');
     expect(parsed.decision).toBe('allowed');
     expect(fs.existsSync(path.join(projectDir, '.lazykimicode', 'lsp-install-decisions.json'))).toBe(true);
+  });
+
+  it('rejects unknown server_id for lsp_install_decision', async () => {
+    const projectDir = fs.mkdtempSync(path.join(tmp, 'project-'));
+    proc = spawn(process.execPath, [DAEMON], {
+      env: {
+        ...process.env,
+        LAZYKIMICODE_PROJECT: projectDir,
+      },
+    });
+    const pending = readMessages(proc, [5]);
+    writeMessage(proc, {
+      jsonrpc: '2.0',
+      id: 5,
+      method: 'tools/call',
+      params: { name: 'lsp_install_decision', arguments: { server_id: 'totally-unknown-server', decision: 'allowed' } },
+    });
+    const messages = await pending;
+    const response = messages.find((m) => m.id === 5);
+    expect(response).toBeDefined();
+    const text = (response!.result as { content: Array<{ text: string }> }).content[0].text;
+    expect(JSON.parse(text).error).toContain('Unknown LSP server');
+  });
+
+  it('returns richer lsp_status when configured', async () => {
+    const projectDir = fs.mkdtempSync(path.join(tmp, 'project-'));
+    proc = spawn(process.execPath, [DAEMON], {
+      env: {
+        ...process.env,
+        LAZYKIMICODE_PROJECT: projectDir,
+        LAZYKIMICODE_LSP_COMMAND: 'typescript-language-server',
+        LAZYKIMICODE_LSP_ARGS: '--stdio',
+      },
+    });
+    const pending = readMessages(proc, [6]);
+    writeMessage(proc, {
+      jsonrpc: '2.0',
+      id: 6,
+      method: 'tools/call',
+      params: { name: 'lsp_status', arguments: {} },
+    });
+    const messages = await pending;
+    const response = messages.find((m) => m.id === 6);
+    expect(response).toBeDefined();
+    const text = (response!.result as { content: Array<{ text: string }> }).content[0].text;
+    const parsed = JSON.parse(text);
+    expect(parsed.status).toBe('ready');
+    expect(parsed.configured).toBe(true);
+    expect(parsed.command).toBe('typescript-language-server');
+    expect(parsed.args).toEqual(['--stdio']);
+    expect(parsed.server).toBeDefined();
+    expect(parsed.server.id).toBe('typescript-language-server');
   });
 }, 15000);

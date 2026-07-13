@@ -154,4 +154,75 @@ describe('lsp diagnostics', () => {
 
     fs.rmSync(projectDir, { recursive: true, force: true });
   });
+
+  it('filters diagnostics by severity', async () => {
+    const file = path.join(tmp, 'x.ts');
+    fs.writeFileSync(file, 'const x: string = 1;\n');
+
+    const transport = new MockLspTransport([
+      { jsonrpc: '2.0', id: 1, result: { capabilities: {} } },
+    ]);
+    transport.onSend((msg) => {
+      if (msg.method === 'textDocument/didOpen' || msg.method === 'textDocument/didChange') {
+        return {
+          jsonrpc: '2.0',
+          method: 'textDocument/publishDiagnostics',
+          params: {
+            uri: pathToFileURL(file).href,
+            diagnostics: [
+              { range: { start: { line: 0, character: 0 }, end: { line: 0, character: 1 } }, severity: 1, message: 'error' },
+              { range: { start: { line: 0, character: 2 }, end: { line: 0, character: 3 } }, severity: 2, message: 'warning' },
+              { range: { start: { line: 0, character: 4 }, end: { line: 0, character: 5 } }, severity: 3, message: 'info' },
+            ],
+          },
+        };
+      }
+      return undefined;
+    });
+
+    const errors = await runDiagnostics(file, transport, undefined, 'error');
+    expect(errors).toHaveLength(1);
+    expect(errors[0].severity).toBe('error');
+
+    const warnings = await runDiagnostics(file, transport, undefined, 'warning');
+    expect(warnings).toHaveLength(1);
+    expect(warnings[0].severity).toBe('warning');
+  });
+
+  it('recursively collects diagnostics from a directory', async () => {
+    const projectDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lsp-dir-'));
+    process.env.LAZYKIMICODE_PROJECT = projectDir;
+    const srcDir = path.join(projectDir, 'src');
+    const fileA = path.join(srcDir, 'a.ts');
+    const fileB = path.join(srcDir, 'b.ts');
+    fs.mkdirSync(srcDir, { recursive: true });
+    fs.writeFileSync(fileA, 'const a = 1;\n');
+    fs.writeFileSync(fileB, 'const b = 1;\n');
+
+    const transport = new MockLspTransport([
+      { jsonrpc: '2.0', id: 1, result: { capabilities: {} } },
+    ]);
+    const openedUris: string[] = [];
+    transport.onSend((msg) => {
+      if (msg.method === 'textDocument/didOpen') {
+        openedUris.push((msg.params as { textDocument: { uri: string } }).textDocument.uri);
+      }
+      if (msg.method === 'textDocument/didOpen' || msg.method === 'textDocument/didChange') {
+        const uri = (msg.params as { textDocument: { uri: string } }).textDocument.uri;
+        return {
+          jsonrpc: '2.0',
+          method: 'textDocument/publishDiagnostics',
+          params: { uri, diagnostics: [] },
+        };
+      }
+      return undefined;
+    });
+
+    await runDiagnostics('src', transport);
+    expect(openedUris).toHaveLength(2);
+    expect(openedUris).toContain(pathToFileURL(fileA).href);
+    expect(openedUris).toContain(pathToFileURL(fileB).href);
+
+    fs.rmSync(projectDir, { recursive: true, force: true });
+  });
 });

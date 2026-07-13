@@ -8,6 +8,7 @@ import {
   loadInstallDecision,
   loadInstallDecisions,
   recordInstallDecision,
+  validateInstallDecisionServerId,
 } from '../../../src/components/lsp/install-decisions.js';
 
 describe('lsp install decisions', () => {
@@ -57,5 +58,19 @@ describe('lsp install decisions', () => {
     fs.mkdirSync(path.dirname(decisionsPath), { recursive: true });
     fs.writeFileSync(decisionsPath, 'not json', 'utf-8');
     expect(loadInstallDecisions()).toEqual({});
+  });
+
+  it('accepts known server ids and aliases', () => {
+    expect(validateInstallDecisionServerId('typescript-language-server')).toBeUndefined();
+    expect(validateInstallDecisionServerId('rust-analyzer')).toBeUndefined();
+    expect(validateInstallDecisionServerId('typescript')).toBeUndefined();
+    expect(validateInstallDecisionServerId('rust')).toBeUndefined();
+    expect(validateInstallDecisionServerId('python')).toBeUndefined();
+  });
+
+  it('rejects unknown server ids', () => {
+    const error = validateInstallDecisionServerId('unknown-server');
+    expect(error).toContain("Unknown LSP server 'unknown-server'");
+    expect(error).toContain('typescript-language-server');
   });
 });
