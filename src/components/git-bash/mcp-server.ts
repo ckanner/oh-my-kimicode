@@ -28,6 +28,7 @@ export interface ServerOptions {
   platform?: string;
   spawnImpl?: typeof spawn;
   bashPath?: string;
+  loginShell?: boolean;
 }
 
 const GIT_BASH_CANDIDATES = [
@@ -70,32 +71,129 @@ export async function executeGitBash(
   cwd: string,
   options: ServerOptions = {},
 ): Promise<{ stdout: string; stderr: string; exitCode: number }> {
+  const { stdout, stderr, exitCode, timedOut } = await executeRun(command, cwd, 0, { ...options, loginShell: false });
+  if (timedOut) {
+    return { stdout, stderr: `${stderr}\n[timed out]`.trim(), exitCode: 124 };
+  }
+  return { stdout, stderr, exitCode };
+}
+
+export interface BashResolution {
+  found: boolean;
+  path: string | null;
+  source: string;
+  checkedPaths: string[];
+  installHint?: string;
+}
+
+export function resolveBashPath(options: ServerOptions = {}): BashResolution {
+  const platform = options.platform ?? os.platform();
+  const checkedPaths: string[] = [];
+
+  if (platform !== 'win32') {
+    return { found: true, path: null, source: 'not-required', checkedPaths };
+  }
+
+  const envOverride = process.env.LAZYKIMICODE_GIT_BASH_PATH;
+  if (envOverride) {
+    checkedPaths.push(envOverride);
+    if (envOverride.endsWith('bash.exe') && fs.existsSync(envOverride)) {
+      return { found: true, path: envOverride, source: 'env', checkedPaths };
+    }
+  }
+
+  for (const candidate of GIT_BASH_CANDIDATES) {
+    checkedPaths.push(candidate);
+    if (fs.existsSync(candidate)) {
+      return { found: true, path: candidate, source: 'candidate', checkedPaths };
+    }
+  }
+
+  const pathEnv = process.env.PATH ?? process.env.Path ?? process.env.path ?? '';
+  const dirs = pathEnv.split(path.delimiter).filter(Boolean);
+  for (const dir of dirs) {
+    const full = path.join(dir, 'bash.exe');
+    checkedPaths.push(full);
+    if (fs.existsSync(full)) {
+      const lower = full.toLowerCase();
+      if (lower.includes('\\windows\\system32\\') || lower.includes('\\microsoft\\windowsapps\\')) {
+        continue;
+      }
+      return { found: true, path: full, source: 'path', checkedPaths };
+    }
+  }
+
+  return {
+    found: false,
+    path: null,
+    source: 'none',
+    checkedPaths,
+    installHint: 'Git Bash is required on native Windows. Install Git for Windows and ensure bash.exe is on PATH.',
+  };
+}
+
+export interface RunResult {
+  stdout: string;
+  stderr: string;
+  exitCode: number;
+  timedOut: boolean;
+}
+
+export async function executeRun(
+  command: string,
+  cwd: string,
+  timeoutMs: number,
+  options: ServerOptions = {},
+): Promise<RunResult> {
   const platform = options.platform ?? os.platform();
   const spawnImpl = options.spawnImpl ?? spawn;
   const bashPath = options.bashPath ?? findBashPath();
+  const loginShell = options.loginShell ?? true;
 
   return new Promise((resolve, reject) => {
     let child: ChildProcessWithoutNullStreams;
+    const shellFlag = loginShell ? '-lc' : '-c';
     if (platform === 'win32') {
       if (!bashPath) {
         reject(new Error('git bash path not found'));
         return;
       }
-      child = spawnImpl(bashPath, ['-c', command], { cwd }) as ChildProcessWithoutNullStreams;
+      child = spawnImpl(bashPath, [shellFlag, command], { cwd }) as ChildProcessWithoutNullStreams;
     } else {
       child = spawnImpl('/bin/sh', ['-c', command], { cwd }) as ChildProcessWithoutNullStreams;
     }
 
     let stdout = '';
     let stderr = '';
+    let timedOut = false;
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
     child.stdout.setEncoding('utf8');
     child.stderr.setEncoding('utf8');
     child.stdout.on('data', (chunk: string) => { stdout += chunk; });
     child.stderr.on('data', (chunk: string) => { stderr += chunk; });
-    child.on('error', reject);
+
+    if (timeoutMs > 0) {
+      timeoutId = setTimeout(() => {
+        timedOut = true;
+        child.kill('SIGTERM');
+        // Force kill after a grace period if still alive.
+        setTimeout(() => child.kill('SIGKILL'), 5000);
+      }, timeoutMs);
+    }
+
+    child.on('error', (err) => {
+      if (timeoutId) clearTimeout(timeoutId);
+      reject(err);
+    });
     child.on('close', (exitCode, signal) => {
-      // A null exitCode means the process was terminated by a signal; treat it as an error.
-      resolve({ stdout, stderr, exitCode: exitCode ?? (signal ? 1 : 0) });
+      if (timeoutId) clearTimeout(timeoutId);
+      resolve({
+        stdout,
+        stderr,
+        exitCode: exitCode ?? (signal ? 1 : 0),
+        timedOut,
+      });
     });
   });
 }
@@ -124,8 +222,52 @@ export async function handleRequest(request: McpRequest, options: ServerOptions 
         result: {
           tools: [
             {
+              name: 'run',
+              description: 'Execute a shell command through Git Bash on native Windows. Returns JSON with stdout, stderr, exitCode, and timedOut.',
+              inputSchema: {
+                type: 'object',
+                properties: {
+                  command: { type: 'string', description: 'The command to execute.' },
+                  timeout: {
+                    type: 'integer',
+                    minimum: 1,
+                    maximum: 1800000,
+                    description: 'Optional timeout in milliseconds. Defaults to 120000 (2 minutes).',
+                  },
+                  workdir: {
+                    type: 'string',
+                    description: 'The working directory to run the command in. Defaults to the current directory.',
+                  },
+                  description: {
+                    type: 'string',
+                    description: 'Clear, concise description of what this command does in 5-10 words.',
+                  },
+                },
+                required: ['command'],
+                additionalProperties: false,
+              },
+            },
+            {
+              name: 'which_bash',
+              description: 'Report how Git Bash was resolved on this platform.',
+              inputSchema: {
+                type: 'object',
+                properties: {},
+                additionalProperties: false,
+              },
+            },
+            {
+              name: 'diagnose',
+              description: 'Diagnose the git_bash MCP readiness on this platform.',
+              inputSchema: {
+                type: 'object',
+                properties: {},
+                additionalProperties: false,
+              },
+            },
+            {
               name: 'git_bash',
-              description: 'On Windows, execute a shell command through Git Bash; on other platforms, advise using the native Bash tool.',
+              description: 'Legacy alias for run. On Windows, execute a shell command through Git Bash; on other platforms, advise using the native Bash tool.',
               inputSchema: {
                 type: 'object',
                 properties: {
@@ -141,7 +283,51 @@ export async function handleRequest(request: McpRequest, options: ServerOptions 
     }
     case 'tools/call': {
       const params = request.params as GitBashCallParams | undefined;
-      if (params?.name !== 'git_bash') {
+      const toolName = params?.name ?? '';
+      const platform = options.platform ?? os.platform();
+
+      if (toolName === 'which_bash') {
+        const resolution = resolveBashPath(options);
+        return {
+          jsonrpc: '2.0',
+          id,
+          result: {
+            content: [{ type: 'text', text: JSON.stringify(resolution) }],
+            isError: false,
+          },
+        };
+      }
+
+      if (toolName === 'diagnose') {
+        const resolution = resolveBashPath(options);
+        const enabled = platform === 'win32' && resolution.found;
+        let status: string;
+        if (platform !== 'win32') {
+          status = 'disabled: run is only exposed on native Windows';
+        } else if (enabled) {
+          status = 'ready';
+        } else {
+          status = 'missing-git-bash';
+        }
+        return {
+          jsonrpc: '2.0',
+          id,
+          result: {
+            content: [{
+              type: 'text',
+              text: JSON.stringify({
+                platform,
+                enabled,
+                status,
+                resolution,
+              }),
+            }],
+            isError: false,
+          },
+        };
+      }
+
+      if (toolName !== 'run' && toolName !== 'git_bash') {
         return {
           jsonrpc: '2.0',
           id,
@@ -152,10 +338,13 @@ export async function handleRequest(request: McpRequest, options: ServerOptions 
         };
       }
 
-      const platform = options.platform ?? os.platform();
-      const args = params.arguments ?? {};
+      const args = params?.arguments ?? {};
       const command = String(args.command ?? '');
-      const cwd = String(args.cwd ?? process.cwd());
+      const cwd = String(args.workdir ?? args.cwd ?? process.cwd());
+      const timeoutArg = args.timeout ?? args.timeout_ms;
+      const timeoutMs = typeof timeoutArg === 'number' && timeoutArg > 0
+        ? Math.min(timeoutArg, 1800000)
+        : (toolName === 'run' ? 120000 : 0);
 
       if (!command) {
         return {
@@ -166,6 +355,16 @@ export async function handleRequest(request: McpRequest, options: ServerOptions 
       }
 
       if (platform !== 'win32') {
+        if (toolName === 'run') {
+          return {
+            jsonrpc: '2.0',
+            id,
+            result: {
+              content: [{ type: 'text', text: JSON.stringify({ error: 'git_bash run is only available on native Windows.' }) }],
+              isError: true,
+            },
+          };
+        }
         return {
           jsonrpc: '2.0',
           id,
@@ -194,7 +393,20 @@ export async function handleRequest(request: McpRequest, options: ServerOptions 
       }
 
       try {
-        const { stdout, stderr, exitCode } = await executeGitBash(command, cwd, { ...options, bashPath });
+        const { stdout, stderr, exitCode, timedOut } = await executeRun(command, cwd, timeoutMs, { ...options, bashPath, loginShell: toolName === 'run' });
+        if (toolName === 'run') {
+          return {
+            jsonrpc: '2.0',
+            id,
+            result: {
+              content: [{
+                type: 'text',
+                text: JSON.stringify({ stdout, stderr, exitCode, timedOut }),
+              }],
+              isError: timedOut || exitCode !== 0,
+            },
+          };
+        }
         const content: Array<{ type: string; text: string }> = [];
         if (stdout) content.push({ type: 'text', text: stdout });
         if (stderr) content.push({ type: 'text', text: stderr });
@@ -203,7 +415,7 @@ export async function handleRequest(request: McpRequest, options: ServerOptions 
           id,
           result: {
             content: content.length ? content : [{ type: 'text', text: '' }],
-            isError: exitCode !== 0,
+            isError: timedOut || exitCode !== 0,
           },
         };
       } catch (e) {

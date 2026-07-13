@@ -10,7 +10,7 @@ const EXPECTED_SKILLS = [
   'init-deep', 'lcx-contribute-bug-fix', 'lcx-doctor', 'lcx-report-bug',
   'lsp', 'lsp-setup', 'programming', 'refactor', 'remove-ai-slops', 'review-work',
   'rules', 'start-work', 'teammode', 'ultimate-browsing', 'ultrawork',
-  'ulw-loop', 'ulw-plan', 'ulw-research', 'visual-qa',
+  'ultraresearch', 'ulw-loop', 'ulw-plan', 'ulw-research', 'visual-qa',
 ];
 
 const REQUIRED_FIELDS = ['name', 'description', 'type', 'whenToUse'];

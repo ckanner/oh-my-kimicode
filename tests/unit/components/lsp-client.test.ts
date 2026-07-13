@@ -89,6 +89,18 @@ describe('LspClient', () => {
     client.close();
   });
 
+  it('requests workspace symbols', async () => {
+    const transport = new MockLspTransport([
+      { jsonrpc: '2.0', id: 1, result: { capabilities: {} } },
+      { jsonrpc: '2.0', id: 2, result: [{ name: 'foo', kind: 12, location: { uri: 'file:///tmp/test.ts', range: { start: { line: 0, character: 0 }, end: { line: 0, character: 1 } } } }] },
+    ]);
+    const client = new LspClient(transport);
+    await client.initialize('file:///tmp/');
+    const result = await client.workspaceSymbol('foo');
+    expect(result).toEqual([{ name: 'foo', kind: 12, location: { uri: 'file:///tmp/test.ts', range: { start: { line: 0, character: 0 }, end: { line: 0, character: 1 } } } }]);
+    client.close();
+  });
+
   it('sends current file content in didChange notification', async () => {
     const file = path.join(tmp, 'test.ts');
     const content = 'const foo = 1;\n';

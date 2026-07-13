@@ -143,6 +143,8 @@ describe(
     expect(tools).toContain('lsp_status');
     expect(tools).toContain('lsp_diagnostics');
     expect(tools).toContain('lsp_goto_definition');
+    expect(tools).toContain('lsp_symbols');
+    expect(tools).toContain('lsp_install_decision');
   });
 
   it('returns no LSP configured for lsp_status', async () => {
@@ -200,5 +202,30 @@ describe(
     } catch {
       // Best-effort cleanup; the OS will reclaim the temp directory.
     }
+  });
+
+  it('records lsp_install_decision', async () => {
+    const projectDir = fs.mkdtempSync(path.join(tmp, 'project-'));
+    proc = spawn(process.execPath, [DAEMON], {
+      env: {
+        ...process.env,
+        LAZYKIMICODE_PROJECT: projectDir,
+      },
+    });
+    const pending = readMessages(proc, [4]);
+    writeMessage(proc, {
+      jsonrpc: '2.0',
+      id: 4,
+      method: 'tools/call',
+      params: { name: 'lsp_install_decision', arguments: { server_id: 'typescript', decision: 'allowed' } },
+    });
+    const messages = await pending;
+    const response = messages.find((m) => m.id === 4);
+    expect(response).toBeDefined();
+    const text = (response!.result as { content: Array<{ text: string }> }).content[0].text;
+    const parsed = JSON.parse(text);
+    expect(parsed.serverId).toBe('typescript');
+    expect(parsed.decision).toBe('allowed');
+    expect(fs.existsSync(path.join(projectDir, '.lazykimicode', 'lsp-install-decisions.json'))).toBe(true);
   });
 }, 15000);

@@ -116,6 +116,8 @@ describe('lsp mcp-server entry', () => {
     expect(tools).toContain('lsp_status');
     expect(tools).toContain('lsp_diagnostics');
     expect(tools).toContain('lsp_goto_definition');
+    expect(tools).toContain('lsp_symbols');
+    expect(tools).toContain('lsp_install_decision');
   });
 
   it('returns no LSP configured for lsp_status', () => {
@@ -141,6 +143,112 @@ describe('lsp mcp-server entry', () => {
     expect(result.status).toBe(0);
     const response = JSON.parse(result.stdout);
     expect(response.result.content[0].text).toContain('"diagnostics":[]');
+  });
+
+  it('records and reads lsp_install_decision', async () => {
+    const projectDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lsp-decision-'));
+    process.env.LAZYKIMICODE_PROJECT = projectDir;
+    const { handleToolRequest } = await import(modulePath);
+
+    const response = await handleToolRequest(
+      { params: { name: 'lsp_install_decision', arguments: { server_id: 'typescript', decision: 'allowed' } } },
+      pathToFileURL(projectDir).href + '/',
+    );
+    const text = JSON.parse(response.content[0].text);
+    expect(text.serverId).toBe('typescript');
+    expect(text.decision).toBe('allowed');
+    expect(text.path).toBe(path.join(projectDir, '.lazykimicode', 'lsp-install-decisions.json'));
+
+    fs.rmSync(projectDir, { recursive: true, force: true });
+  });
+
+  it('rejects invalid lsp_install_decision', async () => {
+    const projectDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lsp-decision-'));
+    process.env.LAZYKIMICODE_PROJECT = projectDir;
+    const { handleToolRequest } = await import(modulePath);
+
+    const response = await handleToolRequest(
+      { params: { name: 'lsp_install_decision', arguments: { server_id: 'typescript', decision: 'maybe' } } },
+      pathToFileURL(projectDir).href + '/',
+    );
+    expect(response.isError).toBe(true);
+    expect(response.content[0].text).toContain('Invalid decision');
+
+    fs.rmSync(projectDir, { recursive: true, force: true });
+  });
+
+  it('searches workspace symbols with lsp_symbols', async () => {
+    const projectDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lsp-symbols-'));
+    process.env.LAZYKIMICODE_PROJECT = projectDir;
+    process.env.LAZYKIMICODE_LSP_COMMAND = 'mock-lsp';
+    const expectedRootUri = pathToFileURL(projectDir).href + '/';
+
+    const transport = new MockLspTransport([
+      { jsonrpc: '2.0', id: 1, result: { capabilities: {} } },
+      { jsonrpc: '2.0', id: 2, result: [{ name: 'foo', kind: 12 }] },
+    ]);
+
+    const { handleToolRequest } = await import(modulePath);
+    const response = await handleToolRequest(
+      { params: { name: 'lsp_symbols', arguments: { file: 'src/x.ts', scope: 'workspace', query: 'foo', limit: 5 } } },
+      expectedRootUri,
+      { createTransport: () => transport },
+    );
+
+    const text = JSON.parse(response.content[0].text);
+    expect(text.symbols).toEqual([{ name: 'foo', kind: 12 }]);
+
+    fs.rmSync(projectDir, { recursive: true, force: true });
+  });
+
+  it('lists document symbols with lsp_symbols', async () => {
+    const projectDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lsp-symbols-'));
+    const file = path.join(projectDir, 'src', 'x.ts');
+    fs.mkdirSync(path.dirname(file), { recursive: true });
+    fs.writeFileSync(file, 'const foo = 1;\n');
+    process.env.LAZYKIMICODE_PROJECT = projectDir;
+    process.env.LAZYKIMICODE_LSP_COMMAND = 'mock-lsp';
+    const expectedRootUri = pathToFileURL(projectDir).href + '/';
+
+    const transport = new MockLspTransport([
+      { jsonrpc: '2.0', id: 1, result: { capabilities: {} } },
+      { jsonrpc: '2.0', id: 2, result: [{ name: 'foo', kind: 12 }] },
+    ]);
+
+    const { handleToolRequest } = await import(modulePath);
+    const response = await handleToolRequest(
+      { params: { name: 'lsp_symbols', arguments: { file: 'src/x.ts' } } },
+      expectedRootUri,
+      { createTransport: () => transport },
+    );
+
+    const text = JSON.parse(response.content[0].text);
+    expect(text.symbols).toEqual([{ name: 'foo', kind: 12 }]);
+
+    fs.rmSync(projectDir, { recursive: true, force: true });
+  });
+
+  it('returns error for workspace lsp_symbols without query', async () => {
+    const projectDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lsp-symbols-'));
+    process.env.LAZYKIMICODE_PROJECT = projectDir;
+    process.env.LAZYKIMICODE_LSP_COMMAND = 'mock-lsp';
+    const expectedRootUri = pathToFileURL(projectDir).href + '/';
+
+    const transport = new MockLspTransport([
+      { jsonrpc: '2.0', id: 1, result: { capabilities: {} } },
+    ]);
+
+    const { handleToolRequest } = await import(modulePath);
+    const response = await handleToolRequest(
+      { params: { name: 'lsp_symbols', arguments: { file: 'src/x.ts', scope: 'workspace' } } },
+      expectedRootUri,
+      { createTransport: () => transport },
+    );
+
+    expect(response.isError).toBe(true);
+    expect(response.content[0].text).toContain("'query' is required");
+
+    fs.rmSync(projectDir, { recursive: true, force: true });
   });
 
   it('returns error for unknown tool', () => {

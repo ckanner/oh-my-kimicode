@@ -77,9 +77,10 @@ export LAZYKIMICODE_LSP_ARGS="--stdio"
 | `lsp_diagnostics` | `file: string` | `{ diagnostics: Diagnostic[] }` | Diagnostics for a file |
 | `lsp_goto_definition` | `file`, `line`, `character` | `{ locations: Location[] }` | Go-to-definition |
 | `lsp_find_references` | `file`, `line`, `character` | `{ locations: Location[] }` | Find references |
-| `lsp_symbols` | `file: string` | `{ symbols: SymbolInformation[] }` | Document symbols |
+| `lsp_symbols` | `file`, `scope?` (`document`\|`workspace`), `query?`, `limit?` | `{ symbols: SymbolInformation[] }` | Document symbols or workspace symbol search |
 | `lsp_prepare_rename` | `file`, `line`, `character` | `{ result }` | Validate a symbol rename |
 | `lsp_rename` | `file`, `line`, `character`, `newName` | `{ result }` | Execute a symbol rename |
+| `lsp_install_decision` | `server_id`, `decision` (`declined`\|`allowed`) | `{ serverId, decision, path }` | Record LSP server install decision |
 
 A stateless fallback binary is also registered as the `lsp_tools_mcp` MCP in `plugin/kimi.plugin.json` for environments that do not use the daemon.
 
@@ -104,6 +105,7 @@ Invoke with `/skill:lazykimicode:<name>` (or `/skill:<name>` if unique).
 | `ulw-plan` | Produce a structured execution plan |
 | `ulw-loop` | Self-referential execution loop with evidence-based completion |
 | `ulw-research` | Research phase for ultrawork plans |
+| `ultraresearch` | Legacy alias for `ulw-research` |
 | `teammode` | Parallel multi-agent orchestration via `AgentSwarm` |
 | `ast-grep` | Structural search using `sg` (ast-grep) |
 | `coding-agent-sessions` | Find and inspect local coding-agent session histories |
@@ -217,4 +219,4 @@ The full verification command used in CI and development:
 pnpm run lint && pnpm run typecheck && pnpm test && pnpm run build
 ```
 
-Latest result: **41 test files, 267 tests passing**.
+Latest result: **42 test files, 283 tests passing**.

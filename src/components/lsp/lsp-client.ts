@@ -116,6 +116,11 @@ export class LspClient {
     return (msg as { result?: unknown }).result;
   }
 
+  async workspaceSymbol(query: string): Promise<unknown> {
+    const msg = await this.request('workspace/symbol', { query });
+    return (msg as { result?: unknown }).result;
+  }
+
   async prepareRename(uri: string, position: Position): Promise<unknown> {
     const msg = await this.request('textDocument/prepareRename', {
       textDocument: { uri },

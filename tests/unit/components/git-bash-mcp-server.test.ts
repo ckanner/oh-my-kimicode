@@ -67,7 +67,7 @@ describe('git-bash mcp-server findBashPath', () => {
 });
 
 describe('git-bash mcp-server entry', () => {
-  it('initializes and lists the git_bash tool', () => {
+  it('initializes and lists git-bash tools', () => {
     const result = spawnSync('node', [SERVER], {
       input: [
         JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'initialize' }),
@@ -83,6 +83,57 @@ describe('git-bash mcp-server entry', () => {
     expect(init.result.protocolVersion).toBe('2024-11-05');
     const list = JSON.parse(lines[1]);
     expect(list.id).toBe(2);
-    expect(list.result.tools.map((t: { name: string }) => t.name)).toContain('git_bash');
+    const names = list.result.tools.map((t: { name: string }) => t.name);
+    expect(names).toContain('git_bash');
+    expect(names).toContain('run');
+    expect(names).toContain('which_bash');
+    expect(names).toContain('diagnose');
+  });
+
+  it('which_bash reports not-required on non-Windows', () => {
+    const result = spawnSync('node', [SERVER], {
+      input: [
+        JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'initialize' }),
+        JSON.stringify({ jsonrpc: '2.0', id: 2, method: 'tools/call', params: { name: 'which_bash', arguments: {} } }),
+      ].join('\n') + '\n',
+      encoding: 'utf-8',
+    });
+    expect(result.status).toBe(0);
+    const lines = result.stdout.trim().split('\n');
+    const call = JSON.parse(lines[1]);
+    const text = JSON.parse(call.result.content[0].text);
+    expect(text.found).toBe(true);
+    expect(text.source).toBe('not-required');
+  });
+
+  it('diagnose reports disabled on non-Windows', () => {
+    const result = spawnSync('node', [SERVER], {
+      input: [
+        JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'initialize' }),
+        JSON.stringify({ jsonrpc: '2.0', id: 2, method: 'tools/call', params: { name: 'diagnose', arguments: {} } }),
+      ].join('\n') + '\n',
+      encoding: 'utf-8',
+    });
+    expect(result.status).toBe(0);
+    const lines = result.stdout.trim().split('\n');
+    const call = JSON.parse(lines[1]);
+    const text = JSON.parse(call.result.content[0].text);
+    expect(text.enabled).toBe(false);
+    expect(text.status).toContain('disabled');
+  });
+
+  it('run errors on non-Windows', () => {
+    const result = spawnSync('node', [SERVER], {
+      input: [
+        JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'initialize' }),
+        JSON.stringify({ jsonrpc: '2.0', id: 2, method: 'tools/call', params: { name: 'run', arguments: { command: 'echo hi' } } }),
+      ].join('\n') + '\n',
+      encoding: 'utf-8',
+    });
+    expect(result.status).toBe(0);
+    const lines = result.stdout.trim().split('\n');
+    const call = JSON.parse(lines[1]);
+    expect(call.result.isError).toBe(true);
+    expect(call.result.content[0].text).toContain('only available on native Windows');
   });
 });
