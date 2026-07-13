@@ -3,7 +3,7 @@
 > **Date:** 2026-07-13  
 > **Goal:** Remove the legacy `OMO`/`OmO` brand entirely from code, docs, configuration, and CI; verify the Kimi Code CLI wire-protocol implementation is complete; clean any remaining stale limitation notes; and deliver a green CI on `main`.
 >
-> **Status:** The env-var namespace and hook/build branding tasks below are complete. The remaining `.omo` directory rename is being executed in [`docs/lazykimicode-audit-remediation-plan.md`](lazykimicode-audit-remediation-plan.md).
+> **Status:** Completed. The env-var namespace, hook/build branding, `.omo` directory rename, and stale-limitation cleanup are all finished and verified in [`docs/audit-report.md`](audit-report.md).
 
 ## 1. Current State Summary
 
@@ -169,7 +169,8 @@ Expected: green; test count should be 41 files / 267 tests (current baseline).
 ## 3. Acceptance Criteria
 
 - [x] `grep` for `OMO_KIMI_`, `OMO_`, `\bOmO\b` in tracked source/docs is clean (except `vendor/`).
+- [x] `grep` for `\.omo\b` in tracked source/docs is clean (except historical plan docs and `vendor/`).
 - [x] `pnpm run lint && pnpm run typecheck && pnpm test && pnpm run build` passes locally.
 - [x] `git status` is clean after build.
 - [x] Changes pushed to `origin/main`.
-- [x] GitHub Actions run `29200996585` green on ubuntu-latest, macos-latest, windows-latest.
+- [x] GitHub Actions run `29220023538` green on ubuntu-latest, macos-latest, windows-latest.

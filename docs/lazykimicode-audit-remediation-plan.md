@@ -2,7 +2,8 @@
 
 > **Date:** 2026-07-13  
 > **Scope:** Full review of code, docs, prompts/skills, tests, and CI against the LazyKimiCode product plan; remediation of all remaining `OMO`/`OmO`/`.omo` legacy branding and any implementation gaps.  
-> **Verification baseline:** `pnpm run lint && pnpm run typecheck && pnpm test && pnpm run build` — must be green before and after remediation.
+> **Status:** Completed. All remediation tasks are finished and verified; see [`docs/audit-report.md`](audit-report.md) for the final audit summary.  
+> **Verification baseline:** `pnpm run lint && pnpm run typecheck && pnpm test && pnpm run build` — green.
 
 ---
 
@@ -52,81 +53,20 @@ This repo implements the wire protocol correctly in:
 | Skill / MCP tool-name alignment | `tests/unit/skills/mcp-alignment.test.ts` passes; `plugin/kimi.plugin.json` declares `codegraph`, `lsp`, `lsp_tools_mcp`, `git_bash` |
 | `create-pr-body.mjs` exists | `plugin/skills/lcx-contribute-bug-fix/scripts/create-pr-body.mjs` exists and has unit tests |
 
-### 2.2 Still wrong — legacy `.omo` directory / branding
+### 2.2 Remediation completed
 
-The user explicitly requested that the project **no longer use the `OMO`/`OmO` brand anywhere**, including configuration. The remaining `OMO` footprint is now almost entirely the **`.omo` directory name** and a handful of copied skill strings.
+All legacy `.omo` / `OMO` / `OmO` / `Oh My KimiCode` references have been removed from shipped code, tests, documentation, and configuration. The remaining `OMO` footprint was the **`.omo` directory name** used for configuration and state; it has been renamed to `.lazykimicode` everywhere.
 
-#### A. Default config/state directories still use `.omo`
+Key remediation items completed:
 
-| File | Current value | Required value |
-|---|---|---|
-| `src/shared/env.ts:59` | `~/.omo/teams` | `~/.lazykimicode/teams` |
-| `src/shared/env.ts:64` | `~/.omo` | `~/.lazykimicode` |
-| `src/shared/env.ts:62` | comment says `.omo` is kept as convention | comment must describe `.lazykimicode` as the LazyKimiCode convention |
-
-#### B. Hardcoded project-level `.omo` paths in source
-
-| File | Path(s) |
-|---|---|
-| `src/components/bootstrap/provision.ts:18` | `path.join(kimiCodeHome, '.omo', 'kimi-agents')` |
-| `src/components/bootstrap/provision.ts:69` | `path.join(os.homedir(), '.omo', 'sg-npm')` |
-| `src/components/codegraph/indexer.ts:57` | `path.join(projectDir, '.omo', 'codegraph-index.json')` |
-| `src/components/lsp/diagnostics.ts:16` | `'.omo/lsp-cache.json'` |
-| `src/components/rules/discover.ts:11` | `path.join(projectDir, '.omo', 'rules')` |
-| `src/components/start-work-continuation/boulder.ts:25,42` | `.omo/boulder.json` |
-| `src/install/doctor.ts:90,92,96` | `.omo/rules` |
-| `src/cli/index.ts:66` | help text `Keep ~/.omo/ rules and config` |
-
-#### C. Skill source files (component and vendor) still reference `.omo`
-
-All component skill sources under `src/components/*/skills/` and all vendor skills under `vendor/shared-skills/skills/` still use `.omo/...` paths and, in some vendor files, `Oh My KimiCode` branding.
-
-The current `scripts/sync-skills.mjs` only renames `OMO_*` env vars, `OmO`, and `Oh My KimiCode` inside `SKILL.md`. It does **not**:
-
-- Replace `.omo` directory references in `SKILL.md`.
-- Transform copied `.mjs` helper scripts at all.
-
-Consequently the generated `plugin/skills/` still contains many `.omo` paths and `plugin/skills/lcx-contribute-bug-fix/scripts/create-pr-body.mjs` still prints "Oh My KimiCode".
-
-#### D. Plugin manifest still tells the model about `.omo/rules`
-
-`plugin/kimi.plugin.json:16` `skillInstructions` contains:
-
-```text
-Respect project rules from .omo/rules/ and AGENTS.md.
-```
-
-This must be updated to `.lazykimicode/rules/`.
-
-#### E. Tests still create `.omo` directories
-
-| File |
-|---|---|
-| `tests/integration/cli-wrappers.test.ts` |
-| `tests/integration/hooks.test.ts` |
-| `tests/integration/installer.test.ts` |
-| `tests/integration/uninstall.test.ts` |
-| `tests/unit/components/bootstrap.test.ts` |
-| `tests/unit/components/rules.test.ts` |
-| `tests/unit/components/start-work-continuation.test.ts` |
-
-#### F. Documentation still advertises `.omo`
-
-| File |
-|---|---|
-| `README.md` |
-| `AGENTS.md` |
-| `docs/capabilities.md` |
-| `docs/audit-report.md` (claims rebrand is complete; it is not) |
-| `docs/lazykimicode-finalize-plan.md` (claims `OMO` env fallbacks remain; they do not; also lists `.omo` as acceptable) |
-
-#### G. Stale test fallback
-
-`tests/unit/scripts/build.test.ts:28` still deletes `env.OMO_KIMI_POSTHOG_API_KEY`. The build script no longer reads this variable, so the line is harmless but confusing and should be removed.
-
-#### H. `.gitignore` still ignores `.omo/`
-
-`.gitignore:3` contains `.omo/`. It should ignore `.lazykimicode/` instead (or in addition during migration).
+- `src/shared/env.ts` defaults to `~/.lazykimicode` and `~/.lazykimicode/teams`.
+- All hardcoded project paths (`boulder.json`, `rules/`, `lsp-cache.json`, `codegraph-index.json`, `kimi-agents`, `sg-npm`) use `.lazykimicode`.
+- `scripts/sync-skills.mjs` renames `.omo` to `.lazykimicode` and `Oh My KimiCode` to `LazyKimiCode` in all copied text files, including helper `.mjs` scripts.
+- `plugin/skills/` is clean of `OMO`, `OmO`, `Oh My KimiCode`, and `.omo` after `pnpm run sync:skills`.
+- `plugin/kimi.plugin.json` `skillInstructions` references `.lazykimicode/rules/`.
+- Tests use `.lazykimicode` directories.
+- `.gitignore` ignores `.lazykimicode/`.
+- Documentation no longer advertises `.omo` or legacy branding.
 
 ---
 
@@ -334,13 +274,13 @@ Expected exceptions:
 
 ## 4. Acceptance criteria
 
-- [ ] `src/shared/env.ts` defaults to `~/.lazykimicode` and `~/.lazykimicode/teams`.
-- [ ] No `.omo` directory references remain in `src/`, `plugin/`, `tests/`, `docs/`, `README.md`, `AGENTS.md`, `.github/`, `.gitignore` (except historical plan docs).
-- [ ] `plugin/skills/` is clean of `OMO`, `OmO`, `Oh My KimiCode`, and `.omo` after `pnpm run sync:skills`.
-- [ ] `plugin/kimi.plugin.json` `skillInstructions` references `.lazykimicode/rules/`.
-- [ ] `scripts/sync-skills.mjs` applies `.omo` → `.lazykimicode` and `Oh My KimiCode` → `LazyKimiCode` to all copied text files.
-- [ ] All tests pass: `pnpm test` → 41 files / 267 tests.
-- [ ] Build succeeds: `pnpm run build`.
-- [ ] Lint and typecheck pass.
-- [ ] Changes are committed and pushed to `origin/main`.
-- [ ] GitHub Actions run is green.
+- [x] `src/shared/env.ts` defaults to `~/.lazykimicode` and `~/.lazykimicode/teams`.
+- [x] No `.omo` directory references remain in `src/`, `plugin/`, `tests/`, `docs/`, `README.md`, `AGENTS.md`, `.github/`, `.gitignore` (except historical plan docs).
+- [x] `plugin/skills/` is clean of `OMO`, `OmO`, `Oh My KimiCode`, and `.omo` after `pnpm run sync:skills`.
+- [x] `plugin/kimi.plugin.json` `skillInstructions` references `.lazykimicode/rules/`.
+- [x] `scripts/sync-skills.mjs` applies `.omo` → `.lazykimicode` and `Oh My KimiCode` → `LazyKimiCode` to all copied text files.
+- [x] All tests pass: `pnpm test` → 41 files / 267 tests.
+- [x] Build succeeds: `pnpm run build`.
+- [x] Lint and typecheck pass.
+- [x] Changes are committed and pushed to `origin/main`.
+- [x] GitHub Actions run is green.

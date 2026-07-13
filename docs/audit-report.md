@@ -69,4 +69,4 @@ The only remaining `OMO` footprint was the **`.omo` directory name** used for co
 - All hardcoded project paths (`boulder.json`, `rules/`, `lsp-cache.json`, `codegraph-index.json`, `kimi-agents`, `sg-npm`) use `.lazykimicode`.
 - `scripts/sync-skills.mjs` renames `.omo` to `.lazykimicode` in all copied text files, including helper `.mjs` scripts.
 - `plugin/skills/` is clean of `OMO`, `OmO`, `Oh My KimiCode`, and `.omo`.
-- CI run `29201532164` passed on `ubuntu-latest`, `macos-latest`, and `windows-latest`.
+- CI run `29220023538` passed on `ubuntu-latest`, `macos-latest`, and `windows-latest`.
